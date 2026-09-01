@@ -831,10 +831,21 @@
                             currentUserRole = dt.role || 'ustadz';
                             currentUserClasses = dt.kelas || ['Belum Ada Kelas'];
                         } else {
+                            // AUTO-HEAL: Jika user sudah login tapi datanya belum ada di collection 'users'
                             currentUserRole = 'ustadz';
-                            currentUserClasses = ['Belum Ada Kelas'];
+                            currentUserClasses = ['Kelas Abu Bakar'];
+                            await setDoc(doc(db, "users", user.uid), {
+                                email: em,
+                                nama: "Ustadz / Ustadzah",
+                                kelas: ['Kelas Abu Bakar'],
+                                role: 'ustadz'
+                            });
                         }
-                    } catch(err) { console.log("Gagal tarik user profile", err); }
+                    } catch(err) { 
+                        console.log("Gagal tarik user profile", err);
+                        currentUserRole = 'ustadz';
+                        currentUserClasses = ['Kelas Abu Bakar'];
+                    }
                 }
                 
                 onSnapshot(collection(db, "users"), (snap) => {

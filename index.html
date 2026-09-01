@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Progres Santri</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- jsPDF & AutoTable -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        .view-section { display: none; }
+        .view-section.active { display: block; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans flex flex-col min-h-screen">
+
+    <!-- Top Navbar -->
+    <nav id="main-nav" class="bg-indigo-700 text-white shadow-md w-full z-50 hidden">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <i class="fa-solid fa-book-quran text-2xl mr-2"></i>
+                    <span class="font-bold text-xl tracking-wider">NGAJI<span class="text-indigo-300">APP</span></span>
+                </div>
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-4 items-center">
+                    <button onclick="switchView('dashboard')" class="nav-btn px-3 py-2 rounded-md hover:bg-indigo-600 transition" data-target="dashboard"><i class="fa-solid fa-chart-pie mr-2"></i>Dashboard</button>
+                    <button onclick="switchView('data-santri')" class="nav-btn px-3 py-2 rounded-md hover:bg-indigo-600 transition" data-target="data-santri"><i class="fa-solid fa-users mr-2"></i>Data Santri</button>
+                    <button onclick="switchView('kelas')" class="nav-btn px-3 py-2 rounded-md hover:bg-indigo-600 transition" data-target="kelas"><i class="fa-solid fa-chalkboard-user mr-2"></i>Kelas</button>
+                    <button onclick="switchView('rekap')" class="nav-btn px-3 py-2 rounded-md hover:bg-indigo-600 transition" data-target="rekap"><i class="fa-solid fa-file-lines mr-2"></i>Rekap</button>
+                    <button id="btn-logout" class="ml-4 px-4 py-2 bg-red-500 hover:bg-red-600 rounded-md font-bold transition"><i class="fa-solid fa-right-from-bracket"></i></button>
+                </div>
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="text-white hover:text-indigo-200 focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-indigo-800 pb-4">
+            <button onclick="switchView('dashboard'); toggleMobileMenu()" class="nav-btn block w-full text-left px-4 py-2 hover:bg-indigo-600" data-target="dashboard"><i class="fa-solid fa-chart-pie mr-2"></i>Dashboard</button>
+            <button onclick="switchView('data-santri'); toggleMobileMenu()" class="nav-btn block w-full text-left px-4 py-2 hover:bg-indigo-600" data-target="data-santri"><i class="fa-solid fa-users mr-2"></i>Data Santri</button>
+            <button onclick="switchView('kelas'); toggleMobileMenu()" class="nav-btn block w-full text-left px-4 py-2 hover:bg-indigo-600" data-target="kelas"><i class="fa-solid fa-chalkboard-user mr-2"></i>Kelas</button>
+            <button onclick="switchView('rekap'); toggleMobileMenu()" class="nav-btn block w-full text-left px-4 py-2 hover:bg-indigo-600" data-target="rekap"><i class="fa-solid fa-file-lines mr-2"></i>Rekap</button>
+            <button id="btn-logout-mobile" class="block w-full text-left px-4 py-2 text-red-400 hover:bg-indigo-600"><i class="fa-solid fa-right-from-bracket mr-2"></i>Keluar</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow p-4 md:p-8 max-w-7xl mx-auto w-full">
+        
+        <!-- View: Login / Register -->
+        <div id="view-login" class="view-section active">
+            <div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg mt-10 border-t-4 border-indigo-500">
+                <h2 id="auth-title" class="text-2xl font-bold mb-6 text-center text-gray-800">Masuk ke Akun</h2>
+                
+                <form id="auth-form">
+                    <!-- Field Tambahan Untuk Register -->
+                    <div id="signup-fields" class="hidden mb-4 space-y-4">
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Nama Lengkap (Gelar)</label>
+                            <input type="text" id="reg-nama" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Cth: Ust. Saprudin S.Ag">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Kelas yang Diajar (Bisa lebih dari 1)</label>
+                            <input type="text" id="reg-kelas" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Cth: Kelas Abu Bakar, Kelas Umar">
+                            <p class="text-[10px] text-gray-400 mt-1">Pisahkan dengan koma jika memegang lebih dari satu kelas.</p>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                        <input type="email" id="login-email" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="email@domain.com" required>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                        <input type="password" id="login-password" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="••••••••••" required>
+                    </div>
+
+                    <button type="submit" id="auth-btn" class="w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 transition">Masuk</button>
+                    
+                    <p id="toggle-auth-text" onclick="toggleAuthMode()" class="text-center text-sm text-indigo-500 font-medium cursor-pointer mt-4 hover:underline">
+                        Belum punya akun? Daftar di sini
+                    </p>
+                    <p id="login-error" class="text-red-500 text-sm mt-3 hidden text-center"></p>
+                </form>
+            </div>
+        </div>
+
+        <!-- View: Dashboard -->
+        <div id="view-dashboard" class="view-section">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">Ringkasan Hari Ini</h2>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div class="bg-white p-4 rounded-xl shadow border-l-4 border-indigo-500">
+                    <p class="text-sm text-gray-500">Total Santri</p>
+                    <p class="text-2xl font-bold" id="dash-total">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow border-l-4 border-green-500">
+                    <p class="text-sm text-gray-500">Hadir</p>
+                    <p class="text-2xl font-bold text-green-600" id="dash-hadir">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow border-l-4 border-yellow-500">
+                    <p class="text-sm text-gray-500">Izin/Sakit</p>
+                    <p class="text-2xl font-bold text-yellow-600" id="dash-izin">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow border-l-4 border-red-500">
+                    <p class="text-sm text-gray-500">Alpa</p>
+                    <p class="text-2xl font-bold text-red-600" id="dash-alpa">0</p>
+                </div>
+            </div>
+
+            <h3 class="text-lg font-bold mb-4 text-gray-700">Kartu Progres Santri (Bintang Mingguan)</h3>
+            <div id="dashboard-cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Cards render here -->
+            </div>
+        </div>
+
+        <!-- View: Data Santri -->
+        <div id="view-data-santri" class="view-section">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6 space-y-3 md:space-y-0">
+                <h2 class="text-2xl font-bold text-gray-800">Manajemen Data Santri</h2>
+                <div class="flex space-x-2">
+                    <select id="filter-kelas-tabel" class="border px-3 py-2 rounded-lg text-sm bg-white shadow-sm focus:outline-none">
+                        <option value="Semua">Semua Kelas</option>
+                    </select>
+                    <button id="btn-tambah-santri" onclick="openModal('tambah')" class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-bold shadow hover:bg-indigo-700 transition">
+                        <i class="fa-solid fa-plus mr-1"></i> Tambah
+                    </button>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-max">
+                        <thead>
+                            <tr class="bg-gray-100 text-gray-600 text-sm uppercase">
+                                <th class="p-4 border-b w-1/4">Nama Santri</th>
+                                <th class="p-4 border-b w-1/4">Kelas / Wali Kelas</th>
+                                <th class="p-4 border-b">Status</th>
+                                <th class="p-4 border-b">Hafalan</th>
+                                <th class="p-4 border-b">Jilid</th>
+                                <th class="p-4 border-b">Ket</th>
+                                <th class="p-4 border-b text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="santri-tbody" class="text-sm">
+                            <!-- Table rows render here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- View: Kelas -->
+        <div id="view-kelas" class="view-section">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">Daftar Kelas / Rombel</h2>
+            <div id="kelas-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Kelas render here -->
+            </div>
+        </div>
+
+        <!-- View: Rekap -->
+        <div id="view-rekap" class="view-section">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6 space-y-3 md:space-y-0">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800">Rekapitulasi Harian</h2>
+                    <p id="info-pengajar-rekap" class="text-sm text-indigo-600 font-medium mt-1 hidden"></p>
+                </div>
+                <div class="flex space-x-2">
+                    <select id="filter-kelas-rekap" class="border px-3 py-2 rounded-lg text-sm bg-white shadow-sm focus:outline-none">
+                        <option value="Semua">Semua Kelas</option>
+                    </select>
+                    <input type="date" id="filter-tanggal" class="border px-3 py-2 rounded-lg shadow-sm focus:outline-none text-sm">
+                    <button onclick="exportGlobalPDF()" class="bg-red-500 text-white px-4 py-2 rounded-lg font-bold shadow hover:bg-red-600 transition">
+                        <i class="fa-solid fa-file-pdf mr-1"></i> PDF
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow overflow-hidden p-4">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-sm min-w-max">
+                        <thead>
+                            <tr class="bg-gray-100 border-b text-gray-700 uppercase text-xs">
+                                <th class="p-3 w-1/4">Nama Santri</th>
+                                <th class="p-3 w-1/4">Kelas / Wali Kelas</th>
+                                <th class="p-3">Status</th>
+                                <th class="p-3">Hafalan</th>
+                                <th class="p-3">Jilid</th>
+                                <th class="p-3">Ket</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rekap-tbody">
+                            <!-- Rekap renders here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Modal Form (Tambah/Edit) -->
+    <div id="modal-form" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden">
+            <div class="bg-indigo-600 px-6 py-4 flex justify-between items-center text-white">
+                <h3 id="modal-title" class="font-bold text-lg">Update Progres</h3>
+                <button onclick="closeModal()" class="hover:text-gray-300"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <form id="santri-form" class="p-6">
+                <input type="hidden" id="form-id">
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Nama Santri</label>
+                    <input type="text" id="form-nama" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500" required>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Kelas / Rombel</label>
+                    <select id="form-kelas" class="w-full px-3 py-2 border rounded-lg bg-white focus:ring-2 focus:ring-indigo-500" required>
+                        <!-- Pilihan kelas menyesuaikan jatah ustadz -->
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Kehadiran</label>
+                        <select id="form-kehadiran" class="w-full px-3 py-2 border rounded-lg bg-white">
+                            <option value="Hadir">Hadir</option>
+                            <option value="Izin">Izin</option>
+                            <option value="Sakit">Sakit</option>
+                            <option value="Alpa">Alpa</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Posisi Jilid</label>
+                        <input type="text" id="form-jilid" class="w-full px-3 py-2 border rounded-lg" placeholder="Cth: Jilid 4">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Halaman (Ngaji)</label>
+                        <input type="text" id="form-halaman" class="w-full px-3 py-2 border rounded-lg" placeholder="Cth: 15">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Surah Hafalan</label>
+                        <input type="text" id="form-surah" class="w-full px-3 py-2 border rounded-lg" placeholder="Cth: An-Naba">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Ayat Hafalan Terakhir</label>
+                        <input type="text" id="form-ayat" class="w-full px-3 py-2 border rounded-lg" placeholder="Cth: 30">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Keterangan / Nilai</label>
+                        <select id="form-keterangan" class="w-full px-3 py-2 border rounded-lg bg-white">
+                            <option value="Lancar">Lancar / Lanjut</option>
+                            <option value="Kurang Lancar">Kurang Lancar</option>
+                            <option value="Mengulang">Mengulang</option>
+                            <option value="-">-</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-2">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-bold hover:bg-gray-300">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold hover:bg-indigo-700">Simpan Data</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Riwayat -->
+    <div id="modal-history" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[80vh] flex flex-col">
+            <div class="bg-indigo-600 px-6 py-4 flex justify-between items-center text-white rounded-t-xl">
+                <h3 class="font-bold text-lg">Riwayat Ngaji: <span id="hist-nama"></span></h3>
+                <button onclick="closeHistory()" class="hover:text-gray-300"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="p-6 overflow-y-auto flex-grow">
+                <table class="w-full text-left text-sm border-collapse">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="p-2 border-b">Tanggal/Jam</th>
+                            <th class="p-2 border-b">Kehadiran</th>
+                            <th class="p-2 border-b">Hafalan</th>
+                            <th class="p-2 border-b">Jilid</th>
+                            <th class="p-2 border-b">Ket</th>
+                        </tr>
+                    </thead>
+                    <tbody id="hist-tbody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg font-bold transition-opacity duration-300 opacity-0 pointer-events-none z-50">
+        Berhasil disimpan!
+    </div>
+
+    <!-- Firebase SDK (Modular v9) -->
+    <script type="module">
+        // 🔴 ATUR KE FALSE UNTUK MODE PRODUKSI (TERHUBUNG KE FIREBASE) 🔴
+        const is_preview = false; 
+
+        // 🟢 PASTE KODE FIREBASE CONFIG ANDA DI BAWAH INI 🟢
+        const firebaseConfig = {
+  apiKey: "AIzaSyCfapSUazt_uCVVI5uttatd2iGR7DyLk54",
+  authDomain: "project-311a138f-ccc5-491b-b79.firebaseapp.com",
+  projectId: "project-311a138f-ccc5-491b-b79",
+  storageBucket: "project-311a138f-ccc5-491b-b79.firebasestorage.app",
+  messagingSenderId: "691555762548",
+  appId: "1:691555762548:web:f7037fd32e00abf488ac21",
+  measurementId: "G-NHSDJKXSD6"
+        };
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        let db, auth;
+        let currentUserRole = 'admin'; 
+        let currentUserClasses = ['Semua']; 
+
+        if (!is_preview) {
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+        }
+
+        let dataStore = [];
+        let classesSet = new Set();
+        let pengajarMap = {};
+        
+        let authMode = 'login'; 
+        window.toggleAuthMode = () => {
+            authMode = authMode === 'login' ? 'register' : 'login';
+            document.getElementById('auth-title').innerText = authMode === 'login' ? 'Masuk ke Akun' : 'Daftar Akun Baru';
+            
+            if(authMode === 'register') {
+                document.getElementById('signup-fields').classList.remove('hidden');
+                document.getElementById('reg-nama').required = true;
+                document.getElementById('reg-kelas').required = true;
+                document.getElementById('auth-btn').innerText = 'Daftar & Masuk';
+                document.getElementById('toggle-auth-text').innerText = 'Sudah punya akun? Masuk di sini';
+            } else {
+                document.getElementById('signup-fields').classList.add('hidden');
+                document.getElementById('reg-nama').required = false;
+                document.getElementById('reg-kelas').required = false;
+                document.getElementById('auth-btn').innerText = 'Masuk';
+                document.getElementById('toggle-auth-text').innerText = 'Belum punya akun? Daftar di sini';
+            }
+        };
+
+        window.toggleMobileMenu = () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        };
+
+        window.switchView = (viewId) => {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            const targetView = document.getElementById(`view-${viewId}`);
+            if(targetView) {
+                targetView.style.display = ''; 
+                targetView.classList.add('active');
+            }
+            
+            if(viewId === 'login') {
+                document.getElementById('main-nav').classList.add('hidden');
+            } else {
+                document.getElementById('main-nav').classList.remove('hidden');
+                localStorage.setItem('activeView', viewId);
+            }
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.toggle('bg-indigo-800', btn.dataset.target === viewId);
+            });
+            
+            if(viewId === 'rekap') renderRekap();
+        };
+
+        function getStars(riwayat) {
+            if(!riwayat || riwayat.length === 0) return '<span class="text-xs text-gray-400 italic">Belum ada bintang</span>';
+            let curr = new Date();
+            let first = curr.getDate() - curr.getDay() + (curr.getDay() === 0 ? -6 : 1); 
+            let monday = new Date(curr.setDate(first));
+            monday.setHours(0,0,0,0);
+            
+            let stars = 0;
+            riwayat.forEach(r => {
+                let rDate = new Date(r.timestamp);
+                if(rDate >= monday && rDate.getDay() >= 1 && rDate.getDay() <= 5 && r.kehadiran === 'Hadir') stars++;
+            });
+            stars = Math.min(stars, 5);
+            return stars > 0 ? '<span class="text-yellow-400 text-sm">' + '⭐'.repeat(stars) + '</span>' : '<span class="text-xs text-gray-400 italic">Belum ada bintang</span>';
+        }
+
+        function getStatusBadge(status) {
+            const colors = { 'Hadir': 'bg-green-100 text-green-700', 'Izin': 'bg-yellow-100 text-yellow-700', 'Sakit': 'bg-orange-100 text-orange-700', 'Alpa': 'bg-red-100 text-red-700' };
+            return `<span class="px-2 py-1 rounded text-xs font-bold ${colors[status] || 'bg-gray-100'}">${status}</span>`;
+        }
+        
+        function getKetBadge(ket) {
+            if(ket === 'Lancar') return '<span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs">Lancar</span>';
+            if(ket === 'Mengulang') return '<span class="px-2 py-1 bg-red-100 text-red-700 rounded text-xs">Ulang</span>';
+            if(ket === 'Kurang Lancar') return '<span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs">Kurang</span>';
+            return ket || '-';
+        }
+
+        function extractClasses() {
+            classesSet.clear();
+            dataStore.forEach(s => { if(s.kelas) classesSet.add(s.kelas); });
+            
+            const filterSelect = document.getElementById('filter-kelas-tabel');
+            let currentFilter = filterSelect.value;
+            filterSelect.innerHTML = '<option value="Semua">Semua Kelas</option>';
+            
+            const filterRekap = document.getElementById('filter-kelas-rekap');
+            let currentRekapFilter = filterRekap.value;
+            filterRekap.innerHTML = '<option value="Semua">Semua Kelas</option>';
+
+            Array.from(classesSet).sort().forEach(cls => {
+                if (currentUserRole === 'admin' || currentUserClasses.includes(cls)) {
+                    filterSelect.innerHTML += `<option value="${cls}">${cls}</option>`;
+                    filterRekap.innerHTML += `<option value="${cls}">${cls}</option>`;
+                }
+            });
+            
+            if(currentUserRole === 'ustadz') {
+                filterSelect.value = currentFilter && currentUserClasses.includes(currentFilter) ? currentFilter : currentUserClasses[0];
+                filterRekap.value = currentRekapFilter && currentUserClasses.includes(currentRekapFilter) ? currentRekapFilter : currentUserClasses[0];
+            } else {
+                filterSelect.value = classesSet.has(currentFilter) ? currentFilter : "Semua";
+                filterRekap.value = classesSet.has(currentRekapFilter) ? currentRekapFilter : "Semua";
+            }
+        }
+
+        function renderAll() {
+            extractClasses();
+            
+            const btnTambah = document.getElementById('btn-tambah-santri');
+            if(btnTambah) btnTambah.style.display = currentUserRole === 'admin' ? 'none' : 'block';
+
+            let had = 0, iz = 0, alp = 0;
+            const dashCards = document.getElementById('dashboard-cards');
+            dashCards.innerHTML = '';
+            
+            dataStore.filter(s => currentUserRole === 'admin' || currentUserClasses.includes(s.kelas)).forEach(s => {
+                if(s.kehadiran === 'Hadir') had++;
+                else if(s.kehadiran === 'Izin' || s.kehadiran === 'Sakit') iz++;
+                else if(s.kehadiran === 'Alpa') alp++;
+
+                dashCards.innerHTML += `
+                    <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 ${s.kehadiran === 'Hadir' ? 'border-green-500' : (s.kehadiran === 'Alpa' ? 'border-red-500' : 'border-yellow-500')}">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <h4 class="font-bold text-gray-800">${s.nama}</h4>
+                                <p class="text-xs text-gray-500">${s.kelas || '-'}</p>
+                            </div>
+                            ${getStatusBadge(s.kehadiran)}
+                        </div>
+                        <div class="mb-2">Bintang Sen-Jum: ${getStars(s.riwayat)}</div>
+                        <div class="text-sm text-gray-600 space-y-1">
+                            <p><i class="fa-solid fa-book-open text-indigo-400 mr-2"></i>${s.jilid} - Hal ${s.halaman}</p>
+                            <p><i class="fa-solid fa-headphones text-indigo-400 mr-2"></i>${s.surah} (Ayat ${s.ayat})</p>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            const totalSantriFiltered = dataStore.filter(s => currentUserRole === 'admin' || currentUserClasses.includes(s.kelas)).length;
+            document.getElementById('dash-total').innerText = totalSantriFiltered;
+            document.getElementById('dash-hadir').innerText = had;
+            document.getElementById('dash-izin').innerText = iz;
+            document.getElementById('dash-alpa').innerText = alp;
+
+            const tbody = document.getElementById('santri-tbody');
+            const selectedClass = document.getElementById('filter-kelas-tabel').value;
+            tbody.innerHTML = '';
+            
+            dataStore.filter(s => {
+                if(currentUserRole === 'ustadz' && !currentUserClasses.includes(s.kelas)) return false;
+                return selectedClass === "Semua" || s.kelas === selectedClass;
+            }).forEach(s => {
+                let actionButtons = `
+                    <button onclick="showHistory('${s.id}')" class="text-green-500 hover:text-green-700" title="Riwayat"><i class="fa-solid fa-clock-rotate-left"></i></button>
+                    <button onclick="exportRapor('${s.id}')" class="text-red-500 hover:text-red-700" title="Cetak Rapor"><i class="fa-solid fa-file-pdf"></i></button>
+                `;
+                if(currentUserRole !== 'admin') {
+                    actionButtons += `
+                        <button onclick="editSantri('${s.id}')" class="text-blue-500 hover:text-blue-700" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button onclick="deleteSantri('${s.id}')" class="text-red-300 hover:text-red-600" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+                    `;
+                }
+
+                let namaWaliKelas = pengajarMap[s.kelas] || '-';
+
+                tbody.innerHTML += `
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="p-4 font-bold text-gray-800">${s.nama}</td>
+                        <td class="p-4">
+                            <div class="font-medium text-gray-800">${s.kelas || '-'}</div>
+                            <div class="text-xs text-indigo-600 font-bold mt-0.5"><i class="fa-solid fa-user-tie mr-1"></i> ${namaWaliKelas}</div>
+                        </td>
+                        <td class="p-4">${getStatusBadge(s.kehadiran)}</td>
+                        <td class="p-4">${s.surah} <span class="text-gray-500 text-xs">(Ayat ${s.ayat})</span></td>
+                        <td class="p-4">${s.jilid} <span class="text-gray-500 text-xs">(Hal ${s.halaman})</span></td>
+                        <td class="p-4">${getKetBadge(s.keterangan)}</td>
+                        <td class="p-4 text-center">
+                            <div class="flex justify-center space-x-3 text-lg">
+                                ${actionButtons}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            const kelasCont = document.getElementById('kelas-container');
+            kelasCont.innerHTML = '';
+            Array.from(classesSet).sort()
+                .filter(cls => currentUserRole === 'admin' || currentUserClasses.includes(cls))
+                .forEach(cls => {
+                const murid = dataStore.filter(s => s.kelas === cls);
+                kelasCont.innerHTML += `
+                    <div class="bg-white rounded-xl shadow p-5">
+                        <div class="flex justify-between items-center mb-4 border-b pb-2">
+                            <h3 class="font-bold text-lg text-indigo-700">${cls}</h3>
+                            <button onclick="exportKelas('${cls}')" class="bg-red-100 text-red-600 px-2 py-1 rounded text-xs font-bold hover:bg-red-200"><i class="fa-solid fa-file-pdf mr-1"></i> Cetak</button>
+                        </div>
+                        <p class="text-sm text-gray-500 mb-3"><i class="fa-solid fa-users mr-2"></i>Total: ${murid.length} Santri</p>
+                        <ul class="text-sm space-y-2">
+                            ${murid.map(m => `<li class="flex justify-between"><span>${m.nama}</span> ${getStatusBadge(m.kehadiran)}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            });
+        }
+
+        document.getElementById('filter-kelas-tabel').addEventListener('change', renderAll);
+        
+        window.openModal = (mode) => {
+            if(currentUserRole === 'admin') return;
+            document.getElementById('santri-form').reset();
+            document.getElementById('form-id').value = '';
+            document.getElementById('modal-title').innerText = 'Tambah Santri Baru';
+            
+            const selectKelas = document.getElementById('form-kelas');
+            selectKelas.innerHTML = '';
+            currentUserClasses.forEach(cls => {
+                selectKelas.innerHTML += `<option value="${cls}">${cls}</option>`;
+            });
+
+            document.getElementById('form-halaman').value = "-";
+            document.getElementById('form-surah').value = "-";
+            document.getElementById('form-ayat').value = "-";
+            document.getElementById('form-keterangan').value = "-";
+            document.getElementById('modal-form').classList.remove('hidden');
+        };
+
+        window.closeModal = () => document.getElementById('modal-form').classList.add('hidden');
+
+        window.editSantri = (id) => {
+            if(currentUserRole === 'admin') return;
+            const s = dataStore.find(x => x.id === id);
+            if(currentUserRole === 'ustadz' && !currentUserClasses.includes(s.kelas)) {
+                alert("Akses Ditolak."); return;
+            }
+            if(s) {
+                document.getElementById('form-id').value = s.id;
+                document.getElementById('form-nama').value = s.nama;
+                
+                const selectKelas = document.getElementById('form-kelas');
+                selectKelas.innerHTML = '';
+                currentUserClasses.forEach(cls => {
+                    selectKelas.innerHTML += `<option value="${cls}" ${cls === s.kelas ? 'selected' : ''}>${cls}</option>`;
+                });
+
+                document.getElementById('form-kehadiran').value = s.kehadiran;
+                document.getElementById('form-jilid').value = s.jilid;
+                document.getElementById('form-halaman').value = s.halaman;
+                document.getElementById('form-surah').value = s.surah;
+                document.getElementById('form-ayat').value = s.ayat;
+                document.getElementById('form-keterangan').value = s.keterangan || '-';
+                document.getElementById('modal-title').innerText = 'Update Progres Santri';
+                document.getElementById('modal-form').classList.remove('hidden');
+            }
+        };
+
+        document.getElementById('santri-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if(currentUserRole === 'admin') return;
+            
+            let finalKelas = document.getElementById('form-kelas').value;
+            const id = document.getElementById('form-id').value || Date.now().toString();
+            const newData = {
+                id: id,
+                nama: document.getElementById('form-nama').value,
+                kelas: finalKelas,
+                kehadiran: document.getElementById('form-kehadiran').value,
+                jilid: document.getElementById('form-jilid').value,
+                halaman: document.getElementById('form-halaman').value,
+                surah: document.getElementById('form-surah').value,
+                ayat: document.getElementById('form-ayat').value,
+                keterangan: document.getElementById('form-keterangan').value,
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                const santriRef = doc(db, "santri", id);
+                const oldDoc = dataStore.find(x => x.id === id);
+                let riwayatBaru = oldDoc && oldDoc.riwayat ? oldDoc.riwayat : [];
+                riwayatBaru.unshift(newData);
+                
+                await setDoc(santriRef, { ...newData, riwayat: riwayatBaru });
+                closeModal();
+                showToast();
+            } catch(err) { alert(err.message); }
+        });
+
+        window.deleteSantri = async (id) => {
+            if(currentUserRole === 'admin') return;
+            const s = dataStore.find(x => x.id === id);
+            if(currentUserRole === 'ustadz' && s && !currentUserClasses.includes(s.kelas)) return;
+
+            if(confirm("Yakin hapus data santri ini?")) {
+                await deleteDoc(doc(db, "santri", id));
+            }
+        };
+
+        window.showHistory = (id) => {
+            const s = dataStore.find(x => x.id === id);
+            if(!s) return;
+            if(currentUserRole === 'ustadz' && !currentUserClasses.includes(s.kelas)) return;
+
+            document.getElementById('hist-nama').innerText = s.nama;
+            const tbody = document.getElementById('hist-tbody');
+            tbody.innerHTML = '';
+            
+            if(s.riwayat && s.riwayat.length > 0) {
+                s.riwayat.forEach(r => {
+                    const dt = new Date(r.timestamp);
+                    const fmt = `${dt.getDate()}/${dt.getMonth()+1}/${dt.getFullYear()} ${dt.getHours()}:${String(dt.getMinutes()).padStart(2,'0')}`;
+                    tbody.innerHTML += `
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="p-2 text-gray-600">${fmt}</td>
+                            <td class="p-2">${getStatusBadge(r.kehadiran)}</td>
+                            <td class="p-2">${r.surah} (${r.ayat})</td>
+                            <td class="p-2">${r.jilid} (${r.halaman})</td>
+                            <td class="p-2">${getKetBadge(r.keterangan)}</td>
+                        </tr>
+                    `;
+                });
+            } else {
+                tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-gray-400">Belum ada riwayat</td></tr>';
+            }
+            document.getElementById('modal-history').classList.remove('hidden');
+        };
+        window.closeHistory = () => document.getElementById('modal-history').classList.add('hidden');
+
+        document.getElementById('filter-tanggal').valueAsDate = new Date();
+        document.getElementById('filter-tanggal').addEventListener('change', renderRekap);
+        document.getElementById('filter-kelas-rekap').addEventListener('change', renderRekap);
+        
+        function renderRekap() {
+            const tglFilter = document.getElementById('filter-tanggal').value;
+            const kelasFilter = document.getElementById('filter-kelas-rekap').value;
+            const tbody = document.getElementById('rekap-tbody');
+            const infoPengajar = document.getElementById('info-pengajar-rekap');
+            tbody.innerHTML = '';
+            
+            if (kelasFilter !== "Semua") {
+                const pengajar = pengajarMap[kelasFilter] || "Belum diatur";
+                infoPengajar.innerHTML = `<i class="fa-solid fa-chalkboard-user mr-1"></i> Difilter untuk: ${pengajar}`;
+                infoPengajar.classList.remove('hidden');
+            } else {
+                infoPengajar.classList.add('hidden');
+            }
+            
+            dataStore.filter(s => {
+                if(currentUserRole === 'ustadz' && !currentUserClasses.includes(s.kelas)) return false;
+                return kelasFilter === "Semua" || s.kelas === kelasFilter;
+            }).forEach(s => {
+                let adaData = (s.riwayat || []).find(r => r.timestamp.startsWith(tglFilter));
+                if(adaData) {
+                    const namaWaliKelas = pengajarMap[s.kelas] || '-';
+                    tbody.innerHTML += `
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="p-3 font-bold text-gray-800">${s.nama}</td>
+                            <td class="p-3">
+                                <div class="font-medium text-gray-800">${s.kelas || '-'}</div>
+                                <div class="text-xs text-indigo-600 font-bold mt-0.5"><i class="fa-solid fa-user-tie mr-1"></i> ${namaWaliKelas}</div>
+                            </td>
+                            <td class="p-3">${getStatusBadge(adaData.kehadiran)}</td>
+                            <td class="p-3">${adaData.surah} <span class="text-gray-500 text-xs">(Ayat ${adaData.ayat})</span></td>
+                            <td class="p-3">${adaData.jilid} <span class="text-gray-500 text-xs">(Hal ${adaData.halaman})</span></td>
+                            <td class="p-3">${getKetBadge(adaData.keterangan)}</td>
+                        </tr>
+                    `;
+                }
+            });
+            if(tbody.innerHTML === '') {
+                 tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-gray-400">Tidak ada data di tanggal/kelas ini</td></tr>';
+            }
+        }
+
+        window.showToast = () => {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => toast.classList.add('opacity-0', 'pointer-events-none'), 3000);
+        };
+
+        window.exportRapor = (id) => {
+            if(!window.jspdf) return;
+            const s = dataStore.find(x => x.id === id);
+            if(currentUserRole === 'ustadz' && !currentUserClasses.includes(s.kelas)) return;
+
+            const doc = new window.jspdf.jsPDF();
+            doc.setFontSize(18); doc.text(`Rapor Ngaji: ${s.nama}`, 14, 22);
+            doc.setFontSize(11); doc.text(`Kelas: ${s.kelas || '-'}`, 14, 30);
+            
+            const tableData = (s.riwayat || []).map(r => {
+                const dt = new Date(r.timestamp);
+                return [`${dt.getDate()}/${dt.getMonth()+1}/${dt.getFullYear()}`, r.kehadiran, r.jilid + ' - ' + r.halaman, r.surah + ' (' + r.ayat + ')', r.keterangan || '-'];
+            });
+
+            doc.autoTable({ startY: 40, head: [['Tanggal', 'Kehadiran', 'Jilid/Hal', 'Hafalan (Ayat)', 'Keterangan']], body: tableData, theme: 'grid', headStyles: { fillColor: [79, 70, 229] } });
+            doc.save(`Rapor_${s.nama.replace(/\s+/g, '_')}.pdf`);
+        };
+
+        window.exportKelas = (kelas) => {
+            if(!window.jspdf) return;
+            const doc = new window.jspdf.jsPDF();
+            doc.setFontSize(16); doc.text(`Daftar Santri: ${kelas}`, 14, 22);
+            const tableData = dataStore.filter(x => x.kelas === kelas).map((m, i) => [i+1, m.nama, m.kehadiran, m.jilid, m.surah]);
+            doc.autoTable({ startY: 30, head: [['No', 'Nama Santri', 'Status Terakhir', 'Jilid', 'Hafalan']], body: tableData, theme: 'striped', headStyles: { fillColor: [79, 70, 229] } });
+            doc.save(`Kelas_${kelas.replace(/\s+/g, '_')}.pdf`);
+        };
+
+        window.exportGlobalPDF = () => {
+            if(!window.jspdf) return;
+            const doc = new window.jspdf.jsPDF();
+            const tgl = document.getElementById('filter-tanggal').value;
+            const kelasFilter = document.getElementById('filter-kelas-rekap').value;
+            
+            doc.setFontSize(16); doc.text(`Rekapitulasi Harian: ${tgl}`, 14, 22); doc.setFontSize(11);
+            let startY = 30;
+            if (kelasFilter !== "Semua") {
+                const pengajar = pengajarMap[kelasFilter] || "Belum diatur";
+                doc.text(`Kelas: ${kelasFilter}`, 14, 30); doc.text(`Pengajar: ${pengajar}`, 14, 36); startY = 42;
+            } else {
+                doc.text(`Filter: Semua Kelas`, 14, 30); startY = 36;
+            }
+            
+            let tableData = [];
+            dataStore.filter(s => {
+                if(currentUserRole === 'ustadz' && !currentUserClasses.includes(s.kelas)) return false;
+                return kelasFilter === "Semua" || s.kelas === kelasFilter;
+            }).forEach(s => {
+                let r = (s.riwayat || []).find(x => x.timestamp.startsWith(tgl));
+                let namaWaliKelas = pengajarMap[s.kelas] || '-';
+                let kolomKelasGabungan = `${s.kelas || '-'}\n(${namaWaliKelas})`;
+                if(r) tableData.push([s.nama, kolomKelasGabungan, r.kehadiran, r.jilid, r.surah, r.keterangan || '-']);
+            });
+
+            doc.autoTable({ startY: startY, head: [['Nama', 'Kelas / Ustadz', 'Kehadiran', 'Jilid', 'Hafalan', 'Ket']], body: tableData, theme: 'grid', headStyles: { fillColor: [220, 38, 38] }, styles: { cellPadding: 3, fontSize: 9 } });
+            doc.save(`Rekap_${tgl}_${kelasFilter.replace(/\s+/g, '')}.pdf`);
+        };
+
+        window.doLogout = () => {
+            signOut(auth);
+        };
+
+        document.getElementById('btn-logout').addEventListener('click', doLogout);
+        document.getElementById('btn-logout-mobile').addEventListener('click', doLogout);
+
+        document.getElementById('auth-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const em = document.getElementById('login-email').value;
+            const pw = document.getElementById('login-password').value;
+            const errEl = document.getElementById('login-error');
+            errEl.classList.add('hidden');
+            
+            try {
+                if (authMode === 'register') {
+                    const nm = document.getElementById('reg-nama').value;
+                    const klInput = document.getElementById('reg-kelas').value;
+                    const kelasArr = klInput.split(',').map(k => k.trim()).filter(k => k.length > 0);
+                    
+                    const userCredential = await createUserWithEmailAndPassword(auth, em, pw);
+                    await setDoc(doc(db, "users", userCredential.user.uid), {
+                        email: em.toLowerCase(),
+                        nama: nm,
+                        kelas: kelasArr,
+                        role: 'ustadz'
+                    });
+                } else {
+                    await signInWithEmailAndPassword(auth, em, pw);
+                }
+            } catch(error) {
+                errEl.innerText = "Error: " + error.message;
+                errEl.classList.remove('hidden');
+            }
+        });
+
+        // STATE LISTENER FIREBASE
+        onAuthStateChanged(auth, async (user) => {
+            if(user) {
+                document.getElementById('view-login').style.display = 'none';
+                const em = user.email.toLowerCase();
+                
+                if(em.includes('admin')) {
+                    currentUserRole = 'admin';
+                    currentUserClasses = ['Semua'];
+                } else {
+                    try {
+                        const userDoc = await getDoc(doc(db, "users", user.uid));
+                        if(userDoc.exists()) {
+                            const dt = userDoc.data();
+                            currentUserRole = dt.role || 'ustadz';
+                            currentUserClasses = dt.kelas || ['Belum Ada Kelas'];
+                        } else {
+                            currentUserRole = 'ustadz';
+                            currentUserClasses = ['Belum Ada Kelas'];
+                        }
+                    } catch(err) { console.log("Gagal tarik user profile", err); }
+                }
+                
+                onSnapshot(collection(db, "users"), (snap) => {
+                    snap.forEach((d) => {
+                        const data = d.data();
+                        if(data.kelas && data.nama) {
+                            if(Array.isArray(data.kelas)) {
+                                data.kelas.forEach(k => { pengajarMap[k] = data.nama; });
+                            } else {
+                                pengajarMap[data.kelas] = data.nama;
+                            }
+                        }
+                    });
+                    renderAll();
+                });
+
+                onSnapshot(collection(db, "santri"), (snapshot) => {
+                    dataStore = [];
+                    snapshot.forEach((doc) => {
+                        dataStore.push(doc.data());
+                    });
+                    renderAll();
+                });
+            } else {
+                document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+                document.getElementById('view-login').style.display = 'block';
+                document.getElementById('main-nav').classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

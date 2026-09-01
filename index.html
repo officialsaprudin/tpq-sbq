@@ -313,7 +313,7 @@
 
     <!-- Firebase SDK (Modular v9) -->
     <script type="module">
-        // 🔴 ATUR KE FALSE UNTUK MODE PRODUKSI (TERHUBUNG KE FIREBASE) 🔴
+        // 🔴 MODE PRODUKSI (TERHUBUNG KE FIREBASE) 🔴
         const is_preview = false; 
 
         // 🟢 PASTE KODE FIREBASE CONFIG ANDA DI BAWAH INI 🟢
@@ -803,7 +803,7 @@
                         email: em.toLowerCase(),
                         nama: nm,
                         kelas: kelasArr,
-                        role: 'ustadz'
+                        role: em.toLowerCase().includes('admin') ? 'admin' : 'ustadz'
                     });
                 } else {
                     await signInWithEmailAndPassword(auth, em, pw);

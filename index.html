@@ -77,7 +77,7 @@
 
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
-                        <input type="email" id="login-email" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="email@domain.com" required>
+                        <input type="email" id="login-email" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="saprudin@ngaji.com" required>
                     </div>
 
                     <div class="mb-6">
@@ -119,9 +119,7 @@
             </div>
 
             <h3 class="text-lg font-bold mb-4 text-gray-700">Kartu Progres Santri (Bintang Mingguan)</h3>
-            <div id="dashboard-cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Cards render here -->
-            </div>
+            <div id="dashboard-cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </div>
 
         <!-- View: Data Santri -->
@@ -152,9 +150,7 @@
                                 <th class="p-4 border-b text-center">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody id="santri-tbody" class="text-sm">
-                            <!-- Table rows render here -->
-                        </tbody>
+                        <tbody id="santri-tbody" class="text-sm"></tbody>
                     </table>
                 </div>
             </div>
@@ -163,9 +159,7 @@
         <!-- View: Kelas -->
         <div id="view-kelas" class="view-section">
             <h2 class="text-2xl font-bold mb-6 text-gray-800">Daftar Kelas / Rombel</h2>
-            <div id="kelas-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Kelas render here -->
-            </div>
+            <div id="kelas-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </div>
 
         <!-- View: Rekap -->
@@ -199,9 +193,7 @@
                                 <th class="p-3">Ket</th>
                             </tr>
                         </thead>
-                        <tbody id="rekap-tbody">
-                            <!-- Rekap renders here -->
-                        </tbody>
+                        <tbody id="rekap-tbody"></tbody>
                     </table>
                 </div>
             </div>
@@ -226,9 +218,7 @@
                 
                 <div class="mb-4">
                     <label class="block text-sm font-bold text-gray-700 mb-1">Kelas / Rombel</label>
-                    <select id="form-kelas" class="w-full px-3 py-2 border rounded-lg bg-white focus:ring-2 focus:ring-indigo-500" required>
-                        <!-- Pilihan kelas menyesuaikan jatah ustadz -->
-                    </select>
+                    <select id="form-kelas" class="w-full px-3 py-2 border rounded-lg bg-white focus:ring-2 focus:ring-indigo-500" required></select>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 mb-4">
@@ -313,10 +303,8 @@
 
     <!-- Firebase SDK (Modular v9) -->
     <script type="module">
-        // 🔴 MODE PRODUKSI (TERHUBUNG KE FIREBASE) 🔴
-        const is_preview = false; 
+        const is_preview = false; // Set ke false untuk produksi
 
-        // 🟢 PASTE KODE FIREBASE CONFIG ANDA DI BAWAH INI 🟢
         const firebaseConfig = {
   apiKey: "AIzaSyCfapSUazt_uCVVI5uttatd2iGR7DyLk54",
   authDomain: "project-311a138f-ccc5-491b-b79.firebaseapp.com",
@@ -453,6 +441,7 @@
             const btnTambah = document.getElementById('btn-tambah-santri');
             if(btnTambah) btnTambah.style.display = currentUserRole === 'admin' ? 'none' : 'block';
 
+            // 1. Dashboard
             let had = 0, iz = 0, alp = 0;
             const dashCards = document.getElementById('dashboard-cards');
             dashCards.innerHTML = '';
@@ -486,6 +475,7 @@
             document.getElementById('dash-izin').innerText = iz;
             document.getElementById('dash-alpa').innerText = alp;
 
+            // 2. Data Santri Table
             const tbody = document.getElementById('santri-tbody');
             const selectedClass = document.getElementById('filter-kelas-tabel').value;
             tbody.innerHTML = '';
@@ -527,6 +517,7 @@
                 `;
             });
 
+            // 3. Menu Kelas
             const kelasCont = document.getElementById('kelas-container');
             kelasCont.innerHTML = '';
             Array.from(classesSet).sort()
@@ -550,6 +541,9 @@
 
         document.getElementById('filter-kelas-tabel').addEventListener('change', renderAll);
         
+        // ==========================================
+        // 5. MODAL & CRUD
+        // ==========================================
         window.openModal = (mode) => {
             if(currentUserRole === 'admin') return;
             document.getElementById('santri-form').reset();
@@ -558,6 +552,7 @@
             
             const selectKelas = document.getElementById('form-kelas');
             selectKelas.innerHTML = '';
+            
             currentUserClasses.forEach(cls => {
                 selectKelas.innerHTML += `<option value="${cls}">${cls}</option>`;
             });
@@ -603,6 +598,7 @@
             if(currentUserRole === 'admin') return;
             
             let finalKelas = document.getElementById('form-kelas').value;
+
             const id = document.getElementById('form-id').value || Date.now().toString();
             const newData = {
                 id: id,
@@ -721,6 +717,9 @@
             setTimeout(() => toast.classList.add('opacity-0', 'pointer-events-none'), 3000);
         };
 
+        // ==========================================
+        // 6. PDF EXPORT
+        // ==========================================
         window.exportRapor = (id) => {
             if(!window.jspdf) return;
             const s = dataStore.find(x => x.id === id);
@@ -778,8 +777,26 @@
             doc.save(`Rekap_${tgl}_${kelasFilter.replace(/\s+/g, '')}.pdf`);
         };
 
+        // ==========================================
+        // 7. INITIALIZATION & REGISTRATION LOGIC
+        // ==========================================
+        function initApp() {
+            renderAll();
+            const lastView = localStorage.getItem('activeView') || 'dashboard';
+            switchView(lastView);
+        }
+
         window.doLogout = () => {
-            signOut(auth);
+            signOut(auth).then(() => {
+                document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+                const loginView = document.getElementById('view-login');
+                loginView.style.display = ''; 
+                loginView.classList.add('active');
+                document.getElementById('main-nav').classList.add('hidden');
+                localStorage.removeItem('activeView');
+                document.getElementById('auth-form').reset();
+                document.getElementById('mobile-menu').classList.add('hidden');
+            });
         };
 
         document.getElementById('btn-logout').addEventListener('click', doLogout);
@@ -803,7 +820,7 @@
                         email: em.toLowerCase(),
                         nama: nm,
                         kelas: kelasArr,
-                        role: em.toLowerCase().includes('admin') ? 'admin' : 'ustadz'
+                        role: 'ustadz'
                     });
                 } else {
                     await signInWithEmailAndPassword(auth, em, pw);
@@ -814,7 +831,7 @@
             }
         });
 
-        // STATE LISTENER FIREBASE
+        // STATE LISTENER FIREBASE UTAMA (ANTI LAYAR PUTIH)
         onAuthStateChanged(auth, async (user) => {
             if(user) {
                 document.getElementById('view-login').style.display = 'none';
@@ -825,30 +842,36 @@
                     currentUserClasses = ['Semua'];
                 } else {
                     try {
-                        const userDoc = await getDoc(doc(db, "users", user.uid));
+                        const userDocRef = doc(db, "users", user.uid);
+                        let userDoc = await getDoc(userDocRef);
+                        
                         if(userDoc.exists()) {
                             const dt = userDoc.data();
                             currentUserRole = dt.role || 'ustadz';
-                            currentUserClasses = dt.kelas || ['Belum Ada Kelas'];
+                            let kl = dt.kelas || ['Kelas Umum'];
+                            currentUserClasses = Array.isArray(kl) ? kl : [kl];
                         } else {
-                            // AUTO-HEAL: Jika user sudah login tapi datanya belum ada di collection 'users'
-                            currentUserRole = 'ustadz';
-                            currentUserClasses = ['Kelas Abu Bakar'];
-                            await setDoc(doc(db, "users", user.uid), {
+                            // Auto-heal jika dokumen belum ada di database
+                            const defaultData = {
                                 email: em,
-                                nama: "Ustadz / Ustadzah",
-                                kelas: ['Kelas Abu Bakar'],
+                                nama: user.email.split('@')[0],
+                                kelas: ['Kelas Umum'],
                                 role: 'ustadz'
-                            });
+                            };
+                            await setDoc(userDocRef, defaultData);
+                            currentUserRole = 'ustadz';
+                            currentUserClasses = ['Kelas Umum'];
                         }
-                    } catch(err) { 
-                        console.log("Gagal tarik user profile", err);
+                    } catch(err) {
+                        console.error("Gagal menarik profil user:", err);
                         currentUserRole = 'ustadz';
-                        currentUserClasses = ['Kelas Abu Bakar'];
+                        currentUserClasses = ['Kelas Umum'];
                     }
                 }
                 
+                // Tarik mapping pengajar secara real-time
                 onSnapshot(collection(db, "users"), (snap) => {
+                    pengajarMap = {};
                     snap.forEach((d) => {
                         const data = d.data();
                         if(data.kelas && data.nama) {
@@ -862,16 +885,21 @@
                     renderAll();
                 });
 
+                // Tarik data santri secara real-time
                 onSnapshot(collection(db, "santri"), (snapshot) => {
                     dataStore = [];
-                    snapshot.forEach((doc) => {
-                        dataStore.push(doc.data());
+                    snapshot.forEach((docSnap) => {
+                        dataStore.push({ id: docSnap.id, ...docSnap.data() });
                     });
-                    renderAll();
+                    initApp();
+                }, (error) => {
+                    console.error("Gagal mendengarkan data santri:", error);
                 });
             } else {
                 document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-                document.getElementById('view-login').style.display = 'block';
+                const loginView = document.getElementById('view-login');
+                loginView.style.display = 'block';
+                loginView.classList.add('active');
                 document.getElementById('main-nav').classList.add('hidden');
             }
         });

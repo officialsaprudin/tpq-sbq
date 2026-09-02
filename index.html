@@ -18,7 +18,6 @@
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans flex flex-col min-h-screen">
 
-    <!-- Top Navbar -->
     <nav id="main-nav" class="bg-indigo-700 text-white shadow-md w-full z-50 hidden">
         <div class="max-w-7xl mx-auto px-4">
             <div class="flex justify-between h-16">
@@ -53,16 +52,14 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
     <main id="app-content" class="flex-grow p-4 md:p-8 max-w-7xl mx-auto w-full">
         
         <!-- View: Login / Register -->
         <div id="view-login" class="view-section active">
             <div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg mt-10 border-t-4 border-indigo-500">
-                <h2 id="auth-title" class="text-2xl font-bold mb-6 text-center text-gray-800">Masuk ke Akun (Mode Preview)</h2>
+                <h2 id="auth-title" class="text-2xl font-bold mb-6 text-center text-gray-800">Masuk ke Akun</h2>
                 
                 <form id="auth-form">
-                    <!-- Field Tambahan Untuk Register -->
                     <div id="signup-fields" class="hidden mb-4 space-y-4">
                         <div>
                             <label class="block text-gray-700 text-sm font-bold mb-2">Nama Lengkap (Gelar)</label>
@@ -84,7 +81,7 @@
                             <p class="text-xs text-gray-600 font-bold border-b border-gray-300 pb-1 mb-2">Daftar Akun Demo:</p>
                             <ul class="text-xs text-gray-600 space-y-2 list-none">
                                 <li>👑 <span class="text-indigo-600 font-bold cursor-pointer hover:underline" onclick="document.getElementById('login-email').value='admin@ngaji.com'">admin@ngaji.com</span> <br><span class="text-[10px] text-gray-400 ml-5">(Akses Semua Kelas)</span></li>
-                                <li>👨‍🏫 <span class="text-green-600 font-bold cursor-pointer hover:underline" onclick="document.getElementById('login-email').value='saprudin@ngaji.com'">saprudin@ngaji.com</span> <br><span class="text-[10px] text-gray-400 ml-5">(Multi: Abu Bakar, Umar)</span></li>
+                                <li>👨‍🏫 <span class="text-green-600 font-bold cursor-pointer hover:underline" onclick="document.getElementById('login-email').value='saprudin@ngaji.com'">saprudin@ngaji.com</span> <br><span class="text-[10px] text-gray-400 ml-5">(Wali Kelas Abu Bakar, Umar)</span></li>
                             </ul>
                         </div>
                     </div>
@@ -104,7 +101,6 @@
             </div>
         </div>
 
-        <!-- View: Dashboard -->
         <div id="view-dashboard" class="view-section">
             <h2 class="text-2xl font-bold mb-6 text-gray-800">Ringkasan Hari Ini</h2>
             
@@ -131,7 +127,6 @@
             <div id="dashboard-cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </div>
 
-        <!-- View: Data Santri -->
         <div id="view-data-santri" class="view-section">
             <div class="flex flex-col md:flex-row justify-between items-center mb-6 space-y-3 md:space-y-0">
                 <h2 class="text-2xl font-bold text-gray-800">Manajemen Data Santri</h2>
@@ -165,13 +160,11 @@
             </div>
         </div>
 
-        <!-- View: Kelas -->
         <div id="view-kelas" class="view-section">
             <h2 class="text-2xl font-bold mb-6 text-gray-800">Daftar Kelas / Rombel</h2>
             <div id="kelas-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </div>
 
-        <!-- View: Rekap -->
         <div id="view-rekap" class="view-section">
             <div class="flex flex-col md:flex-row justify-between items-center mb-6 space-y-3 md:space-y-0">
                 <div>
@@ -199,7 +192,7 @@
                                 <th class="p-3">Status</th>
                                 <th class="p-3">Hafalan</th>
                                 <th class="p-3">Jilid</th>
-                                <th class="p-3">Nilai (Haf/Jld)</th>
+                                <th class="p-3">Nilai</th>
                             </tr>
                         </thead>
                         <tbody id="rekap-tbody"></tbody>
@@ -207,10 +200,8 @@
                 </div>
             </div>
         </div>
-
     </main>
 
-    <!-- Modal Form (Tambah/Edit) -->
     <div id="modal-form" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden">
             <div class="bg-indigo-600 px-6 py-4 flex justify-between items-center text-white">
@@ -242,26 +233,25 @@
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Posisi Jilid</label>
-                        <input type="text" id="form-jilid" class="w-full px-3 py-2 border rounded-lg" placeholder="Cth: 5">
+                        <input type="text" id="form-jilid" class="w-full px-3 py-2 border rounded-lg" placeholder="Cth: Jilid 4">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Halaman (Ngaji)</label>
-                        <input type="text" id="form-halaman" class="w-full px-3 py-2 border rounded-lg" placeholder="Cth: 13">
+                        <input type="text" id="form-halaman" class="w-full px-3 py-2 border rounded-lg" placeholder="Cth: 15">
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Surah Hafalan</label>
-                        <input type="text" id="form-surah" class="w-full px-3 py-2 border rounded-lg" placeholder="Cth: Asy-Syam">
+                        <input type="text" id="form-surah" class="w-full px-3 py-2 border rounded-lg" placeholder="Cth: An-Naba">
                     </div>
                 </div>
 
-                <!-- Pisah Penilaian: Hafalan dan Jilid -->
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Ayat Hafalan Terakhir</label>
-                        <input type="text" id="form-ayat" class="w-full px-3 py-2 border rounded-lg" placeholder="Cth: 1-15">
+                        <input type="text" id="form-ayat" class="w-full px-3 py-2 border rounded-lg" placeholder="Cth: 30">
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Nilai Hafalan</label>
@@ -294,7 +284,6 @@
         </div>
     </div>
 
-    <!-- Modal Riwayat -->
     <div id="modal-history" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[80vh] flex flex-col">
             <div class="bg-indigo-600 px-6 py-4 flex justify-between items-center text-white rounded-t-xl">
@@ -309,7 +298,7 @@
                             <th class="p-2 border-b">Kehadiran</th>
                             <th class="p-2 border-b">Hafalan</th>
                             <th class="p-2 border-b">Jilid</th>
-                            <th class="p-2 border-b">Nilai (Haf/Jld)</th>
+                            <th class="p-2 border-b">Nilai</th>
                         </tr>
                     </thead>
                     <tbody id="hist-tbody"></tbody>
@@ -318,16 +307,13 @@
         </div>
     </div>
 
-    <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-5 right-5 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg font-bold transition-opacity duration-300 opacity-0 pointer-events-none z-50">
         Berhasil disimpan!
     </div>
 
-    <!-- Firebase SDK (Modular v9) -->
     <script type="module">
-        const is_preview = false; // Pastikan ini false untuk produksi
+        const is_preview = false; // Mode Preview Aktif agar bisa dilihat di editor
 
-        // TIMPA / GANTI BLOK DI BAWAH INI DENGAN KODE DARI FIREBASE:
         const firebaseConfig = {
   apiKey: "AIzaSyCfapSUazt_uCVVI5uttatd2iGR7DyLk54",
   authDomain: "project-311a138f-ccc5-491b-b79.firebaseapp.com",
@@ -357,24 +343,29 @@
         let pengajarMap = {
             "Kelas Abu Bakar": "Ust. Saprudin S.Ag",
             "Kelas Umar": "Ust. Saprudin S.Ag",
-            "Kelas Utsman": "Ustazah Aminah"
+            "Kelas Utsman": "Ustazah Siti"
         };
         let emailMap = {
             "saprudin@ngaji.com": ["Kelas Abu Bakar", "Kelas Umar"],
-            "aminah@ngaji.com": ["Kelas Utsman"]
+            "siti@ngaji.com": ["Kelas Utsman"]
         };
-        
-        // Mock data untuk mode Preview
+
         if (is_preview) {
+            // Simulasi data untuk memperlihatkan kondisi bintang hangus
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+
             dataStore = [
-                { id: "1", nama: "Ahmad Yasin", kelas: "Kelas Abu Bakar", kehadiran: "Hadir", jilid: "4", halaman: "15", surah: "An-Naba", ayat: "30", nilaiHafalan: "Lancar", nilaiJilid: "Kurang Lancar", riwayat: [{timestamp: new Date().toISOString(), kehadiran: "Hadir", jilid: "4", halaman: "15", surah: "An-Naba", ayat: "30", nilaiHafalan: "Lancar", nilaiJilid: "Kurang Lancar"}] },
-                { id: "2", nama: "Fatimah Azzahra", kelas: "Kelas Umar", kehadiran: "Hadir", jilid: "Al-Quran", halaman: "102", surah: "Al-Mulk", ayat: "12", nilaiHafalan: "Lancar", nilaiJilid: "Lancar", riwayat: [{timestamp: new Date().toISOString(), kehadiran: "Hadir", jilid: "Al-Quran", halaman: "102", surah: "Al-Mulk", ayat: "12", nilaiHafalan: "Lancar", nilaiJilid: "Lancar"}] }
+                { id: "1", nama: "Ahmad Yasin", kelas: "Kelas Abu Bakar", kehadiran: "Hadir", jilid: "Jilid 4", halaman: "15", surah: "An-Naba", ayat: "30", nilaiHafalan: "Lancar", nilaiJilid: "Lancar", riwayat: [{timestamp: today.toISOString(), kehadiran: "Hadir", jilid: "Jilid 4", halaman: "15", surah: "An-Naba", ayat: "30", nilaiHafalan: "Lancar", nilaiJilid: "Lancar"}] },
+                // Santri ini akan hangus bintangnya karena kemarin Alpa
+                { id: "2", nama: "Fatimah Azzahra", kelas: "Kelas Umar", kehadiran: "Hadir", jilid: "Al-Quran", halaman: "102", surah: "Al-Mulk", ayat: "12", nilaiHafalan: "Kurang Lancar", nilaiJilid: "Mengulang", riwayat: [{timestamp: today.toISOString(), kehadiran: "Hadir", jilid: "Al-Quran", halaman: "102", surah: "Al-Mulk", ayat: "12", nilaiHafalan: "Kurang Lancar", nilaiJilid: "Mengulang"}, {timestamp: yesterday.toISOString(), kehadiran: "Alpa", jilid: "-", halaman: "-", surah: "-", ayat: "-", nilaiHafalan: "-", nilaiJilid: "-"}] },
             ];
             
-            // Auto simulasi preview sbg Ust Saprudin (Multi-Kelas)
+            // Auto simulasi masuk ke dashboard (bypass login form for preview)
             setTimeout(() => {
-                currentUserRole = 'ustadz';
-                currentUserClasses = ['Kelas Abu Bakar', 'Kelas Umar']; 
+                currentUserRole = 'admin';
+                currentUserClasses = ['Semua'];
                 document.getElementById('view-login').style.display = 'none';
                 document.getElementById('main-nav').classList.remove('hidden');
                 initApp();
@@ -431,18 +422,32 @@
 
         function getStars(riwayat) {
             if(!riwayat || riwayat.length === 0) return '<span class="text-xs text-gray-400 italic">Belum ada bintang</span>';
+            
             let curr = new Date();
             let first = curr.getDate() - curr.getDay() + (curr.getDay() === 0 ? -6 : 1); 
             let monday = new Date(curr.setDate(first));
             monday.setHours(0,0,0,0);
             
             let stars = 0;
+            let hasAbsence = false; // Flag sakti pendeteksi bolos
+            
             riwayat.forEach(r => {
                 let rDate = new Date(r.timestamp);
-                if(rDate >= monday && rDate.getDay() >= 1 && rDate.getDay() <= 5 && r.kehadiran === 'Hadir') stars++;
+                // Cek data di minggu ini (Senin - Jumat)
+                if(rDate >= monday && rDate.getDay() >= 1 && rDate.getDay() <= 5) {
+                    if (r.kehadiran === 'Hadir') {
+                        stars++;
+                    } else {
+                        hasAbsence = true; // Ketahuan bolos!
+                    }
+                }
             });
+            
+            // HUKUMAN: Jika ada absen 1x aja di hari kerja minggu ini, bintang langsung hangus!
+            if(hasAbsence) return '<span class="text-[10px] bg-red-100 text-red-600 px-2 py-0.5 rounded font-bold italic shadow-sm"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Hangus (Ada Absen)</span>';
+            
             stars = Math.min(stars, 5);
-            return stars > 0 ? '<span class="text-yellow-400 text-sm">' + '⭐'.repeat(stars) + '</span>' : '<span class="text-xs text-gray-400 italic">Belum ada bintang</span>';
+            return stars > 0 ? '<span class="text-yellow-400 text-sm drop-shadow-md">' + '⭐'.repeat(stars) + '</span>' : '<span class="text-xs text-gray-400 italic">Belum ada bintang</span>';
         }
 
         function getStatusBadge(status) {
@@ -502,7 +507,7 @@
                 else if(s.kehadiran === 'Alpa') alp++;
 
                 dashCards.innerHTML += `
-                    <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 ${s.kehadiran === 'Hadir' ? 'border-green-500' : (s.kehadiran === 'Alpa' ? 'border-red-500' : 'border-yellow-500')}">
+                    <div class="bg-white p-4 rounded-xl shadow border-l-4 ${s.kehadiran === 'Hadir' ? 'border-green-500' : (s.kehadiran === 'Alpa' ? 'border-red-500' : 'border-yellow-500')}">
                         <div class="flex justify-between items-start mb-2">
                             <div>
                                 <h4 class="font-bold text-gray-800">${s.nama}</h4>
@@ -510,9 +515,12 @@
                             </div>
                             ${getStatusBadge(s.kehadiran)}
                         </div>
-                        <div class="mb-2">Bintang Sen-Jum: ${getStars(s.riwayat)}</div>
+                        <div class="mb-2 bg-gray-50 p-2 rounded border border-gray-100">
+                            <span class="text-xs text-gray-500 font-bold block mb-1">Bintang Sen-Jum:</span>
+                            ${getStars(s.riwayat)}
+                        </div>
                         <div class="text-sm text-gray-600 space-y-1">
-                            <p><i class="fa-solid fa-book-open text-indigo-400 mr-2"></i>Jld ${s.jilid} - Hal ${s.halaman}</p>
+                            <p><i class="fa-solid fa-book-open text-indigo-400 mr-2"></i>${s.jilid} - Hal ${s.halaman}</p>
                             <p><i class="fa-solid fa-headphones text-indigo-400 mr-2"></i>${s.surah} (Ayat ${s.ayat})</p>
                         </div>
                     </div>
@@ -535,13 +543,13 @@
                 return selectedClass === "Semua" || s.kelas === selectedClass;
             }).forEach(s => {
                 let actionButtons = `
-                    <button onclick="showHistory('${s.id}')" class="text-green-500 hover:text-green-700" title="Riwayat"><i class="fa-solid fa-clock-rotate-left"></i></button>
-                    <button onclick="exportRapor('${s.id}')" class="text-red-500 hover:text-red-700" title="Cetak Rapor"><i class="fa-solid fa-file-pdf"></i></button>
+                    <button onclick="showHistory('${s.id}')" class="text-green-500 hover:text-green-700 bg-green-50 p-1.5 rounded" title="Riwayat"><i class="fa-solid fa-clock-rotate-left"></i></button>
+                    <button onclick="exportRapor('${s.id}')" class="text-red-500 hover:text-red-700 bg-red-50 p-1.5 rounded" title="Cetak Rapor"><i class="fa-solid fa-file-pdf"></i></button>
                 `;
                 if(currentUserRole !== 'admin') {
                     actionButtons += `
-                        <button onclick="editSantri('${s.id}')" class="text-blue-500 hover:text-blue-700" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button onclick="deleteSantri('${s.id}')" class="text-red-300 hover:text-red-600" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="editSantri('${s.id}')" class="text-blue-500 hover:text-blue-700 bg-blue-50 p-1.5 rounded" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button onclick="deleteSantri('${s.id}')" class="text-red-300 hover:text-red-600 bg-red-50 p-1.5 rounded" title="Hapus"><i class="fa-solid fa-trash"></i></button>
                     `;
                 }
 
@@ -559,13 +567,13 @@
                         </td>
                         <td class="p-4">${getStatusBadge(s.kehadiran)}</td>
                         <td class="p-4">${s.surah} <br><span class="text-gray-500 text-[11px]">(Ayat ${s.ayat})</span></td>
-                        <td class="p-4">Jld ${s.jilid} <br><span class="text-gray-500 text-[11px]">(Hal ${s.halaman})</span></td>
+                        <td class="p-4">${s.jilid} <br><span class="text-gray-500 text-[11px]">(Hal ${s.halaman})</span></td>
                         <td class="p-4">
                             <div class="mb-1 flex items-center space-x-1"><span class="text-[10px] text-gray-400 w-6">Haf:</span> ${badgeHafalan}</div>
                             <div class="flex items-center space-x-1"><span class="text-[10px] text-gray-400 w-6">Jld:</span> ${badgeJilid}</div>
                         </td>
                         <td class="p-4 text-center">
-                            <div class="flex justify-center space-x-3 text-lg">
+                            <div class="flex justify-center space-x-2 text-lg">
                                 ${actionButtons}
                             </div>
                         </td>
@@ -581,14 +589,14 @@
                 .forEach(cls => {
                 const murid = dataStore.filter(s => s.kelas === cls);
                 kelasCont.innerHTML += `
-                    <div class="bg-white rounded-xl shadow p-5">
+                    <div class="bg-white rounded-xl shadow p-5 border-t-4 border-indigo-300">
                         <div class="flex justify-between items-center mb-4 border-b pb-2">
                             <h3 class="font-bold text-lg text-indigo-700">${cls}</h3>
                             <button onclick="exportKelas('${cls}')" class="bg-red-100 text-red-600 px-2 py-1 rounded text-xs font-bold hover:bg-red-200"><i class="fa-solid fa-file-pdf mr-1"></i> Cetak</button>
                         </div>
                         <p class="text-sm text-gray-500 mb-3"><i class="fa-solid fa-users mr-2"></i>Total: ${murid.length} Santri</p>
                         <ul class="text-sm space-y-2">
-                            ${murid.map(m => `<li class="flex justify-between"><span>${m.nama}</span> ${getStatusBadge(m.kehadiran)}</li>`).join('')}
+                            ${murid.map(m => `<li class="flex justify-between items-center bg-gray-50 p-2 rounded"><span>${m.nama}</span> ${getStatusBadge(m.kehadiran)}</li>`).join('')}
                         </ul>
                     </div>
                 `;
@@ -597,9 +605,6 @@
 
         document.getElementById('filter-kelas-tabel').addEventListener('change', renderAll);
         
-        // ==========================================
-        // 5. MODAL & CRUD
-        // ==========================================
         window.openModal = (mode) => {
             if(currentUserRole === 'admin') return;
             document.getElementById('santri-form').reset();
@@ -674,25 +679,18 @@
             };
 
             if(is_preview) {
-                // LOGIKA ANTI-NUMPUK UNTUK PREVIEW LOKAL
                 let existing = dataStore.find(x => x.id === id);
                 if(existing) {
                     if(!existing.riwayat) existing.riwayat = [];
-                    
-                    // Cek apakah ada di tanggal yang sama
+                    // ANTI-NUMPUK (PREVIEW MODE)
                     let existingIndex = existing.riwayat.findIndex(r => {
                         const d1 = new Date(r.timestamp);
-                        const d2 = new Date(); // Hari ini
-                        return d1.getFullYear() === d2.getFullYear() && 
-                               d1.getMonth() === d2.getMonth() && 
-                               d1.getDate() === d2.getDate();
+                        const d2 = new Date();
+                        return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
                     });
-
                     if(existingIndex !== -1) {
-                        // Timpa data riwayat hari ini
                         existing.riwayat[existingIndex] = { ...existing.riwayat[existingIndex], ...newData };
                     } else {
-                        // Hari beda, taruh atas
                         existing.riwayat.unshift({...newData});
                     }
                     Object.assign(existing, newData);
@@ -709,13 +707,11 @@
                     const oldDoc = dataStore.find(x => x.id === id);
                     let riwayatBaru = oldDoc && oldDoc.riwayat ? oldDoc.riwayat : [];
                     
-                    // CEK APAKAH ADA RECORD DI HARI YANG SAMA (Waktu Lokal)
+                    // ANTI-NUMPUK (PRODUCTION MODE)
                     let existingIndex = riwayatBaru.findIndex(r => {
                         const d1 = new Date(r.timestamp);
                         const d2 = new Date();
-                        return d1.getFullYear() === d2.getFullYear() && 
-                               d1.getMonth() === d2.getMonth() && 
-                               d1.getDate() === d2.getDate();
+                        return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
                     });
 
                     if(existingIndex !== -1) {
@@ -767,7 +763,7 @@
                             <td class="p-2 text-gray-600">${fmt}</td>
                             <td class="p-2">${getStatusBadge(r.kehadiran)}</td>
                             <td class="p-2">${r.surah} <br><span class="text-gray-500 text-[10px]">(${r.ayat})</span></td>
-                            <td class="p-2">Jld ${r.jilid} <br><span class="text-gray-500 text-[10px]">(Hal ${r.halaman})</span></td>
+                            <td class="p-2">${r.jilid} <br><span class="text-gray-500 text-[10px]">(Hal ${r.halaman})</span></td>
                             <td class="p-2">
                                 <div class="mb-1 flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">H:</span> ${badgeHafalan}</div>
                                 <div class="flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">J:</span> ${badgeJilid}</div>
@@ -820,7 +816,7 @@
                             </td>
                             <td class="p-3">${getStatusBadge(adaData.kehadiran)}</td>
                             <td class="p-3">${adaData.surah} <br><span class="text-gray-500 text-[10px]">(Ayat ${adaData.ayat})</span></td>
-                            <td class="p-3">Jld ${adaData.jilid} <br><span class="text-gray-500 text-[10px]">(Hal ${adaData.halaman})</span></td>
+                            <td class="p-3">${adaData.jilid} <br><span class="text-gray-500 text-[10px]">(Hal ${adaData.halaman})</span></td>
                             <td class="p-3">
                                 <div class="mb-1 flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">H:</span> ${badgeHafalan}</div>
                                 <div class="flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">J:</span> ${badgeJilid}</div>
@@ -830,7 +826,7 @@
                 }
             });
             if(tbody.innerHTML === '') {
-                 tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-gray-400">Tidak ada data di tanggal/kelas ini</td></tr>';
+                 tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-gray-400 italic">Tidak ada data di tanggal/kelas ini</td></tr>';
             }
         }
 
@@ -902,9 +898,6 @@
             doc.save(`Rekap_${tgl}_${kelasFilter.replace(/\s+/g, '')}.pdf`);
         };
 
-        // ==========================================
-        // 7. INITIALIZATION & REGISTRATION LOGIC
-        // ==========================================
         function initApp() {
             renderAll();
             const lastView = localStorage.getItem('activeView') || 'dashboard';
@@ -912,7 +905,7 @@
         }
 
         window.doLogout = () => {
-            if (is_preview) {
+            if(is_preview) {
                 document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
                 const loginView = document.getElementById('view-login');
                 loginView.style.display = ''; 
@@ -945,18 +938,16 @@
             const errEl = document.getElementById('login-error');
             errEl.classList.add('hidden');
             
-            if (is_preview) {
+            if(is_preview) {
                 const emailLower = em.toLowerCase();
-                
                 if (authMode === 'register') {
                     const nm = document.getElementById('reg-nama').value;
                     const klInput = document.getElementById('reg-kelas').value;
                     const kelasArr = klInput.split(',').map(k => k.trim()).filter(k => k.length > 0);
-                    
-                    kelasArr.forEach(k => pengajarMap[k] = nm);
+                    kelasArr.forEach(kl => { pengajarMap[kl] = nm; });
                     emailMap[emailLower] = kelasArr;
                     
-                    alert('Akun berhasil didaftarkan (Mode Preview). Sistem langsung mengalihkan Anda.');
+                    alert('Akun Multi-Kelas berhasil didaftarkan (Mode Preview).');
                     currentUserRole = 'ustadz';
                     currentUserClasses = kelasArr;
                 } else {
@@ -965,10 +956,9 @@
                         currentUserClasses = ['Semua'];
                     } else {
                         currentUserRole = 'ustadz';
-                        currentUserClasses = emailMap[emailLower] || ['Belum Ada Kelas'];
+                        currentUserClasses = emailMap[emailLower] || ['Kelas Abu Bakar'];
                     }
                 }
-                
                 const loginView = document.getElementById('view-login');
                 loginView.style.display = 'none';
                 loginView.classList.remove('active');
@@ -998,7 +988,7 @@
             }
         });
 
-        if (!is_preview) {
+        if(!is_preview) {
             onAuthStateChanged(auth, async (user) => {
                 if(user) {
                     document.getElementById('view-login').style.display = 'none';

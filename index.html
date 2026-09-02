@@ -59,7 +59,7 @@
         <!-- View: Login / Register -->
         <div id="view-login" class="view-section active">
             <div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg mt-10 border-t-4 border-indigo-500">
-                <h2 id="auth-title" class="text-2xl font-bold mb-6 text-center text-gray-800">Masuk ke Akun</h2>
+                <h2 id="auth-title" class="text-2xl font-bold mb-6 text-center text-gray-800">Masuk ke Akun (Mode Preview)</h2>
                 
                 <form id="auth-form">
                     <!-- Field Tambahan Untuk Register -->
@@ -78,11 +78,20 @@
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
                         <input type="email" id="login-email" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="saprudin@ngaji.com" required>
+                        
+                        <!-- List Akun Demo -->
+                        <div id="demo-hint" class="mt-4 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                            <p class="text-xs text-gray-600 font-bold border-b border-gray-300 pb-1 mb-2">Daftar Akun Demo:</p>
+                            <ul class="text-xs text-gray-600 space-y-2 list-none">
+                                <li>👑 <span class="text-indigo-600 font-bold cursor-pointer hover:underline" onclick="document.getElementById('login-email').value='admin@ngaji.com'">admin@ngaji.com</span> <br><span class="text-[10px] text-gray-400 ml-5">(Akses Semua Kelas)</span></li>
+                                <li>👨‍🏫 <span class="text-green-600 font-bold cursor-pointer hover:underline" onclick="document.getElementById('login-email').value='saprudin@ngaji.com'">saprudin@ngaji.com</span> <br><span class="text-[10px] text-gray-400 ml-5">(Multi: Abu Bakar, Umar)</span></li>
+                            </ul>
+                        </div>
                     </div>
 
                     <div class="mb-6">
                         <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
-                        <input type="password" id="login-password" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="••••••••••" required>
+                        <input type="password" id="login-password" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="••••••••••" value="123456" required>
                     </div>
 
                     <button type="submit" id="auth-btn" class="w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 transition">Masuk</button>
@@ -146,7 +155,7 @@
                                 <th class="p-4 border-b">Status</th>
                                 <th class="p-4 border-b">Hafalan</th>
                                 <th class="p-4 border-b">Jilid</th>
-                                <th class="p-4 border-b">Ket</th>
+                                <th class="p-4 border-b">Nilai (Haf/Jld)</th>
                                 <th class="p-4 border-b text-center">Aksi</th>
                             </tr>
                         </thead>
@@ -190,7 +199,7 @@
                                 <th class="p-3">Status</th>
                                 <th class="p-3">Hafalan</th>
                                 <th class="p-3">Jilid</th>
-                                <th class="p-3">Ket</th>
+                                <th class="p-3">Nilai (Haf/Jld)</th>
                             </tr>
                         </thead>
                         <tbody id="rekap-tbody"></tbody>
@@ -233,29 +242,42 @@
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Posisi Jilid</label>
-                        <input type="text" id="form-jilid" class="w-full px-3 py-2 border rounded-lg" placeholder="Cth: Jilid 4">
+                        <input type="text" id="form-jilid" class="w-full px-3 py-2 border rounded-lg" placeholder="Cth: 5">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Halaman (Ngaji)</label>
-                        <input type="text" id="form-halaman" class="w-full px-3 py-2 border rounded-lg" placeholder="Cth: 15">
+                        <input type="text" id="form-halaman" class="w-full px-3 py-2 border rounded-lg" placeholder="Cth: 13">
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Surah Hafalan</label>
-                        <input type="text" id="form-surah" class="w-full px-3 py-2 border rounded-lg" placeholder="Cth: An-Naba">
+                        <input type="text" id="form-surah" class="w-full px-3 py-2 border rounded-lg" placeholder="Cth: Asy-Syam">
+                    </div>
+                </div>
+
+                <!-- Pisah Penilaian: Hafalan dan Jilid -->
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Ayat Hafalan Terakhir</label>
+                        <input type="text" id="form-ayat" class="w-full px-3 py-2 border rounded-lg" placeholder="Cth: 1-15">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Nilai Hafalan</label>
+                        <select id="form-nilai-hafalan" class="w-full px-3 py-2 border rounded-lg bg-white">
+                            <option value="Lancar">Lancar / Lanjut</option>
+                            <option value="Kurang Lancar">Kurang Lancar</option>
+                            <option value="Mengulang">Mengulang</option>
+                            <option value="-">-</option>
+                        </select>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 mb-6">
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Ayat Hafalan Terakhir</label>
-                        <input type="text" id="form-ayat" class="w-full px-3 py-2 border rounded-lg" placeholder="Cth: 30">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Keterangan / Nilai</label>
-                        <select id="form-keterangan" class="w-full px-3 py-2 border rounded-lg bg-white">
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Nilai Jilid/Ngaji</label>
+                        <select id="form-nilai-jilid" class="w-full px-3 py-2 border rounded-lg bg-white">
                             <option value="Lancar">Lancar / Lanjut</option>
                             <option value="Kurang Lancar">Kurang Lancar</option>
                             <option value="Mengulang">Mengulang</option>
@@ -287,7 +309,7 @@
                             <th class="p-2 border-b">Kehadiran</th>
                             <th class="p-2 border-b">Hafalan</th>
                             <th class="p-2 border-b">Jilid</th>
-                            <th class="p-2 border-b">Ket</th>
+                            <th class="p-2 border-b">Nilai (Haf/Jld)</th>
                         </tr>
                     </thead>
                     <tbody id="hist-tbody"></tbody>
@@ -303,8 +325,9 @@
 
     <!-- Firebase SDK (Modular v9) -->
     <script type="module">
-        const is_preview = false; // Set ke false untuk produksi
+        const is_preview = false; // Pastikan ini false untuk produksi
 
+        // TIMPA / GANTI BLOK DI BAWAH INI DENGAN KODE DARI FIREBASE:
         const firebaseConfig = {
   apiKey: "AIzaSyCfapSUazt_uCVVI5uttatd2iGR7DyLk54",
   authDomain: "project-311a138f-ccc5-491b-b79.firebaseapp.com",
@@ -331,8 +354,33 @@
 
         let dataStore = [];
         let classesSet = new Set();
-        let pengajarMap = {};
+        let pengajarMap = {
+            "Kelas Abu Bakar": "Ust. Saprudin S.Ag",
+            "Kelas Umar": "Ust. Saprudin S.Ag",
+            "Kelas Utsman": "Ustazah Aminah"
+        };
+        let emailMap = {
+            "saprudin@ngaji.com": ["Kelas Abu Bakar", "Kelas Umar"],
+            "aminah@ngaji.com": ["Kelas Utsman"]
+        };
         
+        // Mock data untuk mode Preview
+        if (is_preview) {
+            dataStore = [
+                { id: "1", nama: "Ahmad Yasin", kelas: "Kelas Abu Bakar", kehadiran: "Hadir", jilid: "4", halaman: "15", surah: "An-Naba", ayat: "30", nilaiHafalan: "Lancar", nilaiJilid: "Kurang Lancar", riwayat: [{timestamp: new Date().toISOString(), kehadiran: "Hadir", jilid: "4", halaman: "15", surah: "An-Naba", ayat: "30", nilaiHafalan: "Lancar", nilaiJilid: "Kurang Lancar"}] },
+                { id: "2", nama: "Fatimah Azzahra", kelas: "Kelas Umar", kehadiran: "Hadir", jilid: "Al-Quran", halaman: "102", surah: "Al-Mulk", ayat: "12", nilaiHafalan: "Lancar", nilaiJilid: "Lancar", riwayat: [{timestamp: new Date().toISOString(), kehadiran: "Hadir", jilid: "Al-Quran", halaman: "102", surah: "Al-Mulk", ayat: "12", nilaiHafalan: "Lancar", nilaiJilid: "Lancar"}] }
+            ];
+            
+            // Auto simulasi preview sbg Ust Saprudin (Multi-Kelas)
+            setTimeout(() => {
+                currentUserRole = 'ustadz';
+                currentUserClasses = ['Kelas Abu Bakar', 'Kelas Umar']; 
+                document.getElementById('view-login').style.display = 'none';
+                document.getElementById('main-nav').classList.remove('hidden');
+                initApp();
+            }, 300);
+        }
+
         let authMode = 'login'; 
         window.toggleAuthMode = () => {
             authMode = authMode === 'login' ? 'register' : 'login';
@@ -342,12 +390,14 @@
                 document.getElementById('signup-fields').classList.remove('hidden');
                 document.getElementById('reg-nama').required = true;
                 document.getElementById('reg-kelas').required = true;
+                document.getElementById('demo-hint').classList.add('hidden');
                 document.getElementById('auth-btn').innerText = 'Daftar & Masuk';
                 document.getElementById('toggle-auth-text').innerText = 'Sudah punya akun? Masuk di sini';
             } else {
                 document.getElementById('signup-fields').classList.add('hidden');
                 document.getElementById('reg-nama').required = false;
                 document.getElementById('reg-kelas').required = false;
+                document.getElementById('demo-hint').classList.remove('hidden');
                 document.getElementById('auth-btn').innerText = 'Masuk';
                 document.getElementById('toggle-auth-text').innerText = 'Belum punya akun? Daftar di sini';
             }
@@ -401,10 +451,10 @@
         }
         
         function getKetBadge(ket) {
-            if(ket === 'Lancar') return '<span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs">Lancar</span>';
-            if(ket === 'Mengulang') return '<span class="px-2 py-1 bg-red-100 text-red-700 rounded text-xs">Ulang</span>';
-            if(ket === 'Kurang Lancar') return '<span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs">Kurang</span>';
-            return ket || '-';
+            if(ket === 'Lancar' || ket === 'Lancar / Lanjut') return '<span class="px-2 py-0.5 bg-green-100 text-green-700 rounded text-[10px] font-bold">Lancar</span>';
+            if(ket === 'Mengulang') return '<span class="px-2 py-0.5 bg-red-100 text-red-700 rounded text-[10px] font-bold">Ulang</span>';
+            if(ket === 'Kurang Lancar') return '<span class="px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded text-[10px] font-bold">Kurang</span>';
+            return `<span class="px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-[10px] font-bold">${ket || '-'}</span>`;
         }
 
         function extractClasses() {
@@ -462,7 +512,7 @@
                         </div>
                         <div class="mb-2">Bintang Sen-Jum: ${getStars(s.riwayat)}</div>
                         <div class="text-sm text-gray-600 space-y-1">
-                            <p><i class="fa-solid fa-book-open text-indigo-400 mr-2"></i>${s.jilid} - Hal ${s.halaman}</p>
+                            <p><i class="fa-solid fa-book-open text-indigo-400 mr-2"></i>Jld ${s.jilid} - Hal ${s.halaman}</p>
                             <p><i class="fa-solid fa-headphones text-indigo-400 mr-2"></i>${s.surah} (Ayat ${s.ayat})</p>
                         </div>
                     </div>
@@ -496,6 +546,9 @@
                 }
 
                 let namaWaliKelas = pengajarMap[s.kelas] || '-';
+                
+                let badgeHafalan = getKetBadge(s.nilaiHafalan || s.keterangan);
+                let badgeJilid = getKetBadge(s.nilaiJilid || s.keterangan);
 
                 tbody.innerHTML += `
                     <tr class="border-b hover:bg-gray-50">
@@ -505,9 +558,12 @@
                             <div class="text-xs text-indigo-600 font-bold mt-0.5"><i class="fa-solid fa-user-tie mr-1"></i> ${namaWaliKelas}</div>
                         </td>
                         <td class="p-4">${getStatusBadge(s.kehadiran)}</td>
-                        <td class="p-4">${s.surah} <span class="text-gray-500 text-xs">(Ayat ${s.ayat})</span></td>
-                        <td class="p-4">${s.jilid} <span class="text-gray-500 text-xs">(Hal ${s.halaman})</span></td>
-                        <td class="p-4">${getKetBadge(s.keterangan)}</td>
+                        <td class="p-4">${s.surah} <br><span class="text-gray-500 text-[11px]">(Ayat ${s.ayat})</span></td>
+                        <td class="p-4">Jld ${s.jilid} <br><span class="text-gray-500 text-[11px]">(Hal ${s.halaman})</span></td>
+                        <td class="p-4">
+                            <div class="mb-1 flex items-center space-x-1"><span class="text-[10px] text-gray-400 w-6">Haf:</span> ${badgeHafalan}</div>
+                            <div class="flex items-center space-x-1"><span class="text-[10px] text-gray-400 w-6">Jld:</span> ${badgeJilid}</div>
+                        </td>
                         <td class="p-4 text-center">
                             <div class="flex justify-center space-x-3 text-lg">
                                 ${actionButtons}
@@ -560,7 +616,8 @@
             document.getElementById('form-halaman').value = "-";
             document.getElementById('form-surah').value = "-";
             document.getElementById('form-ayat').value = "-";
-            document.getElementById('form-keterangan').value = "-";
+            document.getElementById('form-nilai-hafalan').value = "Lancar";
+            document.getElementById('form-nilai-jilid').value = "Lancar";
             document.getElementById('modal-form').classList.remove('hidden');
         };
 
@@ -587,7 +644,8 @@
                 document.getElementById('form-halaman').value = s.halaman;
                 document.getElementById('form-surah').value = s.surah;
                 document.getElementById('form-ayat').value = s.ayat;
-                document.getElementById('form-keterangan').value = s.keterangan || '-';
+                document.getElementById('form-nilai-hafalan').value = s.nilaiHafalan || s.keterangan || 'Lancar';
+                document.getElementById('form-nilai-jilid').value = s.nilaiJilid || s.keterangan || 'Lancar';
                 document.getElementById('modal-title').innerText = 'Update Progres Santri';
                 document.getElementById('modal-form').classList.remove('hidden');
             }
@@ -598,8 +656,9 @@
             if(currentUserRole === 'admin') return;
             
             let finalKelas = document.getElementById('form-kelas').value;
-
             const id = document.getElementById('form-id').value || Date.now().toString();
+            const currentTimestamp = new Date().toISOString();
+
             const newData = {
                 id: id,
                 nama: document.getElementById('form-nama').value,
@@ -609,20 +668,67 @@
                 halaman: document.getElementById('form-halaman').value,
                 surah: document.getElementById('form-surah').value,
                 ayat: document.getElementById('form-ayat').value,
-                keterangan: document.getElementById('form-keterangan').value,
-                timestamp: new Date().toISOString()
+                nilaiHafalan: document.getElementById('form-nilai-hafalan').value,
+                nilaiJilid: document.getElementById('form-nilai-jilid').value,
+                timestamp: currentTimestamp 
             };
 
-            try {
-                const santriRef = doc(db, "santri", id);
-                const oldDoc = dataStore.find(x => x.id === id);
-                let riwayatBaru = oldDoc && oldDoc.riwayat ? oldDoc.riwayat : [];
-                riwayatBaru.unshift(newData);
-                
-                await setDoc(santriRef, { ...newData, riwayat: riwayatBaru });
+            if(is_preview) {
+                // LOGIKA ANTI-NUMPUK UNTUK PREVIEW LOKAL
+                let existing = dataStore.find(x => x.id === id);
+                if(existing) {
+                    if(!existing.riwayat) existing.riwayat = [];
+                    
+                    // Cek apakah ada di tanggal yang sama
+                    let existingIndex = existing.riwayat.findIndex(r => {
+                        const d1 = new Date(r.timestamp);
+                        const d2 = new Date(); // Hari ini
+                        return d1.getFullYear() === d2.getFullYear() && 
+                               d1.getMonth() === d2.getMonth() && 
+                               d1.getDate() === d2.getDate();
+                    });
+
+                    if(existingIndex !== -1) {
+                        // Timpa data riwayat hari ini
+                        existing.riwayat[existingIndex] = { ...existing.riwayat[existingIndex], ...newData };
+                    } else {
+                        // Hari beda, taruh atas
+                        existing.riwayat.unshift({...newData});
+                    }
+                    Object.assign(existing, newData);
+                } else {
+                    newData.riwayat = [{...newData}];
+                    dataStore.push(newData);
+                }
                 closeModal();
+                renderAll();
                 showToast();
-            } catch(err) { alert(err.message); }
+            } else {
+                try {
+                    const santriRef = doc(db, "santri", id);
+                    const oldDoc = dataStore.find(x => x.id === id);
+                    let riwayatBaru = oldDoc && oldDoc.riwayat ? oldDoc.riwayat : [];
+                    
+                    // CEK APAKAH ADA RECORD DI HARI YANG SAMA (Waktu Lokal)
+                    let existingIndex = riwayatBaru.findIndex(r => {
+                        const d1 = new Date(r.timestamp);
+                        const d2 = new Date();
+                        return d1.getFullYear() === d2.getFullYear() && 
+                               d1.getMonth() === d2.getMonth() && 
+                               d1.getDate() === d2.getDate();
+                    });
+
+                    if(existingIndex !== -1) {
+                        riwayatBaru[existingIndex] = { ...riwayatBaru[existingIndex], ...newData };
+                    } else {
+                        riwayatBaru.unshift(newData);
+                    }
+                    
+                    await setDoc(santriRef, { ...newData, riwayat: riwayatBaru });
+                    closeModal();
+                    showToast();
+                } catch(err) { alert(err.message); }
+            }
         });
 
         window.deleteSantri = async (id) => {
@@ -631,7 +737,12 @@
             if(currentUserRole === 'ustadz' && s && !currentUserClasses.includes(s.kelas)) return;
 
             if(confirm("Yakin hapus data santri ini?")) {
-                await deleteDoc(doc(db, "santri", id));
+                if(is_preview) {
+                    dataStore = dataStore.filter(x => x.id !== id);
+                    renderAll();
+                } else {
+                    await deleteDoc(doc(db, "santri", id));
+                }
             }
         };
 
@@ -648,13 +759,19 @@
                 s.riwayat.forEach(r => {
                     const dt = new Date(r.timestamp);
                     const fmt = `${dt.getDate()}/${dt.getMonth()+1}/${dt.getFullYear()} ${dt.getHours()}:${String(dt.getMinutes()).padStart(2,'0')}`;
+                    let badgeHafalan = getKetBadge(r.nilaiHafalan || r.keterangan);
+                    let badgeJilid = getKetBadge(r.nilaiJilid || r.keterangan);
+
                     tbody.innerHTML += `
                         <tr class="border-b hover:bg-gray-50">
                             <td class="p-2 text-gray-600">${fmt}</td>
                             <td class="p-2">${getStatusBadge(r.kehadiran)}</td>
-                            <td class="p-2">${r.surah} (${r.ayat})</td>
-                            <td class="p-2">${r.jilid} (${r.halaman})</td>
-                            <td class="p-2">${getKetBadge(r.keterangan)}</td>
+                            <td class="p-2">${r.surah} <br><span class="text-gray-500 text-[10px]">(${r.ayat})</span></td>
+                            <td class="p-2">Jld ${r.jilid} <br><span class="text-gray-500 text-[10px]">(Hal ${r.halaman})</span></td>
+                            <td class="p-2">
+                                <div class="mb-1 flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">H:</span> ${badgeHafalan}</div>
+                                <div class="flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">J:</span> ${badgeJilid}</div>
+                            </td>
                         </tr>
                     `;
                 });
@@ -691,6 +808,9 @@
                 let adaData = (s.riwayat || []).find(r => r.timestamp.startsWith(tglFilter));
                 if(adaData) {
                     const namaWaliKelas = pengajarMap[s.kelas] || '-';
+                    let badgeHafalan = getKetBadge(adaData.nilaiHafalan || adaData.keterangan);
+                    let badgeJilid = getKetBadge(adaData.nilaiJilid || adaData.keterangan);
+
                     tbody.innerHTML += `
                         <tr class="border-b hover:bg-gray-50">
                             <td class="p-3 font-bold text-gray-800">${s.nama}</td>
@@ -699,9 +819,12 @@
                                 <div class="text-xs text-indigo-600 font-bold mt-0.5"><i class="fa-solid fa-user-tie mr-1"></i> ${namaWaliKelas}</div>
                             </td>
                             <td class="p-3">${getStatusBadge(adaData.kehadiran)}</td>
-                            <td class="p-3">${adaData.surah} <span class="text-gray-500 text-xs">(Ayat ${adaData.ayat})</span></td>
-                            <td class="p-3">${adaData.jilid} <span class="text-gray-500 text-xs">(Hal ${adaData.halaman})</span></td>
-                            <td class="p-3">${getKetBadge(adaData.keterangan)}</td>
+                            <td class="p-3">${adaData.surah} <br><span class="text-gray-500 text-[10px]">(Ayat ${adaData.ayat})</span></td>
+                            <td class="p-3">Jld ${adaData.jilid} <br><span class="text-gray-500 text-[10px]">(Hal ${adaData.halaman})</span></td>
+                            <td class="p-3">
+                                <div class="mb-1 flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">H:</span> ${badgeHafalan}</div>
+                                <div class="flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">J:</span> ${badgeJilid}</div>
+                            </td>
                         </tr>
                     `;
                 }
@@ -717,9 +840,6 @@
             setTimeout(() => toast.classList.add('opacity-0', 'pointer-events-none'), 3000);
         };
 
-        // ==========================================
-        // 6. PDF EXPORT
-        // ==========================================
         window.exportRapor = (id) => {
             if(!window.jspdf) return;
             const s = dataStore.find(x => x.id === id);
@@ -731,10 +851,12 @@
             
             const tableData = (s.riwayat || []).map(r => {
                 const dt = new Date(r.timestamp);
-                return [`${dt.getDate()}/${dt.getMonth()+1}/${dt.getFullYear()}`, r.kehadiran, r.jilid + ' - ' + r.halaman, r.surah + ' (' + r.ayat + ')', r.keterangan || '-'];
+                let ketHaf = r.nilaiHafalan || r.keterangan || '-';
+                let ketJld = r.nilaiJilid || r.keterangan || '-';
+                return [`${dt.getDate()}/${dt.getMonth()+1}/${dt.getFullYear()}`, r.kehadiran, r.jilid + ' - ' + r.halaman, r.surah + ' (' + r.ayat + ')', `Haf: ${ketHaf}\nJld: ${ketJld}`];
             });
 
-            doc.autoTable({ startY: 40, head: [['Tanggal', 'Kehadiran', 'Jilid/Hal', 'Hafalan (Ayat)', 'Keterangan']], body: tableData, theme: 'grid', headStyles: { fillColor: [79, 70, 229] } });
+            doc.autoTable({ startY: 40, head: [['Tanggal', 'Kehadiran', 'Jilid/Hal', 'Hafalan (Ayat)', 'Penilaian']], body: tableData, theme: 'grid', headStyles: { fillColor: [79, 70, 229] } });
             doc.save(`Rapor_${s.nama.replace(/\s+/g, '_')}.pdf`);
         };
 
@@ -770,10 +892,13 @@
                 let r = (s.riwayat || []).find(x => x.timestamp.startsWith(tgl));
                 let namaWaliKelas = pengajarMap[s.kelas] || '-';
                 let kolomKelasGabungan = `${s.kelas || '-'}\n(${namaWaliKelas})`;
-                if(r) tableData.push([s.nama, kolomKelasGabungan, r.kehadiran, r.jilid, r.surah, r.keterangan || '-']);
+                let ketHaf = r.nilaiHafalan || r.keterangan || '-';
+                let ketJld = r.nilaiJilid || r.keterangan || '-';
+                
+                if(r) tableData.push([s.nama, kolomKelasGabungan, r.kehadiran, r.jilid, r.surah, `H: ${ketHaf}\nJ: ${ketJld}`]);
             });
 
-            doc.autoTable({ startY: startY, head: [['Nama', 'Kelas / Ustadz', 'Kehadiran', 'Jilid', 'Hafalan', 'Ket']], body: tableData, theme: 'grid', headStyles: { fillColor: [220, 38, 38] }, styles: { cellPadding: 3, fontSize: 9 } });
+            doc.autoTable({ startY: startY, head: [['Nama', 'Kelas / Ustadz', 'Kehadiran', 'Jilid', 'Hafalan', 'Nilai']], body: tableData, theme: 'grid', headStyles: { fillColor: [220, 38, 38] }, styles: { cellPadding: 3, fontSize: 9 } });
             doc.save(`Rekap_${tgl}_${kelasFilter.replace(/\s+/g, '')}.pdf`);
         };
 
@@ -787,7 +912,7 @@
         }
 
         window.doLogout = () => {
-            signOut(auth).then(() => {
+            if (is_preview) {
                 document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
                 const loginView = document.getElementById('view-login');
                 loginView.style.display = ''; 
@@ -796,7 +921,18 @@
                 localStorage.removeItem('activeView');
                 document.getElementById('auth-form').reset();
                 document.getElementById('mobile-menu').classList.add('hidden');
-            });
+            } else {
+                signOut(auth).then(() => {
+                    document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+                    const loginView = document.getElementById('view-login');
+                    loginView.style.display = ''; 
+                    loginView.classList.add('active');
+                    document.getElementById('main-nav').classList.add('hidden');
+                    localStorage.removeItem('activeView');
+                    document.getElementById('auth-form').reset();
+                    document.getElementById('mobile-menu').classList.add('hidden');
+                });
+            }
         };
 
         document.getElementById('btn-logout').addEventListener('click', doLogout);
@@ -809,100 +945,124 @@
             const errEl = document.getElementById('login-error');
             errEl.classList.add('hidden');
             
-            try {
+            if (is_preview) {
+                const emailLower = em.toLowerCase();
+                
                 if (authMode === 'register') {
                     const nm = document.getElementById('reg-nama').value;
                     const klInput = document.getElementById('reg-kelas').value;
                     const kelasArr = klInput.split(',').map(k => k.trim()).filter(k => k.length > 0);
                     
-                    const userCredential = await createUserWithEmailAndPassword(auth, em, pw);
-                    await setDoc(doc(db, "users", userCredential.user.uid), {
-                        email: em.toLowerCase(),
-                        nama: nm,
-                        kelas: kelasArr,
-                        role: 'ustadz'
-                    });
+                    kelasArr.forEach(k => pengajarMap[k] = nm);
+                    emailMap[emailLower] = kelasArr;
+                    
+                    alert('Akun berhasil didaftarkan (Mode Preview). Sistem langsung mengalihkan Anda.');
+                    currentUserRole = 'ustadz';
+                    currentUserClasses = kelasArr;
                 } else {
-                    await signInWithEmailAndPassword(auth, em, pw);
-                }
-            } catch(error) {
-                errEl.innerText = "Error: " + error.message;
-                errEl.classList.remove('hidden');
-            }
-        });
-
-        // STATE LISTENER FIREBASE UTAMA (ANTI LAYAR PUTIH)
-        onAuthStateChanged(auth, async (user) => {
-            if(user) {
-                document.getElementById('view-login').style.display = 'none';
-                const em = user.email.toLowerCase();
-                
-                if(em.includes('admin')) {
-                    currentUserRole = 'admin';
-                    currentUserClasses = ['Semua'];
-                } else {
-                    try {
-                        const userDocRef = doc(db, "users", user.uid);
-                        let userDoc = await getDoc(userDocRef);
-                        
-                        if(userDoc.exists()) {
-                            const dt = userDoc.data();
-                            currentUserRole = dt.role || 'ustadz';
-                            let kl = dt.kelas || ['Kelas Umum'];
-                            currentUserClasses = Array.isArray(kl) ? kl : [kl];
-                        } else {
-                            // Auto-heal jika dokumen belum ada di database
-                            const defaultData = {
-                                email: em,
-                                nama: user.email.split('@')[0],
-                                kelas: ['Kelas Umum'],
-                                role: 'ustadz'
-                            };
-                            await setDoc(userDocRef, defaultData);
-                            currentUserRole = 'ustadz';
-                            currentUserClasses = ['Kelas Umum'];
-                        }
-                    } catch(err) {
-                        console.error("Gagal menarik profil user:", err);
+                    if(emailLower.includes('admin')) {
+                        currentUserRole = 'admin';
+                        currentUserClasses = ['Semua'];
+                    } else {
                         currentUserRole = 'ustadz';
-                        currentUserClasses = ['Kelas Umum'];
+                        currentUserClasses = emailMap[emailLower] || ['Belum Ada Kelas'];
                     }
                 }
                 
-                // Tarik mapping pengajar secara real-time
-                onSnapshot(collection(db, "users"), (snap) => {
-                    pengajarMap = {};
-                    snap.forEach((d) => {
-                        const data = d.data();
-                        if(data.kelas && data.nama) {
-                            if(Array.isArray(data.kelas)) {
-                                data.kelas.forEach(k => { pengajarMap[k] = data.nama; });
-                            } else {
-                                pengajarMap[data.kelas] = data.nama;
-                            }
-                        }
-                    });
-                    renderAll();
-                });
-
-                // Tarik data santri secara real-time
-                onSnapshot(collection(db, "santri"), (snapshot) => {
-                    dataStore = [];
-                    snapshot.forEach((docSnap) => {
-                        dataStore.push({ id: docSnap.id, ...docSnap.data() });
-                    });
-                    initApp();
-                }, (error) => {
-                    console.error("Gagal mendengarkan data santri:", error);
-                });
-            } else {
-                document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
                 const loginView = document.getElementById('view-login');
-                loginView.style.display = 'block';
-                loginView.classList.add('active');
-                document.getElementById('main-nav').classList.add('hidden');
+                loginView.style.display = 'none';
+                loginView.classList.remove('active');
+                document.getElementById('main-nav').classList.remove('hidden');
+                initApp();
+            } else {
+                try {
+                    if (authMode === 'register') {
+                        const nm = document.getElementById('reg-nama').value;
+                        const klInput = document.getElementById('reg-kelas').value;
+                        const kelasArr = klInput.split(',').map(k => k.trim()).filter(k => k.length > 0);
+                        
+                        const userCredential = await createUserWithEmailAndPassword(auth, em, pw);
+                        await setDoc(doc(db, "users", userCredential.user.uid), {
+                            email: em.toLowerCase(),
+                            nama: nm,
+                            kelas: kelasArr,
+                            role: 'ustadz'
+                        });
+                    } else {
+                        await signInWithEmailAndPassword(auth, em, pw);
+                    }
+                } catch(error) {
+                    errEl.innerText = "Error: " + error.message;
+                    errEl.classList.remove('hidden');
+                }
             }
         });
+
+        if (!is_preview) {
+            onAuthStateChanged(auth, async (user) => {
+                if(user) {
+                    document.getElementById('view-login').style.display = 'none';
+                    const em = user.email.toLowerCase();
+                    
+                    if(em.includes('admin')) {
+                        currentUserRole = 'admin';
+                        currentUserClasses = ['Semua'];
+                    } else {
+                        try {
+                            const userDocRef = doc(db, "users", user.uid);
+                            let userDoc = await getDoc(userDocRef);
+                            
+                            if(userDoc.exists()) {
+                                const dt = userDoc.data();
+                                currentUserRole = dt.role || 'ustadz';
+                                let kl = dt.kelas || ['Kelas Umum'];
+                                currentUserClasses = Array.isArray(kl) ? kl : [kl];
+                            } else {
+                                const defaultData = { email: em, nama: user.email.split('@')[0], kelas: ['Kelas Umum'], role: 'ustadz' };
+                                await setDoc(userDocRef, defaultData);
+                                currentUserRole = 'ustadz';
+                                currentUserClasses = ['Kelas Umum'];
+                            }
+                        } catch(err) {
+                            console.error("Gagal menarik profil user:", err);
+                            currentUserRole = 'ustadz';
+                            currentUserClasses = ['Kelas Umum'];
+                        }
+                    }
+                    
+                    onSnapshot(collection(db, "users"), (snap) => {
+                        pengajarMap = {};
+                        snap.forEach((d) => {
+                            const data = d.data();
+                            if(data.kelas && data.nama) {
+                                if(Array.isArray(data.kelas)) {
+                                    data.kelas.forEach(k => { pengajarMap[k] = data.nama; });
+                                } else {
+                                    pengajarMap[data.kelas] = data.nama;
+                                }
+                            }
+                        });
+                        renderAll();
+                    });
+
+                    onSnapshot(collection(db, "santri"), (snapshot) => {
+                        dataStore = [];
+                        snapshot.forEach((docSnap) => {
+                            dataStore.push({ id: docSnap.id, ...docSnap.data() });
+                        });
+                        initApp();
+                    }, (error) => {
+                        console.error("Gagal mendengarkan data santri:", error);
+                    });
+                } else {
+                    document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+                    const loginView = document.getElementById('view-login');
+                    loginView.style.display = 'block';
+                    loginView.classList.add('active');
+                    document.getElementById('main-nav').classList.add('hidden');
+                }
+            });
+        }
     </script>
 </body>
 </html>

@@ -18,6 +18,7 @@
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans flex flex-col min-h-screen">
 
+    <!-- Top Navbar -->
     <nav id="main-nav" class="bg-indigo-700 text-white shadow-md w-full z-50 hidden">
         <div class="max-w-7xl mx-auto px-4">
             <div class="flex justify-between h-16">
@@ -52,6 +53,7 @@
         </div>
     </nav>
 
+    <!-- Main Content -->
     <main id="app-content" class="flex-grow p-4 md:p-8 max-w-7xl mx-auto w-full">
         
         <!-- View: Login / Register -->
@@ -60,6 +62,7 @@
                 <h2 id="auth-title" class="text-2xl font-bold mb-6 text-center text-gray-800">Masuk ke Akun</h2>
                 
                 <form id="auth-form">
+                    <!-- Field Tambahan Untuk Register -->
                     <div id="signup-fields" class="hidden mb-4 space-y-4">
                         <div>
                             <label class="block text-gray-700 text-sm font-bold mb-2">Nama Lengkap (Gelar)</label>
@@ -101,6 +104,7 @@
             </div>
         </div>
 
+        <!-- View: Dashboard -->
         <div id="view-dashboard" class="view-section">
             <h2 class="text-2xl font-bold mb-6 text-gray-800">Ringkasan Hari Ini</h2>
             
@@ -127,6 +131,7 @@
             <div id="dashboard-cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </div>
 
+        <!-- View: Data Santri -->
         <div id="view-data-santri" class="view-section">
             <div class="flex flex-col md:flex-row justify-between items-center mb-6 space-y-3 md:space-y-0">
                 <h2 class="text-2xl font-bold text-gray-800">Manajemen Data Santri</h2>
@@ -160,11 +165,13 @@
             </div>
         </div>
 
+        <!-- View: Kelas -->
         <div id="view-kelas" class="view-section">
             <h2 class="text-2xl font-bold mb-6 text-gray-800">Daftar Kelas / Rombel</h2>
             <div id="kelas-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </div>
 
+        <!-- View: Rekap -->
         <div id="view-rekap" class="view-section">
             <div class="flex flex-col md:flex-row justify-between items-center mb-6 space-y-3 md:space-y-0">
                 <div>
@@ -202,6 +209,7 @@
         </div>
     </main>
 
+    <!-- Modal Form (Tambah/Edit) -->
     <div id="modal-form" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden">
             <div class="bg-indigo-600 px-6 py-4 flex justify-between items-center text-white">
@@ -284,6 +292,7 @@
         </div>
     </div>
 
+    <!-- Modal Riwayat -->
     <div id="modal-history" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[80vh] flex flex-col">
             <div class="bg-indigo-600 px-6 py-4 flex justify-between items-center text-white rounded-t-xl">
@@ -307,12 +316,14 @@
         </div>
     </div>
 
+    <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-5 right-5 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg font-bold transition-opacity duration-300 opacity-0 pointer-events-none z-50">
         Berhasil disimpan!
     </div>
 
+    <!-- Firebase SDK (Modular v9) -->
     <script type="module">
-        const is_preview = false; // Mode Preview Aktif agar bisa dilihat di editor
+        const is_preview = false; // Set ke false untuk masuk tahap produksi
 
         const firebaseConfig = {
   apiKey: "AIzaSyCfapSUazt_uCVVI5uttatd2iGR7DyLk54",
@@ -336,42 +347,50 @@
             const app = initializeApp(firebaseConfig);
             db = getFirestore(app);
             auth = getAuth(app);
+            
+            // Auto hide demo hint box if production
+            const demoHint = document.getElementById('demo-hint');
+            if (demoHint) demoHint.classList.add('hidden');
         }
 
         let dataStore = [];
         let classesSet = new Set();
-        let pengajarMap = {
-            "Kelas Abu Bakar": "Ust. Saprudin S.Ag",
-            "Kelas Umar": "Ust. Saprudin S.Ag",
-            "Kelas Utsman": "Ustazah Siti"
-        };
+        let pengajarMap = {};
+        
         let emailMap = {
-            "saprudin@ngaji.com": ["Kelas Abu Bakar", "Kelas Umar"],
-            "siti@ngaji.com": ["Kelas Utsman"]
+            "saprudin@ngaji.com": ["Kelas Abu Bakar", "Kelas Umar"]
         };
 
         if (is_preview) {
-            // Simulasi data untuk memperlihatkan kondisi bintang hangus
-            const today = new Date();
-            const yesterday = new Date(today);
-            yesterday.setDate(yesterday.getDate() - 1);
-
+            // Data tiruan dengan kasus khusus: Fatimah Azzahra pernah "Alpa" di minggu ini agar bintangnya hangus
+            let tglHariIni = new Date();
+            let tglKemarin = new Date(tglHariIni);
+            tglKemarin.setDate(tglKemarin.getDate() - 1);
+            
             dataStore = [
-                { id: "1", nama: "Ahmad Yasin", kelas: "Kelas Abu Bakar", kehadiran: "Hadir", jilid: "Jilid 4", halaman: "15", surah: "An-Naba", ayat: "30", nilaiHafalan: "Lancar", nilaiJilid: "Lancar", riwayat: [{timestamp: today.toISOString(), kehadiran: "Hadir", jilid: "Jilid 4", halaman: "15", surah: "An-Naba", ayat: "30", nilaiHafalan: "Lancar", nilaiJilid: "Lancar"}] },
-                // Santri ini akan hangus bintangnya karena kemarin Alpa
-                { id: "2", nama: "Fatimah Azzahra", kelas: "Kelas Umar", kehadiran: "Hadir", jilid: "Al-Quran", halaman: "102", surah: "Al-Mulk", ayat: "12", nilaiHafalan: "Kurang Lancar", nilaiJilid: "Mengulang", riwayat: [{timestamp: today.toISOString(), kehadiran: "Hadir", jilid: "Al-Quran", halaman: "102", surah: "Al-Mulk", ayat: "12", nilaiHafalan: "Kurang Lancar", nilaiJilid: "Mengulang"}, {timestamp: yesterday.toISOString(), kehadiran: "Alpa", jilid: "-", halaman: "-", surah: "-", ayat: "-", nilaiHafalan: "-", nilaiJilid: "-"}] },
+                { id: "1", nama: "Ahmad Yasin", kelas: "Kelas Abu Bakar", kehadiran: "Hadir", jilid: "Jilid 4", halaman: "15", surah: "An-Naba", ayat: "30", nilaiHafalan: "Lancar", nilaiJilid: "Kurang Lancar", riwayat: [{timestamp: tglHariIni.toISOString(), kehadiran: "Hadir", jilid: "Jilid 4", halaman: "15", surah: "An-Naba", ayat: "30", nilaiHafalan: "Lancar", nilaiJilid: "Kurang Lancar"}] },
+                
+                // Fatimah disimulasikan Alpa kemarin
+                { id: "2", nama: "Fatimah Azzahra", kelas: "Kelas Umar", kehadiran: "Alpa", jilid: "Al-Quran", halaman: "102", surah: "Al-Mulk", ayat: "12", nilaiHafalan: "-", nilaiJilid: "-", riwayat: [
+                    {timestamp: tglHariIni.toISOString(), kehadiran: "Alpa", jilid: "-", halaman: "-", surah: "-", ayat: "-", nilaiHafalan: "-", nilaiJilid: "-"},
+                    {timestamp: tglKemarin.toISOString(), kehadiran: "Hadir", jilid: "Al-Quran", halaman: "102", surah: "Al-Mulk", ayat: "12", nilaiHafalan: "Lancar", nilaiJilid: "Lancar"}
+                ] },
+                
+                { id: "3", nama: "Budi Santoso", kelas: "Kelas Abu Bakar", kehadiran: "Izin", jilid: "Jilid 2", halaman: "5", surah: "An-Nas", ayat: "6", nilaiHafalan: "-", nilaiJilid: "-", riwayat: [] }
             ];
             
-            // Auto simulasi masuk ke dashboard (bypass login form for preview)
+            // Auto login simulasi sbg Ust Saprudin
             setTimeout(() => {
-                currentUserRole = 'admin';
-                currentUserClasses = ['Semua'];
+                currentUserRole = 'ustadz';
+                currentUserClasses = ['Kelas Abu Bakar', 'Kelas Umar'];
+                pengajarMap['Kelas Abu Bakar'] = "Ust. Saprudin S.Ag";
+                pengajarMap['Kelas Umar'] = "Ust. Saprudin S.Ag";
                 document.getElementById('view-login').style.display = 'none';
                 document.getElementById('main-nav').classList.remove('hidden');
                 initApp();
             }, 300);
         }
-
+        
         let authMode = 'login'; 
         window.toggleAuthMode = () => {
             authMode = authMode === 'login' ? 'register' : 'login';
@@ -381,14 +400,16 @@
                 document.getElementById('signup-fields').classList.remove('hidden');
                 document.getElementById('reg-nama').required = true;
                 document.getElementById('reg-kelas').required = true;
-                document.getElementById('demo-hint').classList.add('hidden');
+                if(document.getElementById('demo-hint')) document.getElementById('demo-hint').classList.add('hidden');
                 document.getElementById('auth-btn').innerText = 'Daftar & Masuk';
                 document.getElementById('toggle-auth-text').innerText = 'Sudah punya akun? Masuk di sini';
             } else {
                 document.getElementById('signup-fields').classList.add('hidden');
                 document.getElementById('reg-nama').required = false;
                 document.getElementById('reg-kelas').required = false;
-                document.getElementById('demo-hint').classList.remove('hidden');
+                if (is_preview && document.getElementById('demo-hint')) {
+                    document.getElementById('demo-hint').classList.remove('hidden');
+                }
                 document.getElementById('auth-btn').innerText = 'Masuk';
                 document.getElementById('toggle-auth-text').innerText = 'Belum punya akun? Daftar di sini';
             }
@@ -421,33 +442,33 @@
         };
 
         function getStars(riwayat) {
-            if(!riwayat || riwayat.length === 0) return '<span class="text-xs text-gray-400 italic">Belum ada bintang</span>';
+            if(!riwayat || riwayat.length === 0) return '<span class="text-xs text-gray-400 italic">Belum ada data</span>';
             
             let curr = new Date();
             let first = curr.getDate() - curr.getDay() + (curr.getDay() === 0 ? -6 : 1); 
             let monday = new Date(curr.setDate(first));
             monday.setHours(0,0,0,0);
             
-            let stars = 0;
-            let hasAbsence = false; // Flag sakti pendeteksi bolos
+            let friday = new Date(monday);
+            friday.setDate(monday.getDate() + 4);
+            friday.setHours(23,59,59,999);
             
-            riwayat.forEach(r => {
+            let weekData = riwayat.filter(r => {
                 let rDate = new Date(r.timestamp);
-                // Cek data di minggu ini (Senin - Jumat)
-                if(rDate >= monday && rDate.getDay() >= 1 && rDate.getDay() <= 5) {
-                    if (r.kehadiran === 'Hadir') {
-                        stars++;
-                    } else {
-                        hasAbsence = true; // Ketahuan bolos!
-                    }
-                }
+                return rDate >= monday && rDate <= friday && rDate.getDay() >= 1 && rDate.getDay() <= 5;
             });
             
-            // HUKUMAN: Jika ada absen 1x aja di hari kerja minggu ini, bintang langsung hangus!
-            if(hasAbsence) return '<span class="text-[10px] bg-red-100 text-red-600 px-2 py-0.5 rounded font-bold italic shadow-sm"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Hangus (Ada Absen)</span>';
-            
-            stars = Math.min(stars, 5);
-            return stars > 0 ? '<span class="text-yellow-400 text-sm drop-shadow-md">' + '⭐'.repeat(stars) + '</span>' : '<span class="text-xs text-gray-400 italic">Belum ada bintang</span>';
+            if(weekData.length === 0) return '<span class="text-xs text-gray-400 italic">Belum ada bintang minggu ini</span>';
+
+            // CEK STRICT: Jika ada satu saja hari dimana kehadiran BUKAN 'Hadir', langsung hangus!
+            let adaAbsen = weekData.some(r => r.kehadiran !== 'Hadir');
+            if(adaAbsen) {
+                return '<span class="px-2 py-0.5 bg-red-100 text-red-600 rounded text-[10px] font-bold border border-red-200">Hangus (Ada Absen)</span>';
+            }
+
+            // Jika lulus sensor strict (semua Hadir)
+            let stars = Math.min(weekData.length, 5);
+            return '<span class="text-yellow-400 text-sm">' + '⭐'.repeat(stars) + '</span>';
         }
 
         function getStatusBadge(status) {
@@ -507,7 +528,7 @@
                 else if(s.kehadiran === 'Alpa') alp++;
 
                 dashCards.innerHTML += `
-                    <div class="bg-white p-4 rounded-xl shadow border-l-4 ${s.kehadiran === 'Hadir' ? 'border-green-500' : (s.kehadiran === 'Alpa' ? 'border-red-500' : 'border-yellow-500')}">
+                    <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 ${s.kehadiran === 'Hadir' ? 'border-green-500' : (s.kehadiran === 'Alpa' ? 'border-red-500' : 'border-yellow-500')}">
                         <div class="flex justify-between items-start mb-2">
                             <div>
                                 <h4 class="font-bold text-gray-800">${s.nama}</h4>
@@ -515,11 +536,8 @@
                             </div>
                             ${getStatusBadge(s.kehadiran)}
                         </div>
-                        <div class="mb-2 bg-gray-50 p-2 rounded border border-gray-100">
-                            <span class="text-xs text-gray-500 font-bold block mb-1">Bintang Sen-Jum:</span>
-                            ${getStars(s.riwayat)}
-                        </div>
-                        <div class="text-sm text-gray-600 space-y-1">
+                        <div class="mb-2 text-sm text-gray-700 font-medium">Bintang Sen-Jum: ${getStars(s.riwayat)}</div>
+                        <div class="text-sm text-gray-600 space-y-1 mt-3">
                             <p><i class="fa-solid fa-book-open text-indigo-400 mr-2"></i>${s.jilid} - Hal ${s.halaman}</p>
                             <p><i class="fa-solid fa-headphones text-indigo-400 mr-2"></i>${s.surah} (Ayat ${s.ayat})</p>
                         </div>
@@ -543,13 +561,13 @@
                 return selectedClass === "Semua" || s.kelas === selectedClass;
             }).forEach(s => {
                 let actionButtons = `
-                    <button onclick="showHistory('${s.id}')" class="text-green-500 hover:text-green-700 bg-green-50 p-1.5 rounded" title="Riwayat"><i class="fa-solid fa-clock-rotate-left"></i></button>
-                    <button onclick="exportRapor('${s.id}')" class="text-red-500 hover:text-red-700 bg-red-50 p-1.5 rounded" title="Cetak Rapor"><i class="fa-solid fa-file-pdf"></i></button>
+                    <button onclick="showHistory('${s.id}')" class="text-green-500 hover:text-green-700" title="Riwayat"><i class="fa-solid fa-clock-rotate-left"></i></button>
+                    <button onclick="exportRapor('${s.id}')" class="text-red-500 hover:text-red-700" title="Cetak Rapor"><i class="fa-solid fa-file-pdf"></i></button>
                 `;
                 if(currentUserRole !== 'admin') {
                     actionButtons += `
-                        <button onclick="editSantri('${s.id}')" class="text-blue-500 hover:text-blue-700 bg-blue-50 p-1.5 rounded" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button onclick="deleteSantri('${s.id}')" class="text-red-300 hover:text-red-600 bg-red-50 p-1.5 rounded" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="editSantri('${s.id}')" class="text-blue-500 hover:text-blue-700" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button onclick="deleteSantri('${s.id}')" class="text-red-300 hover:text-red-600" title="Hapus"><i class="fa-solid fa-trash"></i></button>
                     `;
                 }
 
@@ -573,7 +591,7 @@
                             <div class="flex items-center space-x-1"><span class="text-[10px] text-gray-400 w-6">Jld:</span> ${badgeJilid}</div>
                         </td>
                         <td class="p-4 text-center">
-                            <div class="flex justify-center space-x-2 text-lg">
+                            <div class="flex justify-center space-x-3 text-lg">
                                 ${actionButtons}
                             </div>
                         </td>
@@ -589,14 +607,14 @@
                 .forEach(cls => {
                 const murid = dataStore.filter(s => s.kelas === cls);
                 kelasCont.innerHTML += `
-                    <div class="bg-white rounded-xl shadow p-5 border-t-4 border-indigo-300">
+                    <div class="bg-white rounded-xl shadow p-5">
                         <div class="flex justify-between items-center mb-4 border-b pb-2">
                             <h3 class="font-bold text-lg text-indigo-700">${cls}</h3>
                             <button onclick="exportKelas('${cls}')" class="bg-red-100 text-red-600 px-2 py-1 rounded text-xs font-bold hover:bg-red-200"><i class="fa-solid fa-file-pdf mr-1"></i> Cetak</button>
                         </div>
                         <p class="text-sm text-gray-500 mb-3"><i class="fa-solid fa-users mr-2"></i>Total: ${murid.length} Santri</p>
                         <ul class="text-sm space-y-2">
-                            ${murid.map(m => `<li class="flex justify-between items-center bg-gray-50 p-2 rounded"><span>${m.nama}</span> ${getStatusBadge(m.kehadiran)}</li>`).join('')}
+                            ${murid.map(m => `<li class="flex justify-between"><span>${m.nama}</span> ${getStatusBadge(m.kehadiran)}</li>`).join('')}
                         </ul>
                     </div>
                 `;
@@ -605,6 +623,9 @@
 
         document.getElementById('filter-kelas-tabel').addEventListener('change', renderAll);
         
+        // ==========================================
+        // 5. MODAL & CRUD
+        // ==========================================
         window.openModal = (mode) => {
             if(currentUserRole === 'admin') return;
             document.getElementById('santri-form').reset();
@@ -678,16 +699,17 @@
                 timestamp: currentTimestamp 
             };
 
-            if(is_preview) {
+            if (is_preview) {
                 let existing = dataStore.find(x => x.id === id);
                 if(existing) {
                     if(!existing.riwayat) existing.riwayat = [];
-                    // ANTI-NUMPUK (PREVIEW MODE)
+                    // Logika Anti-Numpuk (Preview Mode)
                     let existingIndex = existing.riwayat.findIndex(r => {
                         const d1 = new Date(r.timestamp);
                         const d2 = new Date();
                         return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
                     });
+                    
                     if(existingIndex !== -1) {
                         existing.riwayat[existingIndex] = { ...existing.riwayat[existingIndex], ...newData };
                     } else {
@@ -707,7 +729,7 @@
                     const oldDoc = dataStore.find(x => x.id === id);
                     let riwayatBaru = oldDoc && oldDoc.riwayat ? oldDoc.riwayat : [];
                     
-                    // ANTI-NUMPUK (PRODUCTION MODE)
+                    // Logika Anti-Numpuk (Live Mode)
                     let existingIndex = riwayatBaru.findIndex(r => {
                         const d1 = new Date(r.timestamp);
                         const d2 = new Date();
@@ -826,7 +848,7 @@
                 }
             });
             if(tbody.innerHTML === '') {
-                 tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-gray-400 italic">Tidak ada data di tanggal/kelas ini</td></tr>';
+                 tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-gray-400">Tidak ada data di tanggal/kelas ini</td></tr>';
             }
         }
 
@@ -836,6 +858,9 @@
             setTimeout(() => toast.classList.add('opacity-0', 'pointer-events-none'), 3000);
         };
 
+        // ==========================================
+        // 6. PDF EXPORT
+        // ==========================================
         window.exportRapor = (id) => {
             if(!window.jspdf) return;
             const s = dataStore.find(x => x.id === id);
@@ -898,6 +923,9 @@
             doc.save(`Rekap_${tgl}_${kelasFilter.replace(/\s+/g, '')}.pdf`);
         };
 
+        // ==========================================
+        // 7. INITIALIZATION & REGISTRATION LOGIC
+        // ==========================================
         function initApp() {
             renderAll();
             const lastView = localStorage.getItem('activeView') || 'dashboard';
@@ -905,7 +933,7 @@
         }
 
         window.doLogout = () => {
-            if(is_preview) {
+            if (is_preview) {
                 document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
                 const loginView = document.getElementById('view-login');
                 loginView.style.display = ''; 
@@ -938,12 +966,14 @@
             const errEl = document.getElementById('login-error');
             errEl.classList.add('hidden');
             
-            if(is_preview) {
+            if (is_preview) {
                 const emailLower = em.toLowerCase();
+                
                 if (authMode === 'register') {
                     const nm = document.getElementById('reg-nama').value;
                     const klInput = document.getElementById('reg-kelas').value;
                     const kelasArr = klInput.split(',').map(k => k.trim()).filter(k => k.length > 0);
+                    
                     kelasArr.forEach(kl => { pengajarMap[kl] = nm; });
                     emailMap[emailLower] = kelasArr;
                     
@@ -959,6 +989,7 @@
                         currentUserClasses = emailMap[emailLower] || ['Kelas Abu Bakar'];
                     }
                 }
+                
                 const loginView = document.getElementById('view-login');
                 loginView.style.display = 'none';
                 loginView.classList.remove('active');
@@ -988,7 +1019,8 @@
             }
         });
 
-        if(!is_preview) {
+        // STATE LISTENER FIREBASE UTAMA
+        if (!is_preview) {
             onAuthStateChanged(auth, async (user) => {
                 if(user) {
                     document.getElementById('view-login').style.display = 'none';

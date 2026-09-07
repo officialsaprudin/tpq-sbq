@@ -62,11 +62,10 @@
                 <h2 id="auth-title" class="text-2xl font-bold mb-6 text-center text-gray-800">Masuk ke Akun</h2>
                 
                 <form id="auth-form">
-                    <!-- Field Tambahan Untuk Register -->
                     <div id="signup-fields" class="hidden mb-4 space-y-4">
                         <div>
                             <label class="block text-gray-700 text-sm font-bold mb-2">Daftar Sebagai</label>
-                            <select id="reg-role" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" onchange="toggleRegFields()">
+                            <select id="reg-role" class="w-full px-3 py-2 border rounded-lg bg-white focus:ring-2 focus:ring-indigo-500" onchange="toggleRoleFields()">
                                 <option value="ustadz">Ustadz / Pengajar</option>
                                 <option value="admin">Admin Lembaga</option>
                             </select>
@@ -76,33 +75,32 @@
                             <input type="text" id="reg-nama" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Cth: Ust. Saprudin S.Ag">
                         </div>
                         <div id="field-kelas">
-                            <label class="block text-gray-700 text-sm font-bold mb-2">Kelas yang Diajar (Bisa lebih dari 1)</label>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Kelas yang Diajar</label>
                             <input type="text" id="reg-kelas" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Cth: Kelas Abu Bakar, Kelas Umar">
                             <p class="text-[10px] text-gray-400 mt-1">Pisahkan dengan koma jika memegang lebih dari satu kelas.</p>
                         </div>
                         <div id="field-lembaga" class="hidden">
-                            <label class="block text-gray-700 text-sm font-bold mb-2">Nama Lembaga</label>
-                            <input type="text" id="reg-lembaga" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Cth: TPQ Al-Hidayah">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Nama Lembaga (TPQ/TPA/Madrasah)</label>
+                            <input type="text" id="reg-lembaga" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Cth: TPQ Al-Ikhlas">
                         </div>
                     </div>
 
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
-                        <input type="email" id="login-email" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="saprudin@ngaji.com" required>
+                        <input type="email" id="login-email" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
                         
-                        <!-- List Akun Demo -->
-                        <div id="demo-hint" class="mt-4 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                        <div id="demo-hint" class="mt-4 bg-gray-50 p-3 rounded-lg border border-gray-200 hidden">
                             <p class="text-xs text-gray-600 font-bold border-b border-gray-300 pb-1 mb-2">Daftar Akun Demo:</p>
                             <ul class="text-xs text-gray-600 space-y-2 list-none">
-                                <li>👑 <span class="text-indigo-600 font-bold cursor-pointer hover:underline" onclick="document.getElementById('login-email').value='admin@ngaji.com'">admin@ngaji.com</span> <br><span class="text-[10px] text-gray-400 ml-5">(Akses Semua Kelas)</span></li>
-                                <li>👨‍🏫 <span class="text-green-600 font-bold cursor-pointer hover:underline" onclick="document.getElementById('login-email').value='saprudin@ngaji.com'">saprudin@ngaji.com</span> <br><span class="text-[10px] text-gray-400 ml-5">(Wali Kelas Abu Bakar, Umar)</span></li>
+                                <li>👑 <span class="text-indigo-600 font-bold cursor-pointer hover:underline" onclick="document.getElementById('login-email').value='admin@ngaji.com'; document.getElementById('login-password').value='123456';">admin@ngaji.com</span> <br><span class="text-[10px] text-gray-400 ml-5">(Akses Semua Kelas)</span></li>
+                                <li>👨‍🏫 <span class="text-green-600 font-bold cursor-pointer hover:underline" onclick="document.getElementById('login-email').value='saprudin@ngaji.com'; document.getElementById('login-password').value='123456';">saprudin@ngaji.com</span> <br><span class="text-[10px] text-gray-400 ml-5">(Wali Kelas Madinah)</span></li>
                             </ul>
                         </div>
                     </div>
 
                     <div class="mb-6">
                         <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
-                        <input type="password" id="login-password" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="••••••••••" value="123456" required>
+                        <input type="password" id="login-password" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
                     </div>
 
                     <button type="submit" id="auth-btn" class="w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 transition">Masuk</button>
@@ -117,11 +115,9 @@
 
         <!-- View: Dashboard -->
         <div id="view-dashboard" class="view-section">
-            <div class="flex justify-between items-center mb-6">
+            <div class="flex items-center mb-6">
                 <h2 id="dash-title" class="text-2xl font-bold text-gray-800">Ringkasan Hari Ini</h2>
-                <button id="btn-edit-lembaga" onclick="openEditLembaga()" class="hidden bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg text-sm font-bold shadow-sm hover:bg-gray-300 transition">
-                    <i class="fa-solid fa-pen mr-1"></i> Edit Lembaga
-                </button>
+                <button id="btn-edit-lembaga" onclick="openLembagaModal()" class="ml-3 bg-gray-200 text-gray-600 px-2 py-1 rounded text-xs font-bold hover:bg-gray-300 hidden"><i class="fa-solid fa-pen"></i> Edit</button>
             </div>
             
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -205,18 +201,25 @@
                 </div>
             </div>
 
-            <!-- Tambahan: Jurnal Kelas Harian -->
-            <div id="jurnal-section" class="mb-6 bg-indigo-50 border border-indigo-100 p-4 rounded-xl hidden">
-                <div class="flex justify-between items-start mb-2">
-                    <h3 class="font-bold text-indigo-800"><i class="fa-solid fa-book-journal-whills mr-2"></i>Jurnal Kelas Harian</h3>
-                    <button id="btn-edit-jurnal" onclick="openJurnal()" class="bg-indigo-600 text-white px-3 py-1 rounded text-xs font-bold shadow hover:bg-indigo-700 transition">
-                        Isi/Edit Jurnal
-                    </button>
+            <!-- JURNAL KELAS HARIAN UI -->
+            <div id="jurnal-section" class="bg-indigo-50 p-4 rounded-xl shadow-sm mb-6 hidden border border-indigo-100">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-indigo-800"><i class="fa-solid fa-book-journal-whills mr-2"></i> Jurnal Kelas Harian</h3>
+                    <button onclick="openJurnalModal()" class="bg-indigo-600 text-white px-3 py-1 rounded text-sm font-bold shadow hover:bg-indigo-700 transition">Isi/Edit Jurnal</button>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-700 mt-3">
-                    <div class="bg-white p-3 rounded-lg border border-indigo-50"><span class="font-bold block text-xs text-indigo-500 mb-1">Tadarus Surah</span><span id="txt-jurnal-tadarus">-</span></div>
-                    <div class="bg-white p-3 rounded-lg border border-indigo-50"><span class="font-bold block text-xs text-indigo-500 mb-1">Murojaah (Surah & Ayat)</span><span id="txt-jurnal-murojaah">-</span></div>
-                    <div class="bg-white p-3 rounded-lg border border-indigo-50"><span class="font-bold block text-xs text-indigo-500 mb-1">Materi Pembelajaran</span><span id="txt-jurnal-materi">-</span></div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white p-3 rounded-lg border border-indigo-50 shadow-sm">
+                        <p class="text-xs text-indigo-500 font-bold mb-1">Tadarus Surah</p>
+                        <p id="jurnal-view-tadarus" class="text-sm font-medium text-gray-800">-</p>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg border border-indigo-50 shadow-sm">
+                        <p class="text-xs text-indigo-500 font-bold mb-1">Murojaah (Surah & Ayat)</p>
+                        <p id="jurnal-view-murojaah" class="text-sm font-medium text-gray-800">-</p>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg border border-indigo-50 shadow-sm">
+                        <p class="text-xs text-indigo-500 font-bold mb-1">Materi Pembelajaran</p>
+                        <p id="jurnal-view-materi" class="text-sm font-medium text-gray-800">-</p>
+                    </div>
                 </div>
             </div>
 
@@ -241,7 +244,7 @@
 
     </main>
 
-    <!-- Modal Form (Tambah/Edit) -->
+    <!-- Modal Form (Tambah/Edit Santri) -->
     <div id="modal-form" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden">
             <div class="bg-indigo-600 px-6 py-4 flex justify-between items-center text-white">
@@ -250,17 +253,14 @@
             </div>
             <form id="santri-form" class="p-6">
                 <input type="hidden" id="form-id">
-                
                 <div class="mb-4">
                     <label class="block text-sm font-bold text-gray-700 mb-1">Nama Santri</label>
                     <input type="text" id="form-nama" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500" required>
                 </div>
-                
                 <div class="mb-4">
                     <label class="block text-sm font-bold text-gray-700 mb-1">Kelas / Rombel</label>
                     <select id="form-kelas" class="w-full px-3 py-2 border rounded-lg bg-white focus:ring-2 focus:ring-indigo-500" required></select>
                 </div>
-
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Kehadiran</label>
@@ -273,25 +273,23 @@
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Posisi Jilid</label>
-                        <input type="text" id="form-jilid" class="w-full px-3 py-2 border rounded-lg" placeholder="Cth: Jilid 4">
+                        <input type="text" id="form-jilid" class="w-full px-3 py-2 border rounded-lg">
                     </div>
                 </div>
-
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Halaman (Ngaji)</label>
-                        <input type="text" id="form-halaman" class="w-full px-3 py-2 border rounded-lg" placeholder="Cth: 15">
+                        <input type="text" id="form-halaman" class="w-full px-3 py-2 border rounded-lg">
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Surah Hafalan</label>
-                        <input type="text" id="form-surah" class="w-full px-3 py-2 border rounded-lg" placeholder="Cth: An-Naba">
+                        <input type="text" id="form-surah" class="w-full px-3 py-2 border rounded-lg">
                     </div>
                 </div>
-
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Ayat Hafalan Terakhir</label>
-                        <input type="text" id="form-ayat" class="w-full px-3 py-2 border rounded-lg" placeholder="Cth: 30">
+                        <input type="text" id="form-ayat" class="w-full px-3 py-2 border rounded-lg">
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Nilai Hafalan</label>
@@ -303,7 +301,6 @@
                         </select>
                     </div>
                 </div>
-
                 <div class="grid grid-cols-2 gap-4 mb-6">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Nilai Jilid/Ngaji</label>
@@ -315,7 +312,6 @@
                         </select>
                     </div>
                 </div>
-
                 <div class="flex justify-end space-x-2">
                     <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-bold hover:bg-gray-300">Batal</button>
                     <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold hover:bg-indigo-700">Simpan Data</button>
@@ -353,46 +349,44 @@
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden">
             <div class="bg-indigo-600 px-6 py-4 flex justify-between items-center text-white">
                 <h3 class="font-bold text-lg">Edit Nama Lembaga</h3>
-                <button onclick="closeEditLembaga()" class="hover:text-gray-300"><i class="fa-solid fa-xmark text-xl"></i></button>
+                <button onclick="closeLembagaModal()" class="hover:text-gray-300"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
             <form id="lembaga-form" class="p-6">
-                <div class="mb-6">
-                    <label class="block text-sm font-bold text-gray-700 mb-2">Nama Lembaga Baru</label>
-                    <input type="text" id="form-nama-lembaga" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500" required>
+                <div class="mb-4">
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Nama Lembaga (Dashboard)</label>
+                    <input type="text" id="form-edit-lembaga" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500" required>
                 </div>
                 <div class="flex justify-end space-x-2">
-                    <button type="button" onclick="closeEditLembaga()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-bold hover:bg-gray-300">Batal</button>
+                    <button type="button" onclick="closeLembagaModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-bold hover:bg-gray-300">Batal</button>
                     <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold hover:bg-indigo-700">Simpan</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Modal Jurnal Kelas -->
+    <!-- Modal Jurnal Harian -->
     <div id="modal-jurnal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="bg-indigo-600 px-6 py-4 flex justify-between items-center text-white">
-                <h3 class="font-bold text-lg">Input Jurnal Kelas Harian</h3>
-                <button onclick="closeJurnal()" class="hover:text-gray-300"><i class="fa-solid fa-xmark text-xl"></i></button>
+                <h3 class="font-bold text-lg">Isi Jurnal Kelas Harian</h3>
+                <button onclick="closeJurnalModal()" class="hover:text-gray-300"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
             <form id="jurnal-form" class="p-6">
-                <input type="hidden" id="jurnal-kelas">
-                <input type="hidden" id="jurnal-tanggal">
-                
+                <p class="text-xs text-gray-500 mb-4 bg-indigo-50 p-2 rounded">Jurnal ini akan tersimpan untuk kelas dan tanggal yang sedang difilter di halaman Rekap.</p>
                 <div class="mb-4">
                     <label class="block text-sm font-bold text-gray-700 mb-1">Tadarus Surah</label>
-                    <input type="text" id="form-jurnal-tadarus" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="Cth: Al-Baqarah 1-10">
+                    <input type="text" id="form-jurnal-tadarus" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="Cth: Al-Baqarah (1-10)">
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-bold text-gray-700 mb-1">Murojaah Surah & Ayat</label>
-                    <input type="text" id="form-jurnal-murojaah" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="Cth: An-Naba 1-40">
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Murojaah (Surah & Ayat)</label>
+                    <input type="text" id="form-jurnal-murojaah" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="Cth: An-Naba s/d An-Naziat">
                 </div>
                 <div class="mb-6">
                     <label class="block text-sm font-bold text-gray-700 mb-1">Materi Pembelajaran</label>
-                    <textarea id="form-jurnal-materi" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="Cth: Penjelasan Tajwid Idgham Bighunnah" rows="3"></textarea>
+                    <textarea id="form-jurnal-materi" rows="3" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="Cth: Tajwid Hukum Nun Mati"></textarea>
                 </div>
                 <div class="flex justify-end space-x-2">
-                    <button type="button" onclick="closeJurnal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-bold hover:bg-gray-300">Batal</button>
+                    <button type="button" onclick="closeJurnalModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-bold hover:bg-gray-300">Batal</button>
                     <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold hover:bg-indigo-700">Simpan Jurnal</button>
                 </div>
             </form>
@@ -406,7 +400,7 @@
 
     <!-- Firebase SDK (Modular v9) -->
     <script type="module">
-        const is_preview = false; // UBAH JADI false UNTUK PRODUKSI YAH BOS
+        const is_preview = false; // Set ke false untuk produksi (Firebase Asli)
 
         const firebaseConfig = {
   apiKey: "AIzaSyCfapSUazt_uCVVI5uttatd2iGR7DyLk54",
@@ -419,13 +413,14 @@
         };
 
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         let db, auth;
         let currentUserRole = 'admin'; 
         let currentUserClasses = ['Semua']; 
-        let currentLembaga = ''; 
+        let currentLembagaName = 'Ringkasan Hari Ini';
+        let currentUserId = '';
 
         if (!is_preview) {
             const app = initializeApp(firebaseConfig);
@@ -434,60 +429,15 @@
         }
 
         let dataStore = [];
-        let jurnalStore = []; // Tambahan state buat nampung Jurnal Kelas
+        let jurnalStore = [];
         let classesSet = new Set();
         let pengajarMap = {};
         
-        let emailMap = {
-            "saprudin@ngaji.com": { role: "ustadz", kelas: ["Kelas Abu Bakar", "Kelas Umar"] },
-            "admin@ngaji.com": { role: "admin", lembaga: "TPQ Al-Hidayah Pusat" }
-        };
-
-        if (is_preview) {
-            let tglHariIni = new Date();
-            let yyyy = tglHariIni.getFullYear();
-            let mm = String(tglHariIni.getMonth() + 1).padStart(2, '0');
-            let dd = String(tglHariIni.getDate()).padStart(2, '0');
-            let tglLokal = `${yyyy}-${mm}-${dd}`;
-            
-            let tglKemarin = new Date(tglHariIni);
-            tglKemarin.setDate(tglKemarin.getDate() - 1);
-            
-            dataStore = [
-                { id: "1", nama: "Ahmad Yasin", kelas: "Kelas Abu Bakar", kehadiran: "Hadir", jilid: "Jilid 4", halaman: "15", surah: "An-Naba", ayat: "30", nilaiHafalan: "Lancar", nilaiJilid: "Kurang Lancar", riwayat: [{timestamp: tglHariIni.toISOString(), kehadiran: "Hadir", jilid: "Jilid 4", halaman: "15", surah: "An-Naba", ayat: "30", nilaiHafalan: "Lancar", nilaiJilid: "Kurang Lancar"}] },
-                { id: "2", nama: "Fatimah Azzahra", kelas: "Kelas Umar", kehadiran: "Alpa", jilid: "Al-Quran", halaman: "102", surah: "Al-Mulk", ayat: "12", nilaiHafalan: "-", nilaiJilid: "-", riwayat: [
-                    {timestamp: tglHariIni.toISOString(), kehadiran: "Alpa", jilid: "-", halaman: "-", surah: "-", ayat: "-", nilaiHafalan: "-", nilaiJilid: "-"},
-                    {timestamp: tglKemarin.toISOString(), kehadiran: "Hadir", jilid: "Al-Quran", halaman: "102", surah: "Al-Mulk", ayat: "12", nilaiHafalan: "Lancar", nilaiJilid: "Lancar"}
-                ] },
-                { id: "3", nama: "Budi Santoso", kelas: "Kelas Abu Bakar", kehadiran: "Izin", jilid: "Jilid 2", halaman: "5", surah: "An-Nas", ayat: "6", nilaiHafalan: "-", nilaiJilid: "-", riwayat: [] }
-            ];
-
-            jurnalStore = [
-                { id: `Kelas Abu Bakar_${tglLokal}`, kelas: "Kelas Abu Bakar", tanggal: tglLokal, tadarus: "Al-Baqarah", murojaah: "An-Naba 1-40", materi: "Makhorijul Huruf" }
-            ];
-        }
-        
         let authMode = 'login'; 
         
-        window.toggleRegFields = () => {
-            const role = document.getElementById('reg-role').value;
-            const fieldKelas = document.getElementById('field-kelas');
-            const fieldLembaga = document.getElementById('field-lembaga');
-            const inputKelas = document.getElementById('reg-kelas');
-            const inputLembaga = document.getElementById('reg-lembaga');
-
-            if (role === 'admin') {
-                fieldKelas.classList.add('hidden');
-                fieldLembaga.classList.remove('hidden');
-                inputKelas.required = false;
-                inputLembaga.required = true;
-            } else {
-                fieldKelas.classList.remove('hidden');
-                fieldLembaga.classList.add('hidden');
-                inputKelas.required = true;
-                inputLembaga.required = false;
-            }
-        };
+        if (is_preview) {
+            document.getElementById('demo-hint').classList.remove('hidden');
+        }
 
         window.toggleAuthMode = () => {
             authMode = authMode === 'login' ? 'register' : 'login';
@@ -496,7 +446,7 @@
             if(authMode === 'register') {
                 document.getElementById('signup-fields').classList.remove('hidden');
                 document.getElementById('reg-nama').required = true;
-                toggleRegFields(); 
+                toggleRoleFields();
                 document.getElementById('demo-hint').classList.add('hidden');
                 document.getElementById('auth-btn').innerText = 'Daftar & Masuk';
                 document.getElementById('toggle-auth-text').innerText = 'Sudah punya akun? Masuk di sini';
@@ -505,18 +455,26 @@
                 document.getElementById('reg-nama').required = false;
                 document.getElementById('reg-kelas').required = false;
                 document.getElementById('reg-lembaga').required = false;
-                if (is_preview) {
-                    document.getElementById('demo-hint').classList.remove('hidden');
-                }
+                if (is_preview) document.getElementById('demo-hint').classList.remove('hidden');
                 document.getElementById('auth-btn').innerText = 'Masuk';
                 document.getElementById('toggle-auth-text').innerText = 'Belum punya akun? Daftar di sini';
             }
         };
 
-        if (!is_preview) {
-            const demoHint = document.getElementById('demo-hint');
-            if (demoHint) demoHint.classList.add('hidden');
-        }
+        window.toggleRoleFields = () => {
+            const role = document.getElementById('reg-role').value;
+            if (role === 'admin') {
+                document.getElementById('field-kelas').classList.add('hidden');
+                document.getElementById('reg-kelas').required = false;
+                document.getElementById('field-lembaga').classList.remove('hidden');
+                document.getElementById('reg-lembaga').required = true;
+            } else {
+                document.getElementById('field-kelas').classList.remove('hidden');
+                document.getElementById('reg-kelas').required = true;
+                document.getElementById('field-lembaga').classList.add('hidden');
+                document.getElementById('reg-lembaga').required = false;
+            }
+        };
 
         window.toggleMobileMenu = () => {
             document.getElementById('mobile-menu').classList.toggle('hidden');
@@ -535,18 +493,6 @@
             } else {
                 document.getElementById('main-nav').classList.remove('hidden');
                 localStorage.setItem('activeView', viewId);
-                
-                const dashTitle = document.getElementById('dash-title');
-                const btnEditLembaga = document.getElementById('btn-edit-lembaga');
-                if (viewId === 'dashboard' && dashTitle) {
-                    if (currentUserRole === 'admin') {
-                        dashTitle.innerText = currentLembaga ? `Ringkasan Hari Ini - ${currentLembaga}` : `Ringkasan Hari Ini`;
-                        if(btnEditLembaga) btnEditLembaga.classList.remove('hidden');
-                    } else {
-                        dashTitle.innerText = `Ringkasan Hari Ini`;
-                        if(btnEditLembaga) btnEditLembaga.classList.add('hidden');
-                    }
-                }
             }
             
             document.querySelectorAll('.nav-btn').forEach(btn => {
@@ -556,32 +502,32 @@
             if(viewId === 'rekap') renderRekap();
         };
 
+        // BINTANG STRICT (Hangus jika ada Alpa/Izin/Sakit dalam seminggu)
         function getStars(riwayat) {
-            if(!riwayat || riwayat.length === 0) return '<span class="text-xs text-gray-400 italic">Belum ada data</span>';
-            
+            if(!riwayat || riwayat.length === 0) return '<span class="text-xs text-gray-400 italic">Belum ada bintang</span>';
             let curr = new Date();
             let first = curr.getDate() - curr.getDay() + (curr.getDay() === 0 ? -6 : 1); 
             let monday = new Date(curr.setDate(first));
             monday.setHours(0,0,0,0);
             
-            let friday = new Date(monday);
-            friday.setDate(monday.getDate() + 4);
-            friday.setHours(23,59,59,999);
-            
-            let weekData = riwayat.filter(r => {
+            let stars = 0;
+            let adaAbsen = false;
+
+            riwayat.forEach(r => {
                 let rDate = new Date(r.timestamp);
-                return rDate >= monday && rDate <= friday && rDate.getDay() >= 1 && rDate.getDay() <= 5;
+                if(rDate >= monday && rDate.getDay() >= 1 && rDate.getDay() <= 5) {
+                    if (r.kehadiran === 'Hadir') {
+                        stars++;
+                    } else {
+                        adaAbsen = true; 
+                    }
+                }
             });
+
+            if (adaAbsen) return '<span class="text-xs text-red-500 font-bold bg-red-100 px-2 py-0.5 rounded">Hangus (Ada Absen)</span>';
             
-            if(weekData.length === 0) return '<span class="text-xs text-gray-400 italic">Belum ada bintang minggu ini</span>';
-
-            let adaAbsen = weekData.some(r => r.kehadiran !== 'Hadir');
-            if(adaAbsen) {
-                return '<span class="px-2 py-0.5 bg-red-100 text-red-600 rounded text-[10px] font-bold border border-red-200">Hangus (Ada Absen)</span>';
-            }
-
-            let stars = Math.min(weekData.length, 5);
-            return '<span class="text-yellow-400 text-sm">' + '⭐'.repeat(stars) + '</span>';
+            stars = Math.min(stars, 5);
+            return stars > 0 ? '<span class="text-yellow-400 text-sm">' + '⭐'.repeat(stars) + '</span>' : '<span class="text-xs text-gray-400 italic">Belum ada bintang</span>';
         }
 
         function getStatusBadge(status) {
@@ -630,6 +576,11 @@
             const btnTambah = document.getElementById('btn-tambah-santri');
             if(btnTambah) btnTambah.style.display = currentUserRole === 'admin' ? 'none' : 'block';
 
+            // Dashboard Title & Edit Button
+            document.getElementById('dash-title').innerText = currentUserRole === 'admin' ? currentLembagaName : 'Ringkasan Hari Ini';
+            const btnEditLembaga = document.getElementById('btn-edit-lembaga');
+            if(btnEditLembaga) btnEditLembaga.style.display = currentUserRole === 'admin' ? 'block' : 'none';
+
             // 1. Dashboard
             let had = 0, iz = 0, alp = 0;
             const dashCards = document.getElementById('dashboard-cards');
@@ -649,8 +600,8 @@
                             </div>
                             ${getStatusBadge(s.kehadiran)}
                         </div>
-                        <div class="mb-2 text-sm text-gray-700 font-medium">Bintang Sen-Jum: ${getStars(s.riwayat)}</div>
-                        <div class="text-sm text-gray-600 space-y-1 mt-3">
+                        <div class="mb-2">Bintang Sen-Jum: ${getStars(s.riwayat)}</div>
+                        <div class="text-sm text-gray-600 space-y-1">
                             <p><i class="fa-solid fa-book-open text-indigo-400 mr-2"></i>${s.jilid} - Hal ${s.halaman}</p>
                             <p><i class="fa-solid fa-headphones text-indigo-400 mr-2"></i>${s.surah} (Ayat ${s.ayat})</p>
                         </div>
@@ -685,7 +636,6 @@
                 }
 
                 let namaWaliKelas = pengajarMap[s.kelas] || '-';
-                
                 let badgeHafalan = getKetBadge(s.nilaiHafalan || s.keterangan);
                 let badgeJilid = getKetBadge(s.nilaiJilid || s.keterangan);
 
@@ -737,8 +687,10 @@
         document.getElementById('filter-kelas-tabel').addEventListener('change', renderAll);
         
         // ==========================================
-        // 5. MODAL & CRUD
+        // 5. MODALS & CRUD
         // ==========================================
+        
+        // --- SANTRI CRUD ---
         window.openModal = (mode) => {
             if(currentUserRole === 'admin') return;
             document.getElementById('santri-form').reset();
@@ -747,10 +699,7 @@
             
             const selectKelas = document.getElementById('form-kelas');
             selectKelas.innerHTML = '';
-            
-            currentUserClasses.forEach(cls => {
-                selectKelas.innerHTML += `<option value="${cls}">${cls}</option>`;
-            });
+            currentUserClasses.forEach(cls => { selectKelas.innerHTML += `<option value="${cls}">${cls}</option>`; });
 
             document.getElementById('form-halaman').value = "-";
             document.getElementById('form-surah').value = "-";
@@ -765,18 +714,14 @@
         window.editSantri = (id) => {
             if(currentUserRole === 'admin') return;
             const s = dataStore.find(x => x.id === id);
-            if(currentUserRole === 'ustadz' && !currentUserClasses.includes(s.kelas)) {
-                alert("Akses Ditolak."); return;
-            }
+            if(currentUserRole === 'ustadz' && !currentUserClasses.includes(s.kelas)) { alert("Akses Ditolak."); return; }
             if(s) {
                 document.getElementById('form-id').value = s.id;
                 document.getElementById('form-nama').value = s.nama;
                 
                 const selectKelas = document.getElementById('form-kelas');
                 selectKelas.innerHTML = '';
-                currentUserClasses.forEach(cls => {
-                    selectKelas.innerHTML += `<option value="${cls}" ${cls === s.kelas ? 'selected' : ''}>${cls}</option>`;
-                });
+                currentUserClasses.forEach(cls => { selectKelas.innerHTML += `<option value="${cls}" ${cls === s.kelas ? 'selected' : ''}>${cls}</option>`; });
 
                 document.getElementById('form-kehadiran').value = s.kehadiran;
                 document.getElementById('form-jilid').value = s.jilid;
@@ -799,17 +744,11 @@
             const currentTimestamp = new Date().toISOString();
 
             const newData = {
-                id: id,
-                nama: document.getElementById('form-nama').value,
-                kelas: finalKelas,
-                kehadiran: document.getElementById('form-kehadiran').value,
-                jilid: document.getElementById('form-jilid').value,
-                halaman: document.getElementById('form-halaman').value,
-                surah: document.getElementById('form-surah').value,
-                ayat: document.getElementById('form-ayat').value,
-                nilaiHafalan: document.getElementById('form-nilai-hafalan').value,
-                nilaiJilid: document.getElementById('form-nilai-jilid').value,
-                timestamp: currentTimestamp 
+                id: id, nama: document.getElementById('form-nama').value, kelas: finalKelas,
+                kehadiran: document.getElementById('form-kehadiran').value, jilid: document.getElementById('form-jilid').value,
+                halaman: document.getElementById('form-halaman').value, surah: document.getElementById('form-surah').value,
+                ayat: document.getElementById('form-ayat').value, nilaiHafalan: document.getElementById('form-nilai-hafalan').value,
+                nilaiJilid: document.getElementById('form-nilai-jilid').value, timestamp: currentTimestamp 
             };
 
             if (is_preview) {
@@ -817,24 +756,17 @@
                 if(existing) {
                     if(!existing.riwayat) existing.riwayat = [];
                     let existingIndex = existing.riwayat.findIndex(r => {
-                        const d1 = new Date(r.timestamp);
-                        const d2 = new Date();
+                        const d1 = new Date(r.timestamp), d2 = new Date();
                         return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
                     });
-                    
-                    if(existingIndex !== -1) {
-                        existing.riwayat[existingIndex] = { ...existing.riwayat[existingIndex], ...newData };
-                    } else {
-                        existing.riwayat.unshift({...newData});
-                    }
+                    if(existingIndex !== -1) existing.riwayat[existingIndex] = { ...existing.riwayat[existingIndex], ...newData };
+                    else existing.riwayat.unshift({...newData});
                     Object.assign(existing, newData);
                 } else {
                     newData.riwayat = [{...newData}];
                     dataStore.push(newData);
                 }
-                closeModal();
-                renderAll();
-                showToast();
+                closeModal(); renderAll(); showToast();
             } else {
                 try {
                     const santriRef = doc(db, "santri", id);
@@ -842,20 +774,15 @@
                     let riwayatBaru = oldDoc && oldDoc.riwayat ? oldDoc.riwayat : [];
                     
                     let existingIndex = riwayatBaru.findIndex(r => {
-                        const d1 = new Date(r.timestamp);
-                        const d2 = new Date();
+                        const d1 = new Date(r.timestamp), d2 = new Date();
                         return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
                     });
 
-                    if(existingIndex !== -1) {
-                        riwayatBaru[existingIndex] = { ...riwayatBaru[existingIndex], ...newData };
-                    } else {
-                        riwayatBaru.unshift(newData);
-                    }
+                    if(existingIndex !== -1) riwayatBaru[existingIndex] = { ...riwayatBaru[existingIndex], ...newData };
+                    else riwayatBaru.unshift(newData);
                     
                     await setDoc(santriRef, { ...newData, riwayat: riwayatBaru });
-                    closeModal();
-                    showToast();
+                    closeModal(); showToast();
                 } catch(err) { alert(err.message); }
             }
         });
@@ -911,95 +838,83 @@
         };
         window.closeHistory = () => document.getElementById('modal-history').classList.add('hidden');
 
-        window.openEditLembaga = () => {
+        // --- LEMBAGA CRUD (ADMIN) ---
+        window.openLembagaModal = () => {
             if (currentUserRole !== 'admin') return;
-            document.getElementById('form-nama-lembaga').value = currentLembaga || '';
+            document.getElementById('form-edit-lembaga').value = currentLembagaName;
             document.getElementById('modal-lembaga').classList.remove('hidden');
         };
-
-        window.closeEditLembaga = () => document.getElementById('modal-lembaga').classList.add('hidden');
-
+        window.closeLembagaModal = () => document.getElementById('modal-lembaga').classList.add('hidden');
+        
         document.getElementById('lembaga-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             if (currentUserRole !== 'admin') return;
             
-            const namaBaru = document.getElementById('form-nama-lembaga').value;
-            
+            const newName = document.getElementById('form-edit-lembaga').value;
             if (is_preview) {
-                currentLembaga = namaBaru;
-                const em = document.getElementById('login-email').value.toLowerCase();
-                if(emailMap[em]) emailMap[em].lembaga = namaBaru;
-                
-                document.getElementById('dash-title').innerText = `Ringkasan Hari Ini - ${currentLembaga}`;
-                closeEditLembaga();
+                currentLembagaName = newName;
+                document.getElementById('dash-title').innerText = currentLembagaName;
+                closeLembagaModal();
                 showToast();
             } else {
                 try {
-                    const userId = auth.currentUser.uid;
-                    await updateDoc(doc(db, "users", userId), { lembaga: namaBaru });
-                    currentLembaga = namaBaru;
-                    document.getElementById('dash-title').innerText = `Ringkasan Hari Ini - ${currentLembaga}`;
-                    closeEditLembaga();
-                    showToast();
-                } catch(error) {
-                    alert("Gagal update lembaga: " + error.message);
-                }
-            }
-        });
-
-        // ==========================================
-        // FITUR TAMBAHAN: JURNAL KELAS HARIAN
-        // ==========================================
-        window.openJurnal = () => {
-            const tgl = document.getElementById('filter-tanggal').value;
-            const kelas = document.getElementById('filter-kelas-rekap').value;
-            if(kelas === 'Semua') return;
-            
-            document.getElementById('jurnal-kelas').value = kelas;
-            document.getElementById('jurnal-tanggal').value = tgl;
-            
-            let jData = jurnalStore.find(j => j.kelas === kelas && j.tanggal === tgl);
-            document.getElementById('form-jurnal-tadarus').value = jData ? jData.tadarus || '' : '';
-            document.getElementById('form-jurnal-murojaah').value = jData ? jData.murojaah || '' : '';
-            document.getElementById('form-jurnal-materi').value = jData ? jData.materi || '' : '';
-            
-            document.getElementById('modal-jurnal').classList.remove('hidden');
-        };
-        
-        window.closeJurnal = () => document.getElementById('modal-jurnal').classList.add('hidden');
-
-        document.getElementById('jurnal-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const kelas = document.getElementById('jurnal-kelas').value;
-            const tgl = document.getElementById('jurnal-tanggal').value;
-            const id = `${kelas}_${tgl}`;
-            
-            const newData = {
-                id: id,
-                kelas: kelas,
-                tanggal: tgl,
-                tadarus: document.getElementById('form-jurnal-tadarus').value,
-                murojaah: document.getElementById('form-jurnal-murojaah').value,
-                materi: document.getElementById('form-jurnal-materi').value
-            };
-
-            if(is_preview) {
-                let existingIndex = jurnalStore.findIndex(x => x.id === id);
-                if(existingIndex !== -1) jurnalStore[existingIndex] = newData;
-                else jurnalStore.push(newData);
-                
-                closeJurnal();
-                renderRekap();
-                showToast();
-            } else {
-                try {
-                    await setDoc(doc(db, "jurnal", id), newData);
-                    closeJurnal();
+                    await setDoc(doc(db, "users", currentUserId), { lembaga: newName }, { merge: true });
+                    currentLembagaName = newName;
+                    document.getElementById('dash-title').innerText = currentLembagaName;
+                    closeLembagaModal();
                     showToast();
                 } catch(err) { alert(err.message); }
             }
         });
 
+        // --- JURNAL KELAS HARIAN CRUD ---
+        window.openJurnalModal = () => {
+            const tgl = document.getElementById('filter-tanggal').value;
+            const kelas = document.getElementById('filter-kelas-rekap').value;
+            if (kelas === "Semua") { alert("Pilih satu kelas spesifik terlebih dahulu!"); return; }
+            
+            const jId = `${kelas}_${tgl}`;
+            const targetJurnal = jurnalStore.find(j => j.id === jId);
+            
+            if(targetJurnal) {
+                document.getElementById('form-jurnal-tadarus').value = targetJurnal.tadarus || '';
+                document.getElementById('form-jurnal-murojaah').value = targetJurnal.murojaah || '';
+                document.getElementById('form-jurnal-materi').value = targetJurnal.materi || '';
+            } else {
+                document.getElementById('jurnal-form').reset();
+            }
+            document.getElementById('modal-jurnal').classList.remove('hidden');
+        };
+        window.closeJurnalModal = () => document.getElementById('modal-jurnal').classList.add('hidden');
+
+        document.getElementById('jurnal-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const tgl = document.getElementById('filter-tanggal').value;
+            const kelas = document.getElementById('filter-kelas-rekap').value;
+            const jId = `${kelas}_${tgl}`;
+            
+            const newData = {
+                id: jId, kelas: kelas, tanggal: tgl,
+                tadarus: document.getElementById('form-jurnal-tadarus').value,
+                murojaah: document.getElementById('form-jurnal-murojaah').value,
+                materi: document.getElementById('form-jurnal-materi').value,
+                timestamp: new Date().toISOString()
+            };
+
+            if (is_preview) {
+                let existingIndex = jurnalStore.findIndex(j => j.id === jId);
+                if(existingIndex !== -1) jurnalStore[existingIndex] = newData;
+                else jurnalStore.push(newData);
+                closeJurnalModal(); renderRekap(); showToast();
+            } else {
+                try {
+                    await setDoc(doc(db, "jurnal", jId), newData);
+                    closeJurnalModal(); showToast();
+                } catch(err) { alert(err.message); }
+            }
+        });
+
+        // --- REKAP & JURNAL RENDER ---
         document.getElementById('filter-tanggal').valueAsDate = new Date();
         document.getElementById('filter-tanggal').addEventListener('change', renderRekap);
         document.getElementById('filter-kelas-rekap').addEventListener('change', renderRekap);
@@ -1009,7 +924,7 @@
             const kelasFilter = document.getElementById('filter-kelas-rekap').value;
             const tbody = document.getElementById('rekap-tbody');
             const infoPengajar = document.getElementById('info-pengajar-rekap');
-            const jurnalSection = document.getElementById('jurnal-section');
+            const jurnalSect = document.getElementById('jurnal-section');
             tbody.innerHTML = '';
             
             if (kelasFilter !== "Semua") {
@@ -1017,15 +932,15 @@
                 infoPengajar.innerHTML = `<i class="fa-solid fa-chalkboard-user mr-1"></i> Difilter untuk: ${pengajar}`;
                 infoPengajar.classList.remove('hidden');
                 
-                // Tampilkan Jurnal Kelas Harian
-                jurnalSection.classList.remove('hidden');
-                let jData = jurnalStore.find(j => j.kelas === kelasFilter && j.tanggal === tglFilter);
-                document.getElementById('txt-jurnal-tadarus').innerText = jData ? jData.tadarus || '-' : '-';
-                document.getElementById('txt-jurnal-murojaah').innerText = jData ? jData.murojaah || '-' : '-';
-                document.getElementById('txt-jurnal-materi').innerText = jData ? jData.materi || '-' : '-';
+                // Tampilkan Jurnal UI
+                jurnalSect.classList.remove('hidden');
+                const targetJurnal = jurnalStore.find(j => j.id === `${kelasFilter}_${tglFilter}`);
+                document.getElementById('jurnal-view-tadarus').innerText = targetJurnal?.tadarus || '-';
+                document.getElementById('jurnal-view-murojaah').innerText = targetJurnal?.murojaah || '-';
+                document.getElementById('jurnal-view-materi').innerText = targetJurnal?.materi || '-';
             } else {
                 infoPengajar.classList.add('hidden');
-                jurnalSection.classList.add('hidden'); // Sembunyikan kalau lagi milih Semua Kelas
+                jurnalSect.classList.add('hidden');
             }
             
             dataStore.filter(s => {
@@ -1067,6 +982,24 @@
             setTimeout(() => toast.classList.add('opacity-0', 'pointer-events-none'), 3000);
         };
 
+        // ==========================================
+        // 6. PDF EXPORT (SMART FIX UNTUK HP)
+        // ==========================================
+        
+        function handlePDFOutput(doc, filename) {
+            // Deteksi device apakah menggunakan mobile/tablet
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            
+            if (isMobile) {
+                // Di HP: Wajib download langsung biar tidak diblokir browser
+                doc.save(filename);
+            } else {
+                // Di PC/Laptop: Buka preview di tab baru (Lebih elegan)
+                const blob = doc.output('blob');
+                window.open(URL.createObjectURL(blob), '_blank');
+            }
+        }
+
         window.exportRapor = (id) => {
             if(!window.jspdf) return;
             const s = dataStore.find(x => x.id === id);
@@ -1085,9 +1018,7 @@
 
             doc.autoTable({ startY: 40, head: [['Tanggal', 'Kehadiran', 'Jilid/Hal', 'Hafalan (Ayat)', 'Penilaian']], body: tableData, theme: 'grid', headStyles: { fillColor: [79, 70, 229] } });
             
-            const pdfBlob = doc.output('blob');
-            const pdfUrl = URL.createObjectURL(pdfBlob);
-            window.open(pdfUrl, '_blank');
+            handlePDFOutput(doc, `Rapor_${s.nama.replace(/\s+/g, '_')}.pdf`);
         };
 
         window.exportKelas = (kelas) => {
@@ -1097,9 +1028,7 @@
             const tableData = dataStore.filter(x => x.kelas === kelas).map((m, i) => [i+1, m.nama, m.kehadiran, m.jilid, m.surah]);
             doc.autoTable({ startY: 30, head: [['No', 'Nama Santri', 'Status Terakhir', 'Jilid', 'Hafalan']], body: tableData, theme: 'striped', headStyles: { fillColor: [79, 70, 229] } });
             
-            const pdfBlob = doc.output('blob');
-            const pdfUrl = URL.createObjectURL(pdfBlob);
-            window.open(pdfUrl, '_blank');
+            handlePDFOutput(doc, `Kelas_${kelas.replace(/\s+/g, '_')}.pdf`);
         };
 
         window.exportGlobalPDF = () => {
@@ -1110,21 +1039,23 @@
             
             doc.setFontSize(16); doc.text(`Rekapitulasi Harian: ${tgl}`, 14, 22); doc.setFontSize(11);
             let startY = 30;
+            
             if (kelasFilter !== "Semua") {
                 const pengajar = pengajarMap[kelasFilter] || "Belum diatur";
-                doc.text(`Kelas: ${kelasFilter}`, 14, 30); doc.text(`Pengajar: ${pengajar}`, 14, 36);
+                doc.text(`Kelas: ${kelasFilter}`, 14, 30); doc.text(`Pengajar: ${pengajar}`, 14, 36); 
                 
-                // Tambahkan info Jurnal Harian ke PDF
-                let jData = jurnalStore.find(j => j.kelas === kelasFilter && j.tanggal === tgl);
-                if(jData) {
+                // Tambahkan info Jurnal Harian jika ada
+                const targetJurnal = jurnalStore.find(j => j.id === `${kelasFilter}_${tgl}`);
+                if(targetJurnal) {
                     doc.setFontSize(9);
-                    doc.text(`[JURNAL] Tadarus: ${jData.tadarus || '-'} | Murojaah: ${jData.murojaah || '-'} | Materi: ${jData.materi || '-'}`, 14, 44);
-                    startY = 50;
+                    doc.text(`Tadarus: ${targetJurnal.tadarus || '-'} | Murojaah: ${targetJurnal.murojaah || '-'}`, 14, 44);
+                    doc.text(`Materi: ${targetJurnal.materi || '-'}`, 14, 50);
+                    startY = 56;
                 } else {
                     startY = 44;
                 }
             } else {
-                doc.text(`Filter: Semua Kelas`, 14, 30); startY = 38;
+                doc.text(`Filter: Semua Kelas`, 14, 30); startY = 36;
             }
             
             let tableData = [];
@@ -1135,19 +1066,20 @@
                 let r = (s.riwayat || []).find(x => x.timestamp.startsWith(tgl));
                 let namaWaliKelas = pengajarMap[s.kelas] || '-';
                 let kolomKelasGabungan = `${s.kelas || '-'}\n(${namaWaliKelas})`;
-                let ketHaf = r.nilaiHafalan || r.keterangan || '-';
-                let ketJld = r.nilaiJilid || r.keterangan || '-';
+                let ketHaf = r ? (r.nilaiHafalan || r.keterangan || '-') : '-';
+                let ketJld = r ? (r.nilaiJilid || r.keterangan || '-') : '-';
                 
                 if(r) tableData.push([s.nama, kolomKelasGabungan, r.kehadiran, r.jilid, r.surah, `H: ${ketHaf}\nJ: ${ketJld}`]);
             });
 
             doc.autoTable({ startY: startY, head: [['Nama', 'Kelas / Ustadz', 'Kehadiran', 'Jilid', 'Hafalan', 'Nilai']], body: tableData, theme: 'grid', headStyles: { fillColor: [220, 38, 38] }, styles: { cellPadding: 3, fontSize: 9 } });
             
-            const pdfBlob = doc.output('blob');
-            const pdfUrl = URL.createObjectURL(pdfBlob);
-            window.open(pdfUrl, '_blank');
+            handlePDFOutput(doc, `Rekap_${tgl}_${kelasFilter.replace(/\s+/g, '')}.pdf`);
         };
 
+        // ==========================================
+        // 7. INITIALIZATION & AUTH LOGIC
+        // ==========================================
         function initApp() {
             renderAll();
             const lastView = localStorage.getItem('activeView') || 'dashboard';
@@ -1164,19 +1096,8 @@
                 localStorage.removeItem('activeView');
                 document.getElementById('auth-form').reset();
                 document.getElementById('mobile-menu').classList.add('hidden');
-                currentLembaga = "";
             } else {
-                signOut(auth).then(() => {
-                    document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-                    const loginView = document.getElementById('view-login');
-                    loginView.style.display = ''; 
-                    loginView.classList.add('active');
-                    document.getElementById('main-nav').classList.add('hidden');
-                    localStorage.removeItem('activeView');
-                    document.getElementById('auth-form').reset();
-                    document.getElementById('mobile-menu').classList.add('hidden');
-                    currentLembaga = "";
-                });
+                signOut(auth);
             }
         };
 
@@ -1191,54 +1112,16 @@
             errEl.classList.add('hidden');
             
             if (is_preview) {
-                const emailLower = em.toLowerCase();
-                
-                if (authMode === 'register') {
-                    const nm = document.getElementById('reg-nama').value;
-                    const role = document.getElementById('reg-role').value;
-                    
-                    if (role === 'admin') {
-                        const lmbg = document.getElementById('reg-lembaga').value;
-                        emailMap[emailLower] = { role: "admin", lembaga: lmbg };
-                        currentUserRole = 'admin';
-                        currentUserClasses = ['Semua'];
-                        currentLembaga = lmbg;
-                        alert('Akun Admin Lembaga berhasil didaftarkan (Mode Preview).');
-                    } else {
-                        const klInput = document.getElementById('reg-kelas').value;
-                        const kelasArr = klInput.split(',').map(k => k.trim()).filter(k => k.length > 0);
-                        kelasArr.forEach(kl => { pengajarMap[kl] = nm; });
-                        emailMap[emailLower] = { role: "ustadz", kelas: kelasArr };
-                        currentUserRole = 'ustadz';
-                        currentUserClasses = kelasArr;
-                        currentLembaga = '';
-                        alert('Akun Pengajar berhasil didaftarkan (Mode Preview).');
-                    }
+                // MOCK LOGIN PREVIEW
+                if (em.includes('admin')) {
+                    currentUserRole = 'admin';
+                    currentUserClasses = ['Semua'];
+                    currentLembagaName = "TPQ Mockup Preview";
                 } else {
-                    let userMockData = emailMap[emailLower];
-                    if (userMockData) {
-                        currentUserRole = userMockData.role;
-                        if(currentUserRole === 'admin') {
-                            currentUserClasses = ['Semua'];
-                            currentLembaga = userMockData.lembaga || '';
-                        } else {
-                            currentUserClasses = userMockData.kelas || ['Kelas Umum'];
-                            currentLembaga = '';
-                        }
-                    } else if(emailLower.includes('admin')) {
-                        currentUserRole = 'admin';
-                        currentUserClasses = ['Semua'];
-                        currentLembaga = 'TPQ Al-Hidayah (Demo)';
-                    } else {
-                        currentUserRole = 'ustadz';
-                        currentUserClasses = ['Kelas Abu Bakar'];
-                        currentLembaga = '';
-                    }
+                    currentUserRole = 'ustadz';
+                    currentUserClasses = ['Kelas Madinah'];
                 }
-                
-                const loginView = document.getElementById('view-login');
-                loginView.style.display = 'none';
-                loginView.classList.remove('active');
+                document.getElementById('view-login').style.display = 'none';
                 document.getElementById('main-nav').classList.remove('hidden');
                 initApp();
             } else {
@@ -1249,14 +1132,9 @@
                         
                         const userCredential = await createUserWithEmailAndPassword(auth, em, pw);
                         
-                        let userData = {
-                            email: em.toLowerCase(),
-                            nama: nm,
-                            role: role
-                        };
-
+                        let userData = { email: em.toLowerCase(), nama: nm, role: role };
                         if (role === 'admin') {
-                            userData.lembaga = document.getElementById('reg-lembaga').value;
+                            userData.lembaga = document.getElementById('reg-lembaga').value || 'Nama Lembaga Baru';
                             userData.kelas = ['Semua'];
                         } else {
                             const klInput = document.getElementById('reg-kelas').value;
@@ -1279,6 +1157,7 @@
             onAuthStateChanged(auth, async (user) => {
                 if(user) {
                     document.getElementById('view-login').style.display = 'none';
+                    currentUserId = user.uid;
                     const em = user.email.toLowerCase();
                     
                     try {
@@ -1287,65 +1166,47 @@
                         
                         if(userDoc.exists()) {
                             const dt = userDoc.data();
-                            currentUserRole = dt.role || (em.includes('admin') ? 'admin' : 'ustadz');
-                            if(currentUserRole === 'admin') {
-                                currentUserClasses = ['Semua'];
-                                currentLembaga = dt.lembaga || '';
-                            } else {
-                                let kl = dt.kelas || ['Kelas Umum'];
-                                currentUserClasses = Array.isArray(kl) ? kl : [kl];
-                                currentLembaga = '';
-                            }
+                            currentUserRole = dt.role || 'ustadz';
+                            let kl = dt.kelas || ['Kelas Umum'];
+                            currentUserClasses = Array.isArray(kl) ? kl : [kl];
+                            currentLembagaName = dt.lembaga || 'Ringkasan Hari Ini';
                         } else {
-                            let defaultRole = em.includes('admin') ? 'admin' : 'ustadz';
-                            const defaultData = { 
-                                email: em, 
-                                nama: user.email.split('@')[0], 
-                                kelas: defaultRole === 'admin' ? ['Semua'] : ['Kelas Umum'], 
-                                role: defaultRole,
-                                lembaga: defaultRole === 'admin' ? 'TPQ Belum Dinamai' : ''
-                            };
-                            await setDoc(userDocRef, defaultData);
-                            currentUserRole = defaultRole;
-                            currentUserClasses = defaultData.kelas;
-                            currentLembaga = defaultData.lembaga;
+                            // Fallback jika database user hilang
+                            currentUserRole = 'ustadz';
+                            currentUserClasses = ['Kelas Umum'];
                         }
                     } catch(err) {
                         console.error("Gagal menarik profil user:", err);
-                        currentUserRole = 'ustadz';
-                        currentUserClasses = ['Kelas Umum'];
                     }
                     
+                    document.getElementById('main-nav').classList.remove('hidden');
+
                     onSnapshot(collection(db, "users"), (snap) => {
                         pengajarMap = {};
                         snap.forEach((d) => {
                             const data = d.data();
-                            if(data.kelas && data.nama && data.role !== 'admin') {
+                            if(data.kelas && data.nama) {
                                 if(Array.isArray(data.kelas)) {
                                     data.kelas.forEach(k => { pengajarMap[k] = data.nama; });
                                 } else {
                                     pengajarMap[data.kelas] = data.nama;
                                 }
                             }
+                            if(d.id === currentUserId && data.role === 'admin') currentLembagaName = data.lembaga || 'Ringkasan Hari Ini';
                         });
                         renderAll();
                     });
 
-                    onSnapshot(collection(db, "santri"), (snapshot) => {
-                        dataStore = [];
-                        snapshot.forEach((docSnap) => {
-                            dataStore.push({ id: docSnap.id, ...docSnap.data() });
-                        });
-                        initApp();
-                    });
-
-                    // Tarik data Jurnal Harian
                     onSnapshot(collection(db, "jurnal"), (snapshot) => {
                         jurnalStore = [];
-                        snapshot.forEach((docSnap) => {
-                            jurnalStore.push(docSnap.data());
-                        });
-                        if (document.getElementById('view-rekap').classList.contains('active')) renderRekap();
+                        snapshot.forEach((docSnap) => { jurnalStore.push({ id: docSnap.id, ...docSnap.data() }); });
+                        renderRekap();
+                    });
+
+                    onSnapshot(collection(db, "santri"), (snapshot) => {
+                        dataStore = [];
+                        snapshot.forEach((docSnap) => { dataStore.push({ id: docSnap.id, ...docSnap.data() }); });
+                        initApp();
                     });
                 } else {
                     document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
@@ -1359,4 +1220,3 @@
     </script>
 </body>
 </html>
-

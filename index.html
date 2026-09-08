@@ -25,7 +25,7 @@
                 <!-- Logo -->
                 <div class="flex items-center">
                     <i class="fa-solid fa-book-quran text-2xl mr-2"></i>
-                    <span class="font-bold text-xl tracking-wider">NGAJI<span class="text-indigo-300">APP</span></span>
+                    <span class="font-bold text-xl tracking-wider">TPQ<span class="text-indigo-300">SBQ</span></span>
                 </div>
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex space-x-4 items-center">
@@ -159,15 +159,17 @@
             
             <div class="bg-white rounded-xl shadow overflow-hidden">
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse min-w-max">
+                    <!-- FIX: min-w-max removed to allow break-words on Catatan -->
+                    <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-gray-100 text-gray-600 text-sm uppercase">
-                                <th class="p-4 border-b w-1/4">Nama Santri</th>
-                                <th class="p-4 border-b w-1/4">Kelas / Wali Kelas</th>
+                                <th class="p-4 border-b w-1/6">Nama Santri</th>
+                                <th class="p-4 border-b w-1/6">Kelas / Wali Kelas</th>
                                 <th class="p-4 border-b">Status</th>
                                 <th class="p-4 border-b">Hafalan</th>
                                 <th class="p-4 border-b">Jilid</th>
-                                <th class="p-4 border-b">Nilai (Haf/Jld)</th>
+                                <th class="p-4 border-b">Nilai</th>
+                                <th class="p-4 border-b w-1/5">Catatan</th>
                                 <th class="p-4 border-b text-center">Aksi</th>
                             </tr>
                         </thead>
@@ -187,71 +189,38 @@
         <div id="view-rekap" class="view-section">
             <div class="flex flex-col md:flex-row justify-between items-center mb-6 space-y-3 md:space-y-0">
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-800">Rekapitulasi Harian</h2>
+                    <h2 class="text-2xl font-bold text-gray-800">Rekapitulasi Jurnal & Nilai</h2>
                     <p id="info-pengajar-rekap" class="text-sm text-indigo-600 font-medium mt-1 hidden"></p>
                 </div>
-                <div class="flex space-x-2">
+                <div class="flex space-x-2 items-center">
                     <select id="filter-kelas-rekap" class="border px-3 py-2 rounded-lg text-sm bg-white shadow-sm focus:outline-none">
                         <option value="Semua">Semua Kelas</option>
                     </select>
-                    <input type="date" id="filter-tanggal" class="border px-3 py-2 rounded-lg shadow-sm focus:outline-none text-sm">
+                    <!-- FIX: 2 INPUT TANGGAL UNTUK RENTANG WAKTU -->
+                    <input type="date" id="filter-tanggal-mulai" class="border px-3 py-2 rounded-lg shadow-sm focus:outline-none text-sm" title="Dari Tanggal">
+                    <span class="text-gray-500 font-bold">-</span>
+                    <input type="date" id="filter-tanggal-akhir" class="border px-3 py-2 rounded-lg shadow-sm focus:outline-none text-sm" title="Sampai Tanggal">
+                    
                     <button onclick="exportGlobalPDF()" class="bg-red-500 text-white px-4 py-2 rounded-lg font-bold shadow hover:bg-red-600 transition">
                         <i class="fa-solid fa-file-pdf mr-1"></i> PDF
                     </button>
                 </div>
             </div>
 
-            <!-- JURNAL KELAS HARIAN UI -->
-            <div id="jurnal-section" class="bg-indigo-50 p-4 rounded-xl shadow-sm mb-6 hidden border border-indigo-100">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="font-bold text-indigo-800"><i class="fa-solid fa-book-journal-whills mr-2"></i> Jurnal Kelas Harian</h3>
-                    <button onclick="openJurnalModal()" class="bg-indigo-600 text-white px-3 py-1 rounded text-sm font-bold shadow hover:bg-indigo-700 transition">Isi/Edit Jurnal</button>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="bg-white p-3 rounded-lg border border-indigo-50 shadow-sm">
-                        <p class="text-xs text-indigo-500 font-bold mb-1">Tadarus Surah</p>
-                        <p id="jurnal-view-tadarus" class="text-sm font-medium text-gray-800">-</p>
-                    </div>
-                    <div class="bg-white p-3 rounded-lg border border-indigo-50 shadow-sm">
-                        <p class="text-xs text-indigo-500 font-bold mb-1">Murojaah (Surah & Ayat)</p>
-                        <p id="jurnal-view-murojaah" class="text-sm font-medium text-gray-800">-</p>
-                    </div>
-                    <div class="bg-white p-3 rounded-lg border border-indigo-50 shadow-sm">
-                        <p class="text-xs text-indigo-500 font-bold mb-1">Materi Pembelajaran</p>
-                        <p id="jurnal-view-materi" class="text-sm font-medium text-gray-800">-</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-xl shadow overflow-hidden p-4">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse text-sm min-w-max">
-                        <thead>
-                            <tr class="bg-gray-100 border-b text-gray-700 uppercase text-xs">
-                                <th class="p-3 w-1/4">Nama Santri</th>
-                                <th class="p-3 w-1/4">Kelas / Wali Kelas</th>
-                                <th class="p-3">Status</th>
-                                <th class="p-3">Hafalan</th>
-                                <th class="p-3">Jilid</th>
-                                <th class="p-3">Nilai</th>
-                            </tr>
-                        </thead>
-                        <tbody id="rekap-tbody"></tbody>
-                    </table>
-                </div>
-            </div>
+            <!-- Kontainer Utama Rekap (Berisi Jurnal + Tabel Dinamis Berderet) -->
+            <div id="rekap-container"></div>
         </div>
 
     </main>
 
     <!-- Modal Form (Tambah/Edit Santri) -->
     <div id="modal-form" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]">
             <div class="bg-indigo-600 px-6 py-4 flex justify-between items-center text-white">
                 <h3 id="modal-title" class="font-bold text-lg">Update Progres</h3>
                 <button onclick="closeModal()" class="hover:text-gray-300"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
-            <form id="santri-form" class="p-6">
+            <form id="santri-form" class="p-6 overflow-y-auto">
                 <input type="hidden" id="form-id">
                 <div class="mb-4">
                     <label class="block text-sm font-bold text-gray-700 mb-1">Nama Santri</label>
@@ -301,16 +270,19 @@
                         </select>
                     </div>
                 </div>
-                <div class="grid grid-cols-2 gap-4 mb-6">
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Nilai Jilid/Ngaji</label>
-                        <select id="form-nilai-jilid" class="w-full px-3 py-2 border rounded-lg bg-white">
-                            <option value="Lancar">Lancar / Lanjut</option>
-                            <option value="Kurang Lancar">Kurang Lancar</option>
-                            <option value="Mengulang">Mengulang</option>
-                            <option value="-">-</option>
-                        </select>
-                    </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Nilai Jilid/Ngaji</label>
+                    <select id="form-nilai-jilid" class="w-full px-3 py-2 border rounded-lg bg-white">
+                        <option value="Lancar">Lancar / Lanjut</option>
+                        <option value="Kurang Lancar">Kurang Lancar</option>
+                        <option value="Mengulang">Mengulang</option>
+                        <option value="-">-</option>
+                    </select>
+                </div>
+                <!-- FIX: Kolom Catatan ditambahkan kembali di Form -->
+                <div class="mb-6">
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Catatan Tambahan (Opsional)</label>
+                    <textarea id="form-catatan" rows="2" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="Cth: Tajwid kurang di huruf Dlod"></textarea>
                 </div>
                 <div class="flex justify-end space-x-2">
                     <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-bold hover:bg-gray-300">Batal</button>
@@ -322,7 +294,7 @@
 
     <!-- Modal Riwayat -->
     <div id="modal-history" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[80vh] flex flex-col">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[80vh] flex flex-col">
             <div class="bg-indigo-600 px-6 py-4 flex justify-between items-center text-white rounded-t-xl">
                 <h3 class="font-bold text-lg">Riwayat Ngaji: <span id="hist-nama"></span></h3>
                 <button onclick="closeHistory()" class="hover:text-gray-300"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -336,6 +308,7 @@
                             <th class="p-2 border-b">Hafalan</th>
                             <th class="p-2 border-b">Jilid</th>
                             <th class="p-2 border-b">Nilai</th>
+                            <th class="p-2 border-b w-1/4">Catatan</th>
                         </tr>
                     </thead>
                     <tbody id="hist-tbody"></tbody>
@@ -368,11 +341,15 @@
     <div id="modal-jurnal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="bg-indigo-600 px-6 py-4 flex justify-between items-center text-white">
-                <h3 class="font-bold text-lg">Isi Jurnal Kelas Harian</h3>
+                <h3 class="font-bold text-lg">Isi Jurnal Kelas</h3>
                 <button onclick="closeJurnalModal()" class="hover:text-gray-300"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
             <form id="jurnal-form" class="p-6">
-                <p class="text-xs text-gray-500 mb-4 bg-indigo-50 p-2 rounded">Jurnal ini akan tersimpan untuk kelas dan tanggal yang sedang difilter di halaman Rekap.</p>
+                <input type="hidden" id="form-jurnal-kelas">
+                <div class="mb-4">
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Tanggal Jurnal</label>
+                    <input type="date" id="form-jurnal-tanggal" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500" required>
+                </div>
                 <div class="mb-4">
                     <label class="block text-sm font-bold text-gray-700 mb-1">Tadarus Surah</label>
                     <input type="text" id="form-jurnal-tadarus" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="Cth: Al-Baqarah (1-10)">
@@ -437,6 +414,18 @@
         
         if (is_preview) {
             document.getElementById('demo-hint').classList.remove('hidden');
+            
+            // Mock Data Generator for Preview mode
+            dataStore = [
+                { id: "1", nama: "Fatimah Azzahra", kelas: "Kelas Madinah", kehadiran: "Hadir", jilid: "Jilid 4", halaman: "15", surah: "An-Naba", ayat: "30", nilaiHafalan: "Lancar", nilaiJilid: "Lancar", catatan: "Tajwid makin mantap", riwayat: [
+                    {timestamp: new Date().toISOString(), kehadiran: "Hadir", jilid: "Jilid 4", halaman: "15", surah: "An-Naba", ayat: "30", nilaiHafalan: "Lancar", nilaiJilid: "Lancar", catatan: "Tajwid makin mantap"},
+                    {timestamp: new Date(new Date().setDate(new Date().getDate() - 1)).toISOString(), kehadiran: "Alpa", jilid: "-", halaman: "-", surah: "-", ayat: "-", nilaiHafalan: "-", nilaiJilid: "-", catatan: "-"}
+                ]},
+                { id: "2", nama: "Ahmad Yasin", kelas: "Kelas Madinah", kehadiran: "Hadir", jilid: "Jilid 2", halaman: "10", surah: "Al-Ikhlas", ayat: "4", nilaiHafalan: "Lancar", nilaiJilid: "Kurang Lancar", catatan: "Sering ketukar huruf Sin dan Syin, perbanyak murajaah agar tidak salah.", riwayat: [
+                    {timestamp: new Date().toISOString(), kehadiran: "Hadir", jilid: "Jilid 2", halaman: "10", surah: "Al-Ikhlas", ayat: "4", nilaiHafalan: "Lancar", nilaiJilid: "Kurang Lancar", catatan: "Sering ketukar huruf Sin dan Syin, perbanyak murajaah agar tidak salah."}
+                ]}
+            ];
+            pengajarMap["Kelas Madinah"] = "Ust. Saprudin S.Ag";
         }
 
         window.toggleAuthMode = () => {
@@ -476,6 +465,11 @@
             }
         };
 
+        if (!is_preview) {
+            const demoHint = document.getElementById('demo-hint');
+            if (demoHint) demoHint.classList.add('hidden');
+        }
+
         window.toggleMobileMenu = () => {
             document.getElementById('mobile-menu').classList.toggle('hidden');
         };
@@ -494,10 +488,6 @@
                 document.getElementById('main-nav').classList.remove('hidden');
                 localStorage.setItem('activeView', viewId);
             }
-            
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.toggle('bg-indigo-800', btn.dataset.target === viewId);
-            });
             
             if(viewId === 'rekap') renderRekap();
         };
@@ -653,6 +643,7 @@
                             <div class="mb-1 flex items-center space-x-1"><span class="text-[10px] text-gray-400 w-6">Haf:</span> ${badgeHafalan}</div>
                             <div class="flex items-center space-x-1"><span class="text-[10px] text-gray-400 w-6">Jld:</span> ${badgeJilid}</div>
                         </td>
+                        <td class="p-4 text-xs text-gray-600 italic break-words max-w-[200px] whitespace-normal">${s.catatan || '-'}</td>
                         <td class="p-4 text-center">
                             <div class="flex justify-center space-x-3 text-lg">
                                 ${actionButtons}
@@ -706,6 +697,7 @@
             document.getElementById('form-ayat').value = "-";
             document.getElementById('form-nilai-hafalan').value = "Lancar";
             document.getElementById('form-nilai-jilid').value = "Lancar";
+            document.getElementById('form-catatan').value = "";
             document.getElementById('modal-form').classList.remove('hidden');
         };
 
@@ -730,6 +722,7 @@
                 document.getElementById('form-ayat').value = s.ayat;
                 document.getElementById('form-nilai-hafalan').value = s.nilaiHafalan || s.keterangan || 'Lancar';
                 document.getElementById('form-nilai-jilid').value = s.nilaiJilid || s.keterangan || 'Lancar';
+                document.getElementById('form-catatan').value = s.catatan || '';
                 document.getElementById('modal-title').innerText = 'Update Progres Santri';
                 document.getElementById('modal-form').classList.remove('hidden');
             }
@@ -748,7 +741,7 @@
                 kehadiran: document.getElementById('form-kehadiran').value, jilid: document.getElementById('form-jilid').value,
                 halaman: document.getElementById('form-halaman').value, surah: document.getElementById('form-surah').value,
                 ayat: document.getElementById('form-ayat').value, nilaiHafalan: document.getElementById('form-nilai-hafalan').value,
-                nilaiJilid: document.getElementById('form-nilai-jilid').value, timestamp: currentTimestamp 
+                nilaiJilid: document.getElementById('form-nilai-jilid').value, catatan: document.getElementById('form-catatan').value, timestamp: currentTimestamp 
             };
 
             if (is_preview) {
@@ -828,11 +821,12 @@
                                 <div class="mb-1 flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">H:</span> ${badgeHafalan}</div>
                                 <div class="flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">J:</span> ${badgeJilid}</div>
                             </td>
+                            <td class="p-2 text-xs text-gray-600 italic break-words max-w-[150px] whitespace-normal">${r.catatan || '-'}</td>
                         </tr>
                     `;
                 });
             } else {
-                tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-gray-400">Belum ada riwayat</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-gray-400">Belum ada riwayat</td></tr>';
             }
             document.getElementById('modal-history').classList.remove('hidden');
         };
@@ -868,11 +862,26 @@
         });
 
         // --- JURNAL KELAS HARIAN CRUD ---
-        window.openJurnalModal = () => {
-            const tgl = document.getElementById('filter-tanggal').value;
-            const kelas = document.getElementById('filter-kelas-rekap').value;
-            if (kelas === "Semua") { alert("Pilih satu kelas spesifik terlebih dahulu!"); return; }
+        window.openJurnalModal = (kelasSpesifik) => {
+            if (currentUserRole === 'admin') {
+                alert("Mode Admin: Anda hanya memiliki akses untuk membaca laporan.");
+                return;
+            }
+            document.getElementById('form-jurnal-kelas').value = kelasSpesifik;
+            document.getElementById('form-jurnal-tanggal').valueAsDate = new Date(); // Default hari ini
             
+            // Pancing trigger change untuk nge-load data jika hari ini sudah diisi
+            const event = new Event('change');
+            document.getElementById('form-jurnal-tanggal').dispatchEvent(event);
+            
+            document.getElementById('modal-jurnal').classList.remove('hidden');
+        };
+        window.closeJurnalModal = () => document.getElementById('modal-jurnal').classList.add('hidden');
+
+        // Deteksi perubahan tanggal di Jurnal untuk auto-load
+        document.getElementById('form-jurnal-tanggal').addEventListener('change', (e) => {
+            const tgl = e.target.value;
+            const kelas = document.getElementById('form-jurnal-kelas').value;
             const jId = `${kelas}_${tgl}`;
             const targetJurnal = jurnalStore.find(j => j.id === jId);
             
@@ -881,16 +890,18 @@
                 document.getElementById('form-jurnal-murojaah').value = targetJurnal.murojaah || '';
                 document.getElementById('form-jurnal-materi').value = targetJurnal.materi || '';
             } else {
-                document.getElementById('jurnal-form').reset();
+                document.getElementById('form-jurnal-tadarus').value = '';
+                document.getElementById('form-jurnal-murojaah').value = '';
+                document.getElementById('form-jurnal-materi').value = '';
             }
-            document.getElementById('modal-jurnal').classList.remove('hidden');
-        };
-        window.closeJurnalModal = () => document.getElementById('modal-jurnal').classList.add('hidden');
+        });
 
         document.getElementById('jurnal-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const tgl = document.getElementById('filter-tanggal').value;
-            const kelas = document.getElementById('filter-kelas-rekap').value;
+            if (currentUserRole === 'admin') return;
+            
+            const tgl = document.getElementById('form-jurnal-tanggal').value;
+            const kelas = document.getElementById('form-jurnal-kelas').value;
             const jId = `${kelas}_${tgl}`;
             
             const newData = {
@@ -914,65 +925,143 @@
             }
         });
 
-        // --- REKAP & JURNAL RENDER ---
-        document.getElementById('filter-tanggal').valueAsDate = new Date();
-        document.getElementById('filter-tanggal').addEventListener('change', renderRekap);
+        // --- REKAP & JURNAL RENDER (RANGE WAKTU) ---
+        // Set Default 1 Minggu kebelakang
+        let defaultStart = new Date(); defaultStart.setDate(defaultStart.getDate() - 7);
+        document.getElementById('filter-tanggal-mulai').valueAsDate = defaultStart;
+        document.getElementById('filter-tanggal-akhir').valueAsDate = new Date();
+        
+        document.getElementById('filter-tanggal-mulai').addEventListener('change', renderRekap);
+        document.getElementById('filter-tanggal-akhir').addEventListener('change', renderRekap);
         document.getElementById('filter-kelas-rekap').addEventListener('change', renderRekap);
         
         function renderRekap() {
-            const tglFilter = document.getElementById('filter-tanggal').value;
+            const tglMulai = document.getElementById('filter-tanggal-mulai').value;
+            const tglAkhir = document.getElementById('filter-tanggal-akhir').value;
             const kelasFilter = document.getElementById('filter-kelas-rekap').value;
-            const tbody = document.getElementById('rekap-tbody');
+            const rekapContainer = document.getElementById('rekap-container');
             const infoPengajar = document.getElementById('info-pengajar-rekap');
-            const jurnalSect = document.getElementById('jurnal-section');
-            tbody.innerHTML = '';
+            rekapContainer.innerHTML = '';
             
+            let classesToRender = [];
+
             if (kelasFilter !== "Semua") {
                 const pengajar = pengajarMap[kelasFilter] || "Belum diatur";
                 infoPengajar.innerHTML = `<i class="fa-solid fa-chalkboard-user mr-1"></i> Difilter untuk: ${pengajar}`;
                 infoPengajar.classList.remove('hidden');
-                
-                // Tampilkan Jurnal UI
-                jurnalSect.classList.remove('hidden');
-                const targetJurnal = jurnalStore.find(j => j.id === `${kelasFilter}_${tglFilter}`);
-                document.getElementById('jurnal-view-tadarus').innerText = targetJurnal?.tadarus || '-';
-                document.getElementById('jurnal-view-murojaah').innerText = targetJurnal?.murojaah || '-';
-                document.getElementById('jurnal-view-materi').innerText = targetJurnal?.materi || '-';
+                classesToRender.push(kelasFilter);
             } else {
                 infoPengajar.classList.add('hidden');
-                jurnalSect.classList.add('hidden');
+                let userClasses = Array.from(classesSet).sort();
+                if (currentUserRole === 'ustadz') {
+                    userClasses = userClasses.filter(c => currentUserClasses.includes(c));
+                }
+                classesToRender = userClasses;
             }
-            
-            dataStore.filter(s => {
-                if(currentUserRole === 'ustadz' && !currentUserClasses.includes(s.kelas)) return false;
-                return kelasFilter === "Semua" || s.kelas === kelasFilter;
-            }).forEach(s => {
-                let adaData = (s.riwayat || []).find(r => r.timestamp.startsWith(tglFilter));
-                if(adaData) {
-                    const namaWaliKelas = pengajarMap[s.kelas] || '-';
-                    let badgeHafalan = getKetBadge(adaData.nilaiHafalan || adaData.keterangan);
-                    let badgeJilid = getKetBadge(adaData.nilaiJilid || adaData.keterangan);
 
-                    tbody.innerHTML += `
+            const startObj = new Date(tglMulai); startObj.setHours(0,0,0,0);
+            const endObj = new Date(tglAkhir); endObj.setHours(23,59,59,999);
+
+            // Loop untuk setiap kelas yang akan dirender secara vertikal
+            classesToRender.forEach(cls => {
+                let rawData = [];
+                let adaSantri = dataStore.filter(s => s.kelas === cls);
+                
+                adaSantri.forEach(s => {
+                    if(s.riwayat) {
+                        s.riwayat.forEach(r => {
+                            let rDate = new Date(r.timestamp);
+                            if(rDate >= startObj && rDate <= endObj) {
+                                rawData.push({ santri: s, record: r, date: rDate });
+                            }
+                        });
+                    }
+                });
+
+                if(rawData.length === 0) return; // Skip kelas ini kalau gak ada data di rentang waktu tersebut
+
+                // Urutkan tanggal terbaru di atas
+                rawData.sort((a,b) => b.date - a.date);
+
+                // Tarik Jurnal dalam rentang waktu ini
+                let jurnalsInRange = jurnalStore.filter(j => {
+                    if(j.kelas !== cls) return false;
+                    let jDate = new Date(j.tanggal);
+                    return jDate >= startObj && jDate <= endObj;
+                });
+                jurnalsInRange.sort((a,b) => new Date(b.tanggal) - new Date(a.tanggal));
+
+                let btnJurnalHtml = '';
+                // Sembunyikan tombol jurnal untuk Admin
+                if(currentUserRole !== 'admin') {
+                    btnJurnalHtml = `<button onclick="openJurnalModal('${cls}')" class="bg-indigo-600 text-white px-3 py-1 rounded text-sm font-bold shadow hover:bg-indigo-700 transition">Isi Jurnal Baru</button>`;
+                }
+
+                let jurnalHtml = `
+                    <div class="bg-indigo-50 p-4 rounded-t-xl border-t border-l border-r border-indigo-100 mt-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-bold text-indigo-800"><i class="fa-solid fa-book-journal-whills mr-2"></i> Jurnal: ${cls}</h3>
+                            ${btnJurnalHtml}
+                        </div>
+                        <div class="space-y-2 max-h-40 overflow-y-auto">
+                            ${jurnalsInRange.length > 0 ? jurnalsInRange.map(j => `
+                                <div class="bg-white p-2 rounded border border-indigo-100 text-xs">
+                                    <span class="font-bold text-indigo-600">${j.tanggal}:</span> 
+                                    Tadarus (${j.tadarus || '-'}), Murojaah (${j.murojaah || '-'}), Materi (${j.materi || '-'})
+                                </div>
+                            `).join('') : '<p class="text-xs text-gray-500 italic">Belum ada jurnal yang diinput pada rentang tanggal ini.</p>'}
+                        </div>
+                    </div>
+                `;
+
+                let rowsHtml = '';
+                rawData.forEach(item => {
+                    const fmtDate = `${item.date.getDate().toString().padStart(2,'0')}/${(item.date.getMonth()+1).toString().padStart(2,'0')}`;
+                    let badgeHafalan = getKetBadge(item.record.nilaiHafalan || item.record.keterangan);
+                    let badgeJilid = getKetBadge(item.record.nilaiJilid || item.record.keterangan);
+
+                    rowsHtml += `
                         <tr class="border-b hover:bg-gray-50">
-                            <td class="p-3 font-bold text-gray-800">${s.nama}</td>
-                            <td class="p-3">
-                                <div class="font-medium text-gray-800">${s.kelas || '-'}</div>
-                                <div class="text-xs text-indigo-600 font-bold mt-0.5"><i class="fa-solid fa-user-tie mr-1"></i> ${namaWaliKelas}</div>
-                            </td>
-                            <td class="p-3">${getStatusBadge(adaData.kehadiran)}</td>
-                            <td class="p-3">${adaData.surah} <br><span class="text-gray-500 text-[10px]">(Ayat ${adaData.ayat})</span></td>
-                            <td class="p-3">${adaData.jilid} <br><span class="text-gray-500 text-[10px]">(Hal ${adaData.halaman})</span></td>
+                            <td class="p-3 text-xs font-bold text-indigo-600 w-16">${fmtDate}</td>
+                            <td class="p-3 font-bold text-gray-800">${item.santri.nama}</td>
+                            <td class="p-3">${getStatusBadge(item.record.kehadiran)}</td>
+                            <td class="p-3">${item.record.surah} <br><span class="text-gray-500 text-[10px]">(Ayat ${item.record.ayat})</span></td>
+                            <td class="p-3">${item.record.jilid} <br><span class="text-gray-500 text-[10px]">(Hal ${item.record.halaman})</span></td>
                             <td class="p-3">
                                 <div class="mb-1 flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">H:</span> ${badgeHafalan}</div>
                                 <div class="flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">J:</span> ${badgeJilid}</div>
                             </td>
+                            <td class="p-3 text-xs text-gray-600 italic break-words max-w-[150px] whitespace-normal">${item.record.catatan || '-'}</td>
                         </tr>
                     `;
-                }
+                });
+
+                let tableHtml = `
+                    <div class="bg-white rounded-b-xl shadow overflow-hidden mb-6 border border-gray-100">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-sm">
+                                <thead>
+                                    <tr class="bg-gray-100 border-b text-gray-700 uppercase text-xs">
+                                        <th class="p-3">Tgl</th>
+                                        <th class="p-3 w-1/5">Nama Santri</th>
+                                        <th class="p-3">Status</th>
+                                        <th class="p-3">Hafalan</th>
+                                        <th class="p-3">Jilid</th>
+                                        <th class="p-3">Nilai</th>
+                                        <th class="p-3 w-1/5">Catatan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${rowsHtml}</tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+
+                rekapContainer.innerHTML += jurnalHtml + tableHtml;
             });
-            if(tbody.innerHTML === '') {
-                 tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-gray-400">Tidak ada data di tanggal/kelas ini</td></tr>';
+
+            if(rekapContainer.innerHTML === '') {
+                 rekapContainer.innerHTML = '<div class="bg-white p-8 rounded-xl shadow text-center text-gray-500">Tidak ada data ngaji di rentang tanggal ini.</div>';
             }
         }
 
@@ -983,18 +1072,14 @@
         };
 
         // ==========================================
-        // 6. PDF EXPORT (SMART FIX UNTUK HP)
+        // 6. PDF EXPORT (SMART FIX UNTUK HP & RENTANG WAKTU)
         // ==========================================
         
         function handlePDFOutput(doc, filename) {
-            // Deteksi device apakah menggunakan mobile/tablet
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-            
             if (isMobile) {
-                // Di HP: Wajib download langsung biar tidak diblokir browser
                 doc.save(filename);
             } else {
-                // Di PC/Laptop: Buka preview di tab baru (Lebih elegan)
                 const blob = doc.output('blob');
                 window.open(URL.createObjectURL(blob), '_blank');
             }
@@ -1006,17 +1091,20 @@
             if(currentUserRole === 'ustadz' && !currentUserClasses.includes(s.kelas)) return;
 
             const doc = new window.jspdf.jsPDF();
-            doc.setFontSize(18); doc.text(`Rapor Ngaji: ${s.nama}`, 14, 22);
-            doc.setFontSize(11); doc.text(`Kelas: ${s.kelas || '-'}`, 14, 30);
+            const pageWidth = doc.internal.pageSize.getWidth();
+            
+            doc.setFontSize(18); doc.text(`Rapor Ngaji: ${s.nama}`, pageWidth / 2, 22, { align: 'center' });
+            doc.setFontSize(11); doc.text(`Kelas: ${s.kelas || '-'}`, pageWidth / 2, 30, { align: 'center' });
             
             const tableData = (s.riwayat || []).map(r => {
                 const dt = new Date(r.timestamp);
                 let ketHaf = r.nilaiHafalan || r.keterangan || '-';
                 let ketJld = r.nilaiJilid || r.keterangan || '-';
-                return [`${dt.getDate()}/${dt.getMonth()+1}/${dt.getFullYear()}`, r.kehadiran, r.jilid + ' - ' + r.halaman, r.surah + ' (' + r.ayat + ')', `Haf: ${ketHaf}\nJld: ${ketJld}`];
+                let cttn = r.catatan || '-';
+                return [`${dt.getDate()}/${dt.getMonth()+1}/${dt.getFullYear()}`, r.kehadiran, r.jilid + ' - ' + r.halaman, r.surah + ' (' + r.ayat + ')', `Haf: ${ketHaf}\nJld: ${ketJld}`, cttn];
             });
 
-            doc.autoTable({ startY: 40, head: [['Tanggal', 'Kehadiran', 'Jilid/Hal', 'Hafalan (Ayat)', 'Penilaian']], body: tableData, theme: 'grid', headStyles: { fillColor: [79, 70, 229] } });
+            doc.autoTable({ startY: 40, head: [['Tanggal', 'Kehadiran', 'Jilid/Hal', 'Hafalan (Ayat)', 'Penilaian', 'Catatan']], body: tableData, theme: 'grid', headStyles: { fillColor: [79, 70, 229] } });
             
             handlePDFOutput(doc, `Rapor_${s.nama.replace(/\s+/g, '_')}.pdf`);
         };
@@ -1024,7 +1112,10 @@
         window.exportKelas = (kelas) => {
             if(!window.jspdf) return;
             const doc = new window.jspdf.jsPDF();
-            doc.setFontSize(16); doc.text(`Daftar Santri: ${kelas}`, 14, 22);
+            const pageWidth = doc.internal.pageSize.getWidth();
+            
+            doc.setFontSize(16); doc.text(`Daftar Santri: ${kelas}`, pageWidth / 2, 22, { align: 'center' });
+            
             const tableData = dataStore.filter(x => x.kelas === kelas).map((m, i) => [i+1, m.nama, m.kehadiran, m.jilid, m.surah]);
             doc.autoTable({ startY: 30, head: [['No', 'Nama Santri', 'Status Terakhir', 'Jilid', 'Hafalan']], body: tableData, theme: 'striped', headStyles: { fillColor: [79, 70, 229] } });
             
@@ -1034,47 +1125,83 @@
         window.exportGlobalPDF = () => {
             if(!window.jspdf) return;
             const doc = new window.jspdf.jsPDF();
-            const tgl = document.getElementById('filter-tanggal').value;
+            
+            // Ambil dari input rentang waktu yang baru
+            const tglMulai = document.getElementById('filter-tanggal-mulai').value;
+            const tglAkhir = document.getElementById('filter-tanggal-akhir').value;
             const kelasFilter = document.getElementById('filter-kelas-rekap').value;
             
-            doc.setFontSize(16); doc.text(`Rekapitulasi Harian: ${tgl}`, 14, 22); doc.setFontSize(11);
-            let startY = 30;
+            const pageWidth = doc.internal.pageSize.getWidth();
             
+            doc.setFontSize(14); doc.text(`Laporan Progres Santri`, pageWidth / 2, 15, { align: 'center' });
+            doc.setFontSize(10); doc.text(`Periode: ${tglMulai} s/d ${tglAkhir}`, pageWidth / 2, 21, { align: 'center' });
+            let startY = 28;
+            
+            const startObj = new Date(tglMulai); startObj.setHours(0,0,0,0);
+            const endObj = new Date(tglAkhir); endObj.setHours(23,59,59,999);
+
             if (kelasFilter !== "Semua") {
                 const pengajar = pengajarMap[kelasFilter] || "Belum diatur";
-                doc.text(`Kelas: ${kelasFilter}`, 14, 30); doc.text(`Pengajar: ${pengajar}`, 14, 36); 
+                doc.text(`Kelas: ${kelasFilter} | Pengajar: ${pengajar}`, pageWidth / 2, 27, { align: 'center' });
+                startY = 32;
                 
-                // Tambahkan info Jurnal Harian jika ada
-                const targetJurnal = jurnalStore.find(j => j.id === `${kelasFilter}_${tgl}`);
-                if(targetJurnal) {
+                // Tempelkan ringkasan jurnal di PDF
+                let jurnalsInRange = jurnalStore.filter(j => {
+                    if(j.kelas !== kelasFilter) return false;
+                    let jDate = new Date(j.tanggal);
+                    return jDate >= startObj && jDate <= endObj;
+                });
+                
+                if (jurnalsInRange.length > 0) {
                     doc.setFontSize(9);
-                    doc.text(`Tadarus: ${targetJurnal.tadarus || '-'} | Murojaah: ${targetJurnal.murojaah || '-'}`, 14, 44);
-                    doc.text(`Materi: ${targetJurnal.materi || '-'}`, 14, 50);
-                    startY = 56;
-                } else {
-                    startY = 44;
+                    doc.text(`Jurnal Terekam (${jurnalsInRange.length} Hari):`, 14, startY); // Jurnal tetap rata kiri biar rapi
+                    startY += 4;
+                    jurnalsInRange.slice(0, 3).forEach(j => { // Tampilkan max 3 jurnal biar PDF ga kepenuhan header
+                         doc.text(`- ${j.tanggal}: Tadarus(${j.tadarus||'-'}), Materi(${j.materi||'-'})`, 14, startY);
+                         startY += 4;
+                    });
+                    if(jurnalsInRange.length > 3) { doc.text(`  ...dan ${jurnalsInRange.length - 3} jurnal lainnya`, 14, startY); startY += 4; }
                 }
             } else {
-                doc.text(`Filter: Semua Kelas`, 14, 30); startY = 36;
+                doc.text(`Filter: Semua Kelas`, pageWidth / 2, 27, { align: 'center' }); startY = 32;
             }
             
-            let tableData = [];
+            let rawData = [];
             dataStore.filter(s => {
                 if(currentUserRole === 'ustadz' && !currentUserClasses.includes(s.kelas)) return false;
                 return kelasFilter === "Semua" || s.kelas === kelasFilter;
             }).forEach(s => {
-                let r = (s.riwayat || []).find(x => x.timestamp.startsWith(tgl));
-                let namaWaliKelas = pengajarMap[s.kelas] || '-';
-                let kolomKelasGabungan = `${s.kelas || '-'}\n(${namaWaliKelas})`;
-                let ketHaf = r ? (r.nilaiHafalan || r.keterangan || '-') : '-';
-                let ketJld = r ? (r.nilaiJilid || r.keterangan || '-') : '-';
-                
-                if(r) tableData.push([s.nama, kolomKelasGabungan, r.kehadiran, r.jilid, r.surah, `H: ${ketHaf}\nJ: ${ketJld}`]);
+                if(s.riwayat) {
+                    s.riwayat.forEach(r => {
+                        let rDate = new Date(r.timestamp);
+                        if(rDate >= startObj && rDate <= endObj) {
+                            rawData.push({ santri: s, record: r, date: rDate });
+                        }
+                    });
+                }
             });
 
-            doc.autoTable({ startY: startY, head: [['Nama', 'Kelas / Ustadz', 'Kehadiran', 'Jilid', 'Hafalan', 'Nilai']], body: tableData, theme: 'grid', headStyles: { fillColor: [220, 38, 38] }, styles: { cellPadding: 3, fontSize: 9 } });
+            rawData.sort((a,b) => b.date - a.date);
+
+            let tableData = rawData.map(item => {
+                 const fmtDate = `${item.date.getDate().toString().padStart(2,'0')}/${(item.date.getMonth()+1).toString().padStart(2,'0')}`;
+                 let ketHaf = item.record.nilaiHafalan || item.record.keterangan || '-';
+                 let ketJld = item.record.nilaiJilid || item.record.keterangan || '-';
+                 let cttn = item.record.catatan || '-';
+                 let kelasString = (kelasFilter === "Semua") ? `\n(${item.santri.kelas})` : '';
+                 return [fmtDate, item.santri.nama + kelasString, item.record.kehadiran, item.record.jilid, item.record.surah, `H:${ketHaf}\nJ:${ketJld}`, cttn];
+            });
+
+            doc.autoTable({ 
+                startY: startY, 
+                head: [['Tgl', 'Nama', 'Hadir', 'Jilid', 'Hafalan', 'Nilai', 'Catatan']], 
+                body: tableData, 
+                theme: 'grid', 
+                headStyles: { fillColor: [220, 38, 38] }, 
+                styles: { cellPadding: 2, fontSize: 8 } 
+            });
             
-            handlePDFOutput(doc, `Rekap_${tgl}_${kelasFilter.replace(/\s+/g, '')}.pdf`);
+            handlePDFOutput(doc, `Laporan_${tglMulai}_to_${tglAkhir}.pdf`);
         };
 
         // ==========================================
@@ -1112,7 +1239,6 @@
             errEl.classList.add('hidden');
             
             if (is_preview) {
-                // MOCK LOGIN PREVIEW
                 if (em.includes('admin')) {
                     currentUserRole = 'admin';
                     currentUserClasses = ['Semua'];
@@ -1152,7 +1278,6 @@
             }
         });
 
-        // STATE LISTENER FIREBASE UTAMA
         if (!is_preview) {
             onAuthStateChanged(auth, async (user) => {
                 if(user) {
@@ -1171,7 +1296,6 @@
                             currentUserClasses = Array.isArray(kl) ? kl : [kl];
                             currentLembagaName = dt.lembaga || 'Ringkasan Hari Ini';
                         } else {
-                            // Fallback jika database user hilang
                             currentUserRole = 'ustadz';
                             currentUserClasses = ['Kelas Umum'];
                         }
@@ -1183,6 +1307,7 @@
 
                     onSnapshot(collection(db, "users"), (snap) => {
                         pengajarMap = {};
+                        let foundAdminLembaga = null;
                         snap.forEach((d) => {
                             const data = d.data();
                             if(data.kelas && data.nama) {
@@ -1192,8 +1317,11 @@
                                     pengajarMap[data.kelas] = data.nama;
                                 }
                             }
-                            if(d.id === currentUserId && data.role === 'admin') currentLembagaName = data.lembaga || 'Ringkasan Hari Ini';
+                            if(data.role === 'admin' && data.lembaga) {
+                                foundAdminLembaga = data.lembaga;
+                            }
                         });
+                        if (foundAdminLembaga) currentLembagaName = foundAdminLembaga;
                         renderAll();
                     });
 

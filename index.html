@@ -25,7 +25,7 @@
                 <!-- Logo -->
                 <div class="flex items-center">
                     <i class="fa-solid fa-book-quran text-2xl mr-2"></i>
-                    <span class="font-bold text-xl tracking-wider">TPQ<span class="text-indigo-300">Salaamah Bisyaf'atil Quran</span></span>
+                    <span class="font-bold text-xl tracking-wider">TPQ<span class="text-indigo-300">Salaamah Bisyafa'atil Qur'an</span></span>
                 </div>
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex space-x-4 items-center">
@@ -104,9 +104,17 @@
 
         <!-- View: Dashboard -->
         <div id="view-dashboard" class="view-section">
-            <div class="flex items-center mb-6">
-                <h2 id="dash-title" class="text-2xl font-bold text-gray-800">Nama Lembaga</h2>
-                <button id="btn-edit-lembaga" onclick="openLembagaModal()" class="ml-3 bg-gray-200 text-gray-600 px-2 py-1 rounded text-xs font-bold hover:bg-gray-300 hidden"><i class="fa-solid fa-pen"></i> Edit</button>
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6 space-y-3 md:space-y-0">
+                <div class="flex items-center">
+                    <h2 id="dash-title" class="text-2xl font-bold text-gray-800">Nama Lembaga</h2>
+                    <!-- Tombol Edit Lembaga, default sembunyi -->
+                    <button id="btn-edit-lembaga" onclick="openLembagaModal()" class="ml-3 bg-gray-200 text-gray-600 px-2 py-1 rounded text-xs font-bold hover:bg-gray-300 hidden"><i class="fa-solid fa-pen"></i> Edit</button>
+                </div>
+                <div class="flex space-x-2">
+                    <select id="filter-kelas-dashboard" class="border px-3 py-2 rounded-lg text-sm bg-white shadow-sm focus:outline-none">
+                        <option value="Semua">Semua Kelas</option>
+                    </select>
+                </div>
             </div>
             
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -506,19 +514,26 @@
             let currentRekapFilter = filterRekap.value;
             filterRekap.innerHTML = '<option value="Semua">Semua Kelas</option>';
 
+            const filterDash = document.getElementById('filter-kelas-dashboard');
+            let currentDashFilter = filterDash.value;
+            filterDash.innerHTML = '<option value="Semua">Semua Kelas</option>';
+
             Array.from(classesSet).sort().forEach(cls => {
                 if (currentUserRole === 'admin' || currentUserClasses.includes(cls)) {
                     filterSelect.innerHTML += `<option value="${cls}">${cls}</option>`;
                     filterRekap.innerHTML += `<option value="${cls}">${cls}</option>`;
+                    filterDash.innerHTML += `<option value="${cls}">${cls}</option>`;
                 }
             });
             
             if(currentUserRole === 'ustadz') {
                 filterSelect.value = currentFilter && currentUserClasses.includes(currentFilter) ? currentFilter : currentUserClasses[0];
                 filterRekap.value = currentRekapFilter && currentUserClasses.includes(currentRekapFilter) ? currentRekapFilter : currentUserClasses[0];
+                filterDash.value = currentDashFilter && currentUserClasses.includes(currentDashFilter) ? currentDashFilter : currentUserClasses[0];
             } else {
                 filterSelect.value = classesSet.has(currentFilter) ? currentFilter : "Semua";
                 filterRekap.value = classesSet.has(currentRekapFilter) ? currentRekapFilter : "Semua";
+                filterDash.value = classesSet.has(currentDashFilter) ? currentDashFilter : "Semua";
             }
         }
 
@@ -528,17 +543,29 @@
             const btnTambah = document.getElementById('btn-tambah-santri');
             if(btnTambah) btnTambah.style.display = currentUserRole === 'admin' ? 'none' : 'block';
 
-            // Dashboard Title & Edit Button
+            // Dashboard Title & Fix Hak Akses Button Edit Lembaga
             document.getElementById('dash-title').innerText = currentLembagaName;
             const btnEditLembaga = document.getElementById('btn-edit-lembaga');
-            if(btnEditLembaga) btnEditLembaga.style.display = currentUserRole === 'admin' ? 'inline-block' : 'none';
+            if (btnEditLembaga) {
+                // Gunakan class tailwind 'hidden' murni agar tidak bentrok dengan display CSS
+                if (currentUserRole === 'admin') {
+                    btnEditLembaga.classList.remove('hidden');
+                } else {
+                    btnEditLembaga.classList.add('hidden');
+                }
+            }
 
-            // 1. Dashboard
-            let had = 0, iz = 0, alp = 0;
+            // 1. Dashboard (With Dynamic Class Filter)
+            const selectedDashClass = document.getElementById('filter-kelas-dashboard').value;
+            let had = 0, iz = 0, alp = 0, totalDash = 0;
             const dashCards = document.getElementById('dashboard-cards');
             dashCards.innerHTML = '';
             
-            dataStore.filter(s => currentUserRole === 'admin' || currentUserClasses.includes(s.kelas)).forEach(s => {
+            dataStore.filter(s => {
+                if(currentUserRole === 'ustadz' && !currentUserClasses.includes(s.kelas)) return false;
+                return selectedDashClass === "Semua" || s.kelas === selectedDashClass;
+            }).forEach(s => {
+                totalDash++;
                 if(s.kehadiran === 'Hadir') had++;
                 else if(s.kehadiran === 'Izin' || s.kehadiran === 'Sakit') iz++;
                 else if(s.kehadiran === 'Alpa') alp++;
@@ -561,8 +588,7 @@
                 `;
             });
             
-            const totalSantriFiltered = dataStore.filter(s => currentUserRole === 'admin' || currentUserClasses.includes(s.kelas)).length;
-            document.getElementById('dash-total').innerText = totalSantriFiltered;
+            document.getElementById('dash-total').innerText = totalDash;
             document.getElementById('dash-hadir').innerText = had;
             document.getElementById('dash-izin').innerText = iz;
             document.getElementById('dash-alpa').innerText = alp;
@@ -637,11 +663,8 @@
             });
         }
 
+        document.getElementById('filter-kelas-dashboard').addEventListener('change', renderAll);
         document.getElementById('filter-kelas-tabel').addEventListener('change', renderAll);
-        
-        // ==========================================
-        // 5. MODALS & CRUD
-        // ==========================================
         
         window.openModal = (mode) => {
             if(currentUserRole === 'admin') return;

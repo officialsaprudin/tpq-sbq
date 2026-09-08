@@ -25,7 +25,7 @@
                 <!-- Logo -->
                 <div class="flex items-center">
                     <i class="fa-solid fa-book-quran text-2xl mr-2"></i>
-                    <span class="font-bold text-xl tracking-wider">TPQ<span class="text-indigo-300">SBQ</span></span>
+                    <span class="font-bold text-xl tracking-wider">TPQ<span class="text-indigo-300">Salaamah Bisyaf'atil Quran</span></span>
                 </div>
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex space-x-4 items-center">
@@ -64,24 +64,13 @@
                 <form id="auth-form">
                     <div id="signup-fields" class="hidden mb-4 space-y-4">
                         <div>
-                            <label class="block text-gray-700 text-sm font-bold mb-2">Daftar Sebagai</label>
-                            <select id="reg-role" class="w-full px-3 py-2 border rounded-lg bg-white focus:ring-2 focus:ring-indigo-500" onchange="toggleRoleFields()">
-                                <option value="ustadz">Ustadz / Pengajar</option>
-                                <option value="admin">Admin Lembaga</option>
-                            </select>
-                        </div>
-                        <div>
                             <label class="block text-gray-700 text-sm font-bold mb-2">Nama Lengkap (Gelar)</label>
                             <input type="text" id="reg-nama" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Cth: Ust. Saprudin S.Ag">
                         </div>
                         <div id="field-kelas">
                             <label class="block text-gray-700 text-sm font-bold mb-2">Kelas yang Diajar</label>
-                            <input type="text" id="reg-kelas" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Cth: Kelas Abu Bakar, Kelas Umar">
+                            <input type="text" id="reg-kelas" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Cth: Kelas Madinah, Kelas Mekkah">
                             <p class="text-[10px] text-gray-400 mt-1">Pisahkan dengan koma jika memegang lebih dari satu kelas.</p>
-                        </div>
-                        <div id="field-lembaga" class="hidden">
-                            <label class="block text-gray-700 text-sm font-bold mb-2">Nama Lembaga (TPQ/TPA/Madrasah)</label>
-                            <input type="text" id="reg-lembaga" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Cth: TPQ Al-Ikhlas">
                         </div>
                     </div>
 
@@ -92,8 +81,8 @@
                         <div id="demo-hint" class="mt-4 bg-gray-50 p-3 rounded-lg border border-gray-200 hidden">
                             <p class="text-xs text-gray-600 font-bold border-b border-gray-300 pb-1 mb-2">Daftar Akun Demo:</p>
                             <ul class="text-xs text-gray-600 space-y-2 list-none">
-                                <li>👑 <span class="text-indigo-600 font-bold cursor-pointer hover:underline" onclick="document.getElementById('login-email').value='admin@ngaji.com'; document.getElementById('login-password').value='123456';">admin@ngaji.com</span> <br><span class="text-[10px] text-gray-400 ml-5">(Akses Semua Kelas)</span></li>
-                                <li>👨‍🏫 <span class="text-green-600 font-bold cursor-pointer hover:underline" onclick="document.getElementById('login-email').value='saprudin@ngaji.com'; document.getElementById('login-password').value='123456';">saprudin@ngaji.com</span> <br><span class="text-[10px] text-gray-400 ml-5">(Wali Kelas Madinah)</span></li>
+                                <li>👑 <span class="text-indigo-600 font-bold cursor-pointer hover:underline" onclick="document.getElementById('login-email').value='admin@ngaji.com'; document.getElementById('login-password').value='123456';">admin@ngaji.com</span> <br><span class="text-[10px] text-gray-400 ml-5">(Akses Semua Kelas - Read Only)</span></li>
+                                <li>👨‍🏫 <span class="text-green-600 font-bold cursor-pointer hover:underline" onclick="document.getElementById('login-email').value='saprudin@ngaji.com'; document.getElementById('login-password').value='123456';">saprudin@ngaji.com</span> <br><span class="text-[10px] text-gray-400 ml-5">(Wali Kelas Madinah - Akses Penuh)</span></li>
                             </ul>
                         </div>
                     </div>
@@ -116,7 +105,7 @@
         <!-- View: Dashboard -->
         <div id="view-dashboard" class="view-section">
             <div class="flex items-center mb-6">
-                <h2 id="dash-title" class="text-2xl font-bold text-gray-800">Ringkasan Hari Ini</h2>
+                <h2 id="dash-title" class="text-2xl font-bold text-gray-800">Nama Lembaga</h2>
                 <button id="btn-edit-lembaga" onclick="openLembagaModal()" class="ml-3 bg-gray-200 text-gray-600 px-2 py-1 rounded text-xs font-bold hover:bg-gray-300 hidden"><i class="fa-solid fa-pen"></i> Edit</button>
             </div>
             
@@ -159,18 +148,17 @@
             
             <div class="bg-white rounded-xl shadow overflow-hidden">
                 <div class="overflow-x-auto">
-                    <!-- FIX: min-w-max removed to allow break-words on Catatan -->
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-gray-100 text-gray-600 text-sm uppercase">
-                                <th class="p-4 border-b w-1/6">Nama Santri</th>
-                                <th class="p-4 border-b w-1/6">Kelas / Wali Kelas</th>
-                                <th class="p-4 border-b">Status</th>
-                                <th class="p-4 border-b">Hafalan</th>
-                                <th class="p-4 border-b">Jilid</th>
-                                <th class="p-4 border-b">Nilai</th>
-                                <th class="p-4 border-b w-1/5">Catatan</th>
-                                <th class="p-4 border-b text-center">Aksi</th>
+                                <th class="p-4 border-b w-1/5 whitespace-nowrap">Nama Santri</th>
+                                <th class="p-4 border-b w-1/5 whitespace-nowrap">Kelas / Wali Kelas</th>
+                                <th class="p-4 border-b whitespace-nowrap">Status</th>
+                                <th class="p-4 border-b whitespace-nowrap">Hafalan</th>
+                                <th class="p-4 border-b whitespace-nowrap">Jilid</th>
+                                <th class="p-4 border-b whitespace-nowrap">Nilai</th>
+                                <th class="p-4 border-b w-1/4">Catatan</th>
+                                <th class="p-4 border-b text-center whitespace-nowrap">Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="santri-tbody" class="text-sm"></tbody>
@@ -189,38 +177,41 @@
         <div id="view-rekap" class="view-section">
             <div class="flex flex-col md:flex-row justify-between items-center mb-6 space-y-3 md:space-y-0">
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-800">Rekapitulasi Jurnal & Nilai</h2>
+                    <h2 class="text-2xl font-bold text-gray-800">Laporan Progres Santri</h2>
                     <p id="info-pengajar-rekap" class="text-sm text-indigo-600 font-medium mt-1 hidden"></p>
                 </div>
-                <div class="flex space-x-2 items-center">
+                <div class="flex flex-wrap items-center gap-2">
                     <select id="filter-kelas-rekap" class="border px-3 py-2 rounded-lg text-sm bg-white shadow-sm focus:outline-none">
                         <option value="Semua">Semua Kelas</option>
                     </select>
-                    <!-- FIX: 2 INPUT TANGGAL UNTUK RENTANG WAKTU -->
-                    <input type="date" id="filter-tanggal-mulai" class="border px-3 py-2 rounded-lg shadow-sm focus:outline-none text-sm" title="Dari Tanggal">
-                    <span class="text-gray-500 font-bold">-</span>
-                    <input type="date" id="filter-tanggal-akhir" class="border px-3 py-2 rounded-lg shadow-sm focus:outline-none text-sm" title="Sampai Tanggal">
-                    
+                    <div class="flex items-center space-x-1 border px-2 py-1 rounded-lg bg-white shadow-sm">
+                        <span class="text-xs text-gray-500 font-bold">Dari:</span>
+                        <input type="date" id="filter-tanggal-mulai" class="focus:outline-none text-sm bg-transparent">
+                    </div>
+                    <div class="flex items-center space-x-1 border px-2 py-1 rounded-lg bg-white shadow-sm">
+                        <span class="text-xs text-gray-500 font-bold">S/d:</span>
+                        <input type="date" id="filter-tanggal-akhir" class="focus:outline-none text-sm bg-transparent">
+                    </div>
                     <button onclick="exportGlobalPDF()" class="bg-red-500 text-white px-4 py-2 rounded-lg font-bold shadow hover:bg-red-600 transition">
                         <i class="fa-solid fa-file-pdf mr-1"></i> PDF
                     </button>
                 </div>
             </div>
 
-            <!-- Kontainer Utama Rekap (Berisi Jurnal + Tabel Dinamis Berderet) -->
-            <div id="rekap-container"></div>
+            <!-- Area Dinamis untuk Rekap -->
+            <div id="rekap-container" class="space-y-8"></div>
         </div>
 
     </main>
 
     <!-- Modal Form (Tambah/Edit Santri) -->
     <div id="modal-form" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden">
             <div class="bg-indigo-600 px-6 py-4 flex justify-between items-center text-white">
                 <h3 id="modal-title" class="font-bold text-lg">Update Progres</h3>
                 <button onclick="closeModal()" class="hover:text-gray-300"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
-            <form id="santri-form" class="p-6 overflow-y-auto">
+            <form id="santri-form" class="p-6">
                 <input type="hidden" id="form-id">
                 <div class="mb-4">
                     <label class="block text-sm font-bold text-gray-700 mb-1">Nama Santri</label>
@@ -270,19 +261,20 @@
                         </select>
                     </div>
                 </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-bold text-gray-700 mb-1">Nilai Jilid/Ngaji</label>
-                    <select id="form-nilai-jilid" class="w-full px-3 py-2 border rounded-lg bg-white">
-                        <option value="Lancar">Lancar / Lanjut</option>
-                        <option value="Kurang Lancar">Kurang Lancar</option>
-                        <option value="Mengulang">Mengulang</option>
-                        <option value="-">-</option>
-                    </select>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Nilai Jilid/Ngaji</label>
+                        <select id="form-nilai-jilid" class="w-full px-3 py-2 border rounded-lg bg-white">
+                            <option value="Lancar">Lancar / Lanjut</option>
+                            <option value="Kurang Lancar">Kurang Lancar</option>
+                            <option value="Mengulang">Mengulang</option>
+                            <option value="-">-</option>
+                        </select>
+                    </div>
                 </div>
-                <!-- FIX: Kolom Catatan ditambahkan kembali di Form -->
                 <div class="mb-6">
                     <label class="block text-sm font-bold text-gray-700 mb-1">Catatan Tambahan (Opsional)</label>
-                    <textarea id="form-catatan" rows="2" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="Cth: Tajwid kurang di huruf Dlod"></textarea>
+                    <textarea id="form-catatan" rows="2" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="Cth: Tajwid kurang, Sering lupa huruf Dlod"></textarea>
                 </div>
                 <div class="flex justify-end space-x-2">
                     <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-bold hover:bg-gray-300">Batal</button>
@@ -294,7 +286,7 @@
 
     <!-- Modal Riwayat -->
     <div id="modal-history" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[80vh] flex flex-col">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[80vh] flex flex-col">
             <div class="bg-indigo-600 px-6 py-4 flex justify-between items-center text-white rounded-t-xl">
                 <h3 class="font-bold text-lg">Riwayat Ngaji: <span id="hist-nama"></span></h3>
                 <button onclick="closeHistory()" class="hover:text-gray-300"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -303,12 +295,12 @@
                 <table class="w-full text-left text-sm border-collapse">
                     <thead>
                         <tr class="bg-gray-100">
-                            <th class="p-2 border-b">Tanggal/Jam</th>
-                            <th class="p-2 border-b">Kehadiran</th>
-                            <th class="p-2 border-b">Hafalan</th>
-                            <th class="p-2 border-b">Jilid</th>
-                            <th class="p-2 border-b">Nilai</th>
-                            <th class="p-2 border-b w-1/4">Catatan</th>
+                            <th class="p-2 border-b whitespace-nowrap">Tanggal/Jam</th>
+                            <th class="p-2 border-b whitespace-nowrap">Kehadiran</th>
+                            <th class="p-2 border-b whitespace-nowrap">Hafalan</th>
+                            <th class="p-2 border-b whitespace-nowrap">Jilid</th>
+                            <th class="p-2 border-b whitespace-nowrap">Nilai</th>
+                            <th class="p-2 border-b">Catatan</th>
                         </tr>
                     </thead>
                     <tbody id="hist-tbody"></tbody>
@@ -341,7 +333,7 @@
     <div id="modal-jurnal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="bg-indigo-600 px-6 py-4 flex justify-between items-center text-white">
-                <h3 class="font-bold text-lg">Isi Jurnal Kelas</h3>
+                <h3 class="font-bold text-lg">Isi Jurnal Kelas Harian</h3>
                 <button onclick="closeJurnalModal()" class="hover:text-gray-300"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
             <form id="jurnal-form" class="p-6">
@@ -378,6 +370,9 @@
     <!-- Firebase SDK (Modular v9) -->
     <script type="module">
         const is_preview = false; // Set ke false untuk produksi (Firebase Asli)
+        
+        // GANTI EMAIL INI DENGAN EMAIL ANDA AGAR OTOMATIS JADI ADMIN
+        const ADMIN_EMAILS = ['admin@ngaji.com', 'saprudin@ngaji.com']; 
 
         const firebaseConfig = {
   apiKey: "AIzaSyCfapSUazt_uCVVI5uttatd2iGR7DyLk54",
@@ -391,12 +386,12 @@
 
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         let db, auth;
-        let currentUserRole = 'admin'; 
+        let currentUserRole = 'ustadz'; 
         let currentUserClasses = ['Semua']; 
-        let currentLembagaName = 'Ringkasan Hari Ini';
+        let currentLembagaName = 'Aplikasi Progres Santri';
         let currentUserId = '';
 
         if (!is_preview) {
@@ -414,18 +409,6 @@
         
         if (is_preview) {
             document.getElementById('demo-hint').classList.remove('hidden');
-            
-            // Mock Data Generator for Preview mode
-            dataStore = [
-                { id: "1", nama: "Fatimah Azzahra", kelas: "Kelas Madinah", kehadiran: "Hadir", jilid: "Jilid 4", halaman: "15", surah: "An-Naba", ayat: "30", nilaiHafalan: "Lancar", nilaiJilid: "Lancar", catatan: "Tajwid makin mantap", riwayat: [
-                    {timestamp: new Date().toISOString(), kehadiran: "Hadir", jilid: "Jilid 4", halaman: "15", surah: "An-Naba", ayat: "30", nilaiHafalan: "Lancar", nilaiJilid: "Lancar", catatan: "Tajwid makin mantap"},
-                    {timestamp: new Date(new Date().setDate(new Date().getDate() - 1)).toISOString(), kehadiran: "Alpa", jilid: "-", halaman: "-", surah: "-", ayat: "-", nilaiHafalan: "-", nilaiJilid: "-", catatan: "-"}
-                ]},
-                { id: "2", nama: "Ahmad Yasin", kelas: "Kelas Madinah", kehadiran: "Hadir", jilid: "Jilid 2", halaman: "10", surah: "Al-Ikhlas", ayat: "4", nilaiHafalan: "Lancar", nilaiJilid: "Kurang Lancar", catatan: "Sering ketukar huruf Sin dan Syin, perbanyak murajaah agar tidak salah.", riwayat: [
-                    {timestamp: new Date().toISOString(), kehadiran: "Hadir", jilid: "Jilid 2", halaman: "10", surah: "Al-Ikhlas", ayat: "4", nilaiHafalan: "Lancar", nilaiJilid: "Kurang Lancar", catatan: "Sering ketukar huruf Sin dan Syin, perbanyak murajaah agar tidak salah."}
-                ]}
-            ];
-            pengajarMap["Kelas Madinah"] = "Ust. Saprudin S.Ag";
         }
 
         window.toggleAuthMode = () => {
@@ -435,7 +418,7 @@
             if(authMode === 'register') {
                 document.getElementById('signup-fields').classList.remove('hidden');
                 document.getElementById('reg-nama').required = true;
-                toggleRoleFields();
+                document.getElementById('reg-kelas').required = true;
                 document.getElementById('demo-hint').classList.add('hidden');
                 document.getElementById('auth-btn').innerText = 'Daftar & Masuk';
                 document.getElementById('toggle-auth-text').innerText = 'Sudah punya akun? Masuk di sini';
@@ -443,32 +426,11 @@
                 document.getElementById('signup-fields').classList.add('hidden');
                 document.getElementById('reg-nama').required = false;
                 document.getElementById('reg-kelas').required = false;
-                document.getElementById('reg-lembaga').required = false;
                 if (is_preview) document.getElementById('demo-hint').classList.remove('hidden');
                 document.getElementById('auth-btn').innerText = 'Masuk';
                 document.getElementById('toggle-auth-text').innerText = 'Belum punya akun? Daftar di sini';
             }
         };
-
-        window.toggleRoleFields = () => {
-            const role = document.getElementById('reg-role').value;
-            if (role === 'admin') {
-                document.getElementById('field-kelas').classList.add('hidden');
-                document.getElementById('reg-kelas').required = false;
-                document.getElementById('field-lembaga').classList.remove('hidden');
-                document.getElementById('reg-lembaga').required = true;
-            } else {
-                document.getElementById('field-kelas').classList.remove('hidden');
-                document.getElementById('reg-kelas').required = true;
-                document.getElementById('field-lembaga').classList.add('hidden');
-                document.getElementById('reg-lembaga').required = false;
-            }
-        };
-
-        if (!is_preview) {
-            const demoHint = document.getElementById('demo-hint');
-            if (demoHint) demoHint.classList.add('hidden');
-        }
 
         window.toggleMobileMenu = () => {
             document.getElementById('mobile-menu').classList.toggle('hidden');
@@ -489,10 +451,13 @@
                 localStorage.setItem('activeView', viewId);
             }
             
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.toggle('bg-indigo-800', btn.dataset.target === viewId);
+            });
+            
             if(viewId === 'rekap') renderRekap();
         };
 
-        // BINTANG STRICT (Hangus jika ada Alpa/Izin/Sakit dalam seminggu)
         function getStars(riwayat) {
             if(!riwayat || riwayat.length === 0) return '<span class="text-xs text-gray-400 italic">Belum ada bintang</span>';
             let curr = new Date();
@@ -506,11 +471,8 @@
             riwayat.forEach(r => {
                 let rDate = new Date(r.timestamp);
                 if(rDate >= monday && rDate.getDay() >= 1 && rDate.getDay() <= 5) {
-                    if (r.kehadiran === 'Hadir') {
-                        stars++;
-                    } else {
-                        adaAbsen = true; 
-                    }
+                    if (r.kehadiran === 'Hadir') stars++;
+                    else adaAbsen = true; 
                 }
             });
 
@@ -567,9 +529,9 @@
             if(btnTambah) btnTambah.style.display = currentUserRole === 'admin' ? 'none' : 'block';
 
             // Dashboard Title & Edit Button
-            document.getElementById('dash-title').innerText = currentUserRole === 'admin' ? currentLembagaName : 'Ringkasan Hari Ini';
+            document.getElementById('dash-title').innerText = currentLembagaName;
             const btnEditLembaga = document.getElementById('btn-edit-lembaga');
-            if(btnEditLembaga) btnEditLembaga.style.display = currentUserRole === 'admin' ? 'block' : 'none';
+            if(btnEditLembaga) btnEditLembaga.style.display = currentUserRole === 'admin' ? 'inline-block' : 'none';
 
             // 1. Dashboard
             let had = 0, iz = 0, alp = 0;
@@ -631,20 +593,20 @@
 
                 tbody.innerHTML += `
                     <tr class="border-b hover:bg-gray-50">
-                        <td class="p-4 font-bold text-gray-800">${s.nama}</td>
-                        <td class="p-4">
+                        <td class="p-4 font-bold text-gray-800 whitespace-nowrap">${s.nama}</td>
+                        <td class="p-4 whitespace-nowrap">
                             <div class="font-medium text-gray-800">${s.kelas || '-'}</div>
                             <div class="text-xs text-indigo-600 font-bold mt-0.5"><i class="fa-solid fa-user-tie mr-1"></i> ${namaWaliKelas}</div>
                         </td>
-                        <td class="p-4">${getStatusBadge(s.kehadiran)}</td>
-                        <td class="p-4">${s.surah} <br><span class="text-gray-500 text-[11px]">(Ayat ${s.ayat})</span></td>
-                        <td class="p-4">${s.jilid} <br><span class="text-gray-500 text-[11px]">(Hal ${s.halaman})</span></td>
-                        <td class="p-4">
+                        <td class="p-4 whitespace-nowrap">${getStatusBadge(s.kehadiran)}</td>
+                        <td class="p-4 whitespace-nowrap">${s.surah} <br><span class="text-gray-500 text-[11px]">(Ayat ${s.ayat})</span></td>
+                        <td class="p-4 whitespace-nowrap">${s.jilid} <br><span class="text-gray-500 text-[11px]">(Hal ${s.halaman})</span></td>
+                        <td class="p-4 whitespace-nowrap">
                             <div class="mb-1 flex items-center space-x-1"><span class="text-[10px] text-gray-400 w-6">Haf:</span> ${badgeHafalan}</div>
                             <div class="flex items-center space-x-1"><span class="text-[10px] text-gray-400 w-6">Jld:</span> ${badgeJilid}</div>
                         </td>
-                        <td class="p-4 text-xs text-gray-600 italic break-words max-w-[200px] whitespace-normal">${s.catatan || '-'}</td>
-                        <td class="p-4 text-center">
+                        <td class="p-4 text-xs italic text-gray-600 break-words whitespace-normal min-w-[150px]">${s.catatan || '-'}</td>
+                        <td class="p-4 text-center whitespace-nowrap">
                             <div class="flex justify-center space-x-3 text-lg">
                                 ${actionButtons}
                             </div>
@@ -681,7 +643,6 @@
         // 5. MODALS & CRUD
         // ==========================================
         
-        // --- SANTRI CRUD ---
         window.openModal = (mode) => {
             if(currentUserRole === 'admin') return;
             document.getElementById('santri-form').reset();
@@ -697,7 +658,6 @@
             document.getElementById('form-ayat').value = "-";
             document.getElementById('form-nilai-hafalan').value = "Lancar";
             document.getElementById('form-nilai-jilid').value = "Lancar";
-            document.getElementById('form-catatan').value = "";
             document.getElementById('modal-form').classList.remove('hidden');
         };
 
@@ -741,7 +701,8 @@
                 kehadiran: document.getElementById('form-kehadiran').value, jilid: document.getElementById('form-jilid').value,
                 halaman: document.getElementById('form-halaman').value, surah: document.getElementById('form-surah').value,
                 ayat: document.getElementById('form-ayat').value, nilaiHafalan: document.getElementById('form-nilai-hafalan').value,
-                nilaiJilid: document.getElementById('form-nilai-jilid').value, catatan: document.getElementById('form-catatan').value, timestamp: currentTimestamp 
+                nilaiJilid: document.getElementById('form-nilai-jilid').value, catatan: document.getElementById('form-catatan').value,
+                timestamp: currentTimestamp 
             };
 
             if (is_preview) {
@@ -813,15 +774,15 @@
 
                     tbody.innerHTML += `
                         <tr class="border-b hover:bg-gray-50">
-                            <td class="p-2 text-gray-600">${fmt}</td>
-                            <td class="p-2">${getStatusBadge(r.kehadiran)}</td>
-                            <td class="p-2">${r.surah} <br><span class="text-gray-500 text-[10px]">(${r.ayat})</span></td>
-                            <td class="p-2">${r.jilid} <br><span class="text-gray-500 text-[10px]">(Hal ${r.halaman})</span></td>
-                            <td class="p-2">
+                            <td class="p-2 text-gray-600 whitespace-nowrap">${fmt}</td>
+                            <td class="p-2 whitespace-nowrap">${getStatusBadge(r.kehadiran)}</td>
+                            <td class="p-2 whitespace-nowrap">${r.surah} <br><span class="text-gray-500 text-[10px]">(${r.ayat})</span></td>
+                            <td class="p-2 whitespace-nowrap">${r.jilid} <br><span class="text-gray-500 text-[10px]">(Hal ${r.halaman})</span></td>
+                            <td class="p-2 whitespace-nowrap">
                                 <div class="mb-1 flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">H:</span> ${badgeHafalan}</div>
                                 <div class="flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">J:</span> ${badgeJilid}</div>
                             </td>
-                            <td class="p-2 text-xs text-gray-600 italic break-words max-w-[150px] whitespace-normal">${r.catatan || '-'}</td>
+                            <td class="p-2 text-xs italic text-gray-600 break-words whitespace-normal min-w-[150px]">${r.catatan || '-'}</td>
                         </tr>
                     `;
                 });
@@ -848,43 +809,36 @@
             if (is_preview) {
                 currentLembagaName = newName;
                 document.getElementById('dash-title').innerText = currentLembagaName;
-                closeLembagaModal();
-                showToast();
+                closeLembagaModal(); showToast();
             } else {
                 try {
-                    await setDoc(doc(db, "users", currentUserId), { lembaga: newName }, { merge: true });
-                    currentLembagaName = newName;
-                    document.getElementById('dash-title').innerText = currentLembagaName;
-                    closeLembagaModal();
-                    showToast();
+                    let updatePromises = [];
+                    const usersSnap = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js").then(m => m.getDocs(collection(db, "users")));
+                    usersSnap.forEach(docSnap => {
+                        if (docSnap.data().role === 'admin') updatePromises.push(setDoc(doc(db, "users", docSnap.id), { lembaga: newName }, { merge: true }));
+                    });
+                    await Promise.all(updatePromises);
+                    closeLembagaModal(); showToast();
                 } catch(err) { alert(err.message); }
             }
         });
 
         // --- JURNAL KELAS HARIAN CRUD ---
         window.openJurnalModal = (kelasSpesifik) => {
-            if (currentUserRole === 'admin') {
-                alert("Mode Admin: Anda hanya memiliki akses untuk membaca laporan.");
-                return;
+            if(currentUserRole === 'admin') return; // Admin Read Only
+            const kelas = kelasSpesifik || document.getElementById('filter-kelas-rekap').value;
+            if (kelas === "Semua") { alert("Pilih satu kelas spesifik terlebih dahulu!"); return; }
+            
+            // Set default date di form jurnal jika kosong, atau pakai tanggal hari ini
+            if(!document.getElementById('form-jurnal-tanggal').value) {
+                document.getElementById('form-jurnal-tanggal').valueAsDate = new Date();
             }
-            document.getElementById('form-jurnal-kelas').value = kelasSpesifik;
-            document.getElementById('form-jurnal-tanggal').valueAsDate = new Date(); // Default hari ini
             
-            // Pancing trigger change untuk nge-load data jika hari ini sudah diisi
-            const event = new Event('change');
-            document.getElementById('form-jurnal-tanggal').dispatchEvent(event);
-            
-            document.getElementById('modal-jurnal').classList.remove('hidden');
-        };
-        window.closeJurnalModal = () => document.getElementById('modal-jurnal').classList.add('hidden');
-
-        // Deteksi perubahan tanggal di Jurnal untuk auto-load
-        document.getElementById('form-jurnal-tanggal').addEventListener('change', (e) => {
-            const tgl = e.target.value;
-            const kelas = document.getElementById('form-jurnal-kelas').value;
+            const tgl = document.getElementById('form-jurnal-tanggal').value;
             const jId = `${kelas}_${tgl}`;
             const targetJurnal = jurnalStore.find(j => j.id === jId);
             
+            document.getElementById('form-jurnal-kelas').value = kelas;
             if(targetJurnal) {
                 document.getElementById('form-jurnal-tadarus').value = targetJurnal.tadarus || '';
                 document.getElementById('form-jurnal-murojaah').value = targetJurnal.murojaah || '';
@@ -894,11 +848,19 @@
                 document.getElementById('form-jurnal-murojaah').value = '';
                 document.getElementById('form-jurnal-materi').value = '';
             }
+            document.getElementById('modal-jurnal').classList.remove('hidden');
+        };
+        window.closeJurnalModal = () => document.getElementById('modal-jurnal').classList.add('hidden');
+
+        // Listener jika tanggal di modal diganti, otomatis muat data jurnal hari itu
+        document.getElementById('form-jurnal-tanggal').addEventListener('change', () => {
+            const kelas = document.getElementById('form-jurnal-kelas').value;
+            window.openJurnalModal(kelas); 
         });
 
         document.getElementById('jurnal-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            if (currentUserRole === 'admin') return;
+            if(currentUserRole === 'admin') return; 
             
             const tgl = document.getElementById('form-jurnal-tanggal').value;
             const kelas = document.getElementById('form-jurnal-kelas').value;
@@ -925,12 +887,13 @@
             }
         });
 
-        // --- REKAP & JURNAL RENDER (RANGE WAKTU) ---
-        // Set Default 1 Minggu kebelakang
-        let defaultStart = new Date(); defaultStart.setDate(defaultStart.getDate() - 7);
-        document.getElementById('filter-tanggal-mulai').valueAsDate = defaultStart;
-        document.getElementById('filter-tanggal-akhir').valueAsDate = new Date();
-        
+        // --- REKAP & JURNAL RENDER (DATE RANGE) ---
+        // Setup Date Range Default (1 Minggu Terakhir)
+        let hariIni = new Date();
+        let semingguLalu = new Date(); semingguLalu.setDate(hariIni.getDate() - 6);
+        document.getElementById('filter-tanggal-mulai').valueAsDate = semingguLalu;
+        document.getElementById('filter-tanggal-akhir').valueAsDate = hariIni;
+
         document.getElementById('filter-tanggal-mulai').addEventListener('change', renderRekap);
         document.getElementById('filter-tanggal-akhir').addEventListener('change', renderRekap);
         document.getElementById('filter-kelas-rekap').addEventListener('change', renderRekap);
@@ -939,129 +902,116 @@
             const tglMulai = document.getElementById('filter-tanggal-mulai').value;
             const tglAkhir = document.getElementById('filter-tanggal-akhir').value;
             const kelasFilter = document.getElementById('filter-kelas-rekap').value;
-            const rekapContainer = document.getElementById('rekap-container');
-            const infoPengajar = document.getElementById('info-pengajar-rekap');
-            rekapContainer.innerHTML = '';
+            const container = document.getElementById('rekap-container');
+            container.innerHTML = '';
             
-            let classesToRender = [];
+            if(!tglMulai || !tglAkhir) return;
 
-            if (kelasFilter !== "Semua") {
-                const pengajar = pengajarMap[kelasFilter] || "Belum diatur";
-                infoPengajar.innerHTML = `<i class="fa-solid fa-chalkboard-user mr-1"></i> Difilter untuk: ${pengajar}`;
-                infoPengajar.classList.remove('hidden');
-                classesToRender.push(kelasFilter);
-            } else {
-                infoPengajar.classList.add('hidden');
-                let userClasses = Array.from(classesSet).sort();
-                if (currentUserRole === 'ustadz') {
-                    userClasses = userClasses.filter(c => currentUserClasses.includes(c));
-                }
-                classesToRender = userClasses;
-            }
+            let kelasRenderList = kelasFilter === "Semua" ? Array.from(classesSet).sort().filter(cls => currentUserRole === 'admin' || currentUserClasses.includes(cls)) : [kelasFilter];
 
-            const startObj = new Date(tglMulai); startObj.setHours(0,0,0,0);
-            const endObj = new Date(tglAkhir); endObj.setHours(23,59,59,999);
-
-            // Loop untuk setiap kelas yang akan dirender secara vertikal
-            classesToRender.forEach(cls => {
-                let rawData = [];
-                let adaSantri = dataStore.filter(s => s.kelas === cls);
+            kelasRenderList.forEach(kls => {
+                const pengajar = pengajarMap[kls] || "Belum diatur";
+                let btnIsiJurnal = currentUserRole === 'admin' ? '' : `<button onclick="openJurnalModal('${kls}')" class="bg-indigo-600 text-white px-3 py-1 rounded text-sm font-bold shadow hover:bg-indigo-700 transition whitespace-nowrap">Isi/Edit Jurnal</button>`;
                 
-                adaSantri.forEach(s => {
-                    if(s.riwayat) {
-                        s.riwayat.forEach(r => {
-                            let rDate = new Date(r.timestamp);
-                            if(rDate >= startObj && rDate <= endObj) {
-                                rawData.push({ santri: s, record: r, date: rDate });
-                            }
+                let jurnalHTML = '';
+                // Cari Jurnal dalam range tanggal, urutkan dari terbaru
+                let jurnalKelasIni = jurnalStore.filter(j => j.kelas === kls && j.tanggal >= tglMulai && j.tanggal <= tglAkhir).sort((a,b) => b.tanggal.localeCompare(a.tanggal));
+                
+                if (jurnalKelasIni.length > 0) {
+                    jurnalKelasIni.forEach(j => {
+                        jurnalHTML += `
+                            <div class="bg-indigo-50 p-4 rounded-xl shadow-sm mb-4 border border-indigo-100">
+                                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-2">
+                                    <h3 class="font-bold text-indigo-800"><i class="fa-solid fa-book-journal-whills mr-2"></i> Jurnal Tgl: ${j.tanggal}</h3>
+                                    ${btnIsiJurnal}
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="bg-white p-3 rounded-lg border border-indigo-50 shadow-sm"><p class="text-xs text-indigo-500 font-bold mb-1">Tadarus</p><p class="text-sm font-medium text-gray-800 break-words">${j.tadarus || '-'}</p></div>
+                                    <div class="bg-white p-3 rounded-lg border border-indigo-50 shadow-sm"><p class="text-xs text-indigo-500 font-bold mb-1">Murojaah</p><p class="text-sm font-medium text-gray-800 break-words">${j.murojaah || '-'}</p></div>
+                                    <div class="bg-white p-3 rounded-lg border border-indigo-50 shadow-sm"><p class="text-xs text-indigo-500 font-bold mb-1">Materi</p><p class="text-sm font-medium text-gray-800 break-words">${j.materi || '-'}</p></div>
+                                </div>
+                            </div>`;
+                    });
+                } else {
+                    jurnalHTML = `
+                        <div class="bg-indigo-50 p-4 rounded-xl shadow-sm mb-4 border border-indigo-100 flex justify-between items-center">
+                            <p class="text-sm text-indigo-800 italic">Belum ada jurnal untuk rentang tanggal ini.</p>
+                            ${btnIsiJurnal}
+                        </div>`;
+                }
+
+                let tabelTbody = '';
+                let adaDataSantri = false;
+
+                dataStore.filter(s => s.kelas === kls).forEach(s => {
+                    // Filter riwayat berdasarkan range tanggal
+                    let riwayatDalamRange = (s.riwayat || []).filter(r => {
+                        const tglRiwayat = r.timestamp.split('T')[0]; 
+                        return tglRiwayat >= tglMulai && tglRiwayat <= tglAkhir;
+                    });
+
+                    if(riwayatDalamRange.length > 0) {
+                        adaDataSantri = true;
+                        riwayatDalamRange.forEach(adaData => {
+                            let dtRaw = new Date(adaData.timestamp);
+                            let tglCetak = `${String(dtRaw.getDate()).padStart(2,'0')}/${String(dtRaw.getMonth()+1).padStart(2,'0')}`;
+                            let badgeHafalan = getKetBadge(adaData.nilaiHafalan || adaData.keterangan);
+                            let badgeJilid = getKetBadge(adaData.nilaiJilid || adaData.keterangan);
+
+                            tabelTbody += `
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3 text-xs text-gray-500 font-bold whitespace-nowrap">${tglCetak}</td>
+                                    <td class="p-3 font-bold text-gray-800 whitespace-nowrap">${s.nama}</td>
+                                    <td class="p-3 whitespace-nowrap">${getStatusBadge(adaData.kehadiran)}</td>
+                                    <td class="p-3 whitespace-nowrap">${adaData.surah} <br><span class="text-gray-500 text-[10px]">(Ayat ${adaData.ayat})</span></td>
+                                    <td class="p-3 whitespace-nowrap">${adaData.jilid} <br><span class="text-gray-500 text-[10px]">(Hal ${adaData.halaman})</span></td>
+                                    <td class="p-3 whitespace-nowrap">
+                                        <div class="mb-1 flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">H:</span> ${badgeHafalan}</div>
+                                        <div class="flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">J:</span> ${badgeJilid}</div>
+                                    </td>
+                                    <td class="p-3 text-xs italic text-gray-600 break-words whitespace-normal min-w-[150px]">${adaData.catatan || '-'}</td>
+                                </tr>
+                            `;
                         });
                     }
                 });
 
-                if(rawData.length === 0) return; // Skip kelas ini kalau gak ada data di rentang waktu tersebut
-
-                // Urutkan tanggal terbaru di atas
-                rawData.sort((a,b) => b.date - a.date);
-
-                // Tarik Jurnal dalam rentang waktu ini
-                let jurnalsInRange = jurnalStore.filter(j => {
-                    if(j.kelas !== cls) return false;
-                    let jDate = new Date(j.tanggal);
-                    return jDate >= startObj && jDate <= endObj;
-                });
-                jurnalsInRange.sort((a,b) => new Date(b.tanggal) - new Date(a.tanggal));
-
-                let btnJurnalHtml = '';
-                // Sembunyikan tombol jurnal untuk Admin
-                if(currentUserRole !== 'admin') {
-                    btnJurnalHtml = `<button onclick="openJurnalModal('${cls}')" class="bg-indigo-600 text-white px-3 py-1 rounded text-sm font-bold shadow hover:bg-indigo-700 transition">Isi Jurnal Baru</button>`;
+                if(!adaDataSantri) {
+                     tabelTbody = '<tr><td colspan="7" class="p-4 text-center text-gray-400">Tidak ada data ngaji di rentang tanggal ini</td></tr>';
                 }
 
-                let jurnalHtml = `
-                    <div class="bg-indigo-50 p-4 rounded-t-xl border-t border-l border-r border-indigo-100 mt-6">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-bold text-indigo-800"><i class="fa-solid fa-book-journal-whills mr-2"></i> Jurnal: ${cls}</h3>
-                            ${btnJurnalHtml}
-                        </div>
-                        <div class="space-y-2 max-h-40 overflow-y-auto">
-                            ${jurnalsInRange.length > 0 ? jurnalsInRange.map(j => `
-                                <div class="bg-white p-2 rounded border border-indigo-100 text-xs">
-                                    <span class="font-bold text-indigo-600">${j.tanggal}:</span> 
-                                    Tadarus (${j.tadarus || '-'}), Murojaah (${j.murojaah || '-'}), Materi (${j.materi || '-'})
+                // Cuma tampilkan kelas yang ada jurnal ATAU ada data ngaji
+                if (jurnalKelasIni.length > 0 || adaDataSantri) {
+                    container.innerHTML += `
+                        <div class="mb-10">
+                            <h3 class="text-xl font-bold text-gray-800 mb-1 border-b-2 border-indigo-200 pb-2">${kls}</h3>
+                            <p class="text-sm text-indigo-600 font-bold mb-4"><i class="fa-solid fa-user-tie mr-1"></i> Pengajar: ${pengajar}</p>
+                            ${jurnalHTML}
+                            <div class="bg-white rounded-xl shadow overflow-hidden p-4">
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-left border-collapse text-sm">
+                                        <thead>
+                                            <tr class="bg-gray-100 border-b text-gray-700 uppercase text-xs">
+                                                <th class="p-3 whitespace-nowrap">Tgl</th>
+                                                <th class="p-3 whitespace-nowrap">Nama Santri</th>
+                                                <th class="p-3 whitespace-nowrap">Status</th>
+                                                <th class="p-3 whitespace-nowrap">Hafalan</th>
+                                                <th class="p-3 whitespace-nowrap">Jilid</th>
+                                                <th class="p-3 whitespace-nowrap">Nilai</th>
+                                                <th class="p-3 w-1/4">Catatan</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>${tabelTbody}</tbody>
+                                    </table>
                                 </div>
-                            `).join('') : '<p class="text-xs text-gray-500 italic">Belum ada jurnal yang diinput pada rentang tanggal ini.</p>'}
+                            </div>
                         </div>
-                    </div>
-                `;
-
-                let rowsHtml = '';
-                rawData.forEach(item => {
-                    const fmtDate = `${item.date.getDate().toString().padStart(2,'0')}/${(item.date.getMonth()+1).toString().padStart(2,'0')}`;
-                    let badgeHafalan = getKetBadge(item.record.nilaiHafalan || item.record.keterangan);
-                    let badgeJilid = getKetBadge(item.record.nilaiJilid || item.record.keterangan);
-
-                    rowsHtml += `
-                        <tr class="border-b hover:bg-gray-50">
-                            <td class="p-3 text-xs font-bold text-indigo-600 w-16">${fmtDate}</td>
-                            <td class="p-3 font-bold text-gray-800">${item.santri.nama}</td>
-                            <td class="p-3">${getStatusBadge(item.record.kehadiran)}</td>
-                            <td class="p-3">${item.record.surah} <br><span class="text-gray-500 text-[10px]">(Ayat ${item.record.ayat})</span></td>
-                            <td class="p-3">${item.record.jilid} <br><span class="text-gray-500 text-[10px]">(Hal ${item.record.halaman})</span></td>
-                            <td class="p-3">
-                                <div class="mb-1 flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">H:</span> ${badgeHafalan}</div>
-                                <div class="flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">J:</span> ${badgeJilid}</div>
-                            </td>
-                            <td class="p-3 text-xs text-gray-600 italic break-words max-w-[150px] whitespace-normal">${item.record.catatan || '-'}</td>
-                        </tr>
                     `;
-                });
-
-                let tableHtml = `
-                    <div class="bg-white rounded-b-xl shadow overflow-hidden mb-6 border border-gray-100">
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left border-collapse text-sm">
-                                <thead>
-                                    <tr class="bg-gray-100 border-b text-gray-700 uppercase text-xs">
-                                        <th class="p-3">Tgl</th>
-                                        <th class="p-3 w-1/5">Nama Santri</th>
-                                        <th class="p-3">Status</th>
-                                        <th class="p-3">Hafalan</th>
-                                        <th class="p-3">Jilid</th>
-                                        <th class="p-3">Nilai</th>
-                                        <th class="p-3 w-1/5">Catatan</th>
-                                    </tr>
-                                </thead>
-                                <tbody>${rowsHtml}</tbody>
-                            </table>
-                        </div>
-                    </div>
-                `;
-
-                rekapContainer.innerHTML += jurnalHtml + tableHtml;
+                }
             });
-
-            if(rekapContainer.innerHTML === '') {
-                 rekapContainer.innerHTML = '<div class="bg-white p-8 rounded-xl shadow text-center text-gray-500">Tidak ada data ngaji di rentang tanggal ini.</div>';
+            
+            if(container.innerHTML === '') {
+                 container.innerHTML = '<div class="text-center text-gray-400 p-10 bg-white rounded-xl shadow">Tidak ada aktivitas ngaji atau jurnal untuk semua kelas di rentang tanggal ini.</div>';
             }
         }
 
@@ -1072,14 +1022,13 @@
         };
 
         // ==========================================
-        // 6. PDF EXPORT (SMART FIX UNTUK HP & RENTANG WAKTU)
+        // 6. PDF EXPORT (SMART FIX & CENTERED TITLE)
         // ==========================================
         
         function handlePDFOutput(doc, filename) {
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-            if (isMobile) {
-                doc.save(filename);
-            } else {
+            if (isMobile) doc.save(filename);
+            else {
                 const blob = doc.output('blob');
                 window.open(URL.createObjectURL(blob), '_blank');
             }
@@ -1100,11 +1049,10 @@
                 const dt = new Date(r.timestamp);
                 let ketHaf = r.nilaiHafalan || r.keterangan || '-';
                 let ketJld = r.nilaiJilid || r.keterangan || '-';
-                let cttn = r.catatan || '-';
-                return [`${dt.getDate()}/${dt.getMonth()+1}/${dt.getFullYear()}`, r.kehadiran, r.jilid + ' - ' + r.halaman, r.surah + ' (' + r.ayat + ')', `Haf: ${ketHaf}\nJld: ${ketJld}`, cttn];
+                return [`${dt.getDate()}/${dt.getMonth()+1}/${dt.getFullYear()}`, r.kehadiran, r.jilid + ' - ' + r.halaman, r.surah + ' (' + r.ayat + ')', `Haf: ${ketHaf}\nJld: ${ketJld}`, r.catatan || '-'];
             });
 
-            doc.autoTable({ startY: 40, head: [['Tanggal', 'Kehadiran', 'Jilid/Hal', 'Hafalan (Ayat)', 'Penilaian', 'Catatan']], body: tableData, theme: 'grid', headStyles: { fillColor: [79, 70, 229] } });
+            doc.autoTable({ startY: 40, head: [['Tanggal', 'Kehadiran', 'Jilid/Hal', 'Hafalan', 'Nilai', 'Catatan']], body: tableData, theme: 'grid', headStyles: { fillColor: [79, 70, 229] }, styles: { cellPadding: 3, fontSize: 9 } });
             
             handlePDFOutput(doc, `Rapor_${s.nama.replace(/\s+/g, '_')}.pdf`);
         };
@@ -1113,9 +1061,8 @@
             if(!window.jspdf) return;
             const doc = new window.jspdf.jsPDF();
             const pageWidth = doc.internal.pageSize.getWidth();
-            
+
             doc.setFontSize(16); doc.text(`Daftar Santri: ${kelas}`, pageWidth / 2, 22, { align: 'center' });
-            
             const tableData = dataStore.filter(x => x.kelas === kelas).map((m, i) => [i+1, m.nama, m.kehadiran, m.jilid, m.surah]);
             doc.autoTable({ startY: 30, head: [['No', 'Nama Santri', 'Status Terakhir', 'Jilid', 'Hafalan']], body: tableData, theme: 'striped', headStyles: { fillColor: [79, 70, 229] } });
             
@@ -1125,83 +1072,71 @@
         window.exportGlobalPDF = () => {
             if(!window.jspdf) return;
             const doc = new window.jspdf.jsPDF();
-            
-            // Ambil dari input rentang waktu yang baru
+            const pageWidth = doc.internal.pageSize.getWidth();
+
             const tglMulai = document.getElementById('filter-tanggal-mulai').value;
             const tglAkhir = document.getElementById('filter-tanggal-akhir').value;
             const kelasFilter = document.getElementById('filter-kelas-rekap').value;
             
-            const pageWidth = doc.internal.pageSize.getWidth();
+            doc.setFontSize(16); doc.text(`Laporan Progres Santri`, pageWidth / 2, 22, { align: 'center' });
+            doc.setFontSize(10); doc.text(`Periode: ${tglMulai} s/d ${tglAkhir}`, pageWidth / 2, 28, { align: 'center' });
             
-            doc.setFontSize(14); doc.text(`Laporan Progres Santri`, pageWidth / 2, 15, { align: 'center' });
-            doc.setFontSize(10); doc.text(`Periode: ${tglMulai} s/d ${tglAkhir}`, pageWidth / 2, 21, { align: 'center' });
-            let startY = 28;
-            
-            const startObj = new Date(tglMulai); startObj.setHours(0,0,0,0);
-            const endObj = new Date(tglAkhir); endObj.setHours(23,59,59,999);
+            let startY = 36;
+            let kelasRenderList = kelasFilter === "Semua" ? Array.from(classesSet).sort().filter(cls => currentUserRole === 'admin' || currentUserClasses.includes(cls)) : [kelasFilter];
 
-            if (kelasFilter !== "Semua") {
-                const pengajar = pengajarMap[kelasFilter] || "Belum diatur";
-                doc.text(`Kelas: ${kelasFilter} | Pengajar: ${pengajar}`, pageWidth / 2, 27, { align: 'center' });
-                startY = 32;
+            kelasRenderList.forEach((kls, index) => {
+                if (index > 0 && startY > doc.internal.pageSize.getHeight() - 40) { doc.addPage(); startY = 20; }
                 
-                // Tempelkan ringkasan jurnal di PDF
-                let jurnalsInRange = jurnalStore.filter(j => {
-                    if(j.kelas !== kelasFilter) return false;
-                    let jDate = new Date(j.tanggal);
-                    return jDate >= startObj && jDate <= endObj;
+                const pengajar = pengajarMap[kls] || "Belum diatur";
+                doc.setFontSize(11); doc.setFont(undefined, 'bold');
+                doc.text(`Kelas: ${kls} | Pengajar: ${pengajar}`, 14, startY);
+                startY += 8;
+
+                let jurnalKelasIni = jurnalStore.filter(j => j.kelas === kls && j.tanggal >= tglMulai && j.tanggal <= tglAkhir).sort((a,b) => a.tanggal.localeCompare(b.tanggal));
+                if(jurnalKelasIni.length > 0) {
+                    doc.setFontSize(9); doc.setFont(undefined, 'normal');
+                    jurnalKelasIni.forEach(j => {
+                        if (startY > doc.internal.pageSize.getHeight() - 20) { doc.addPage(); startY = 20; }
+                        doc.text(`[${j.tanggal}] Tadarus: ${j.tadarus||'-'} | Murojaah: ${j.murojaah||'-'}`, 14, startY); startY += 5;
+                        doc.text(`Materi: ${j.materi||'-'}`, 14, startY); startY += 6;
+                    });
+                    startY += 2;
+                }
+
+                let tableData = [];
+                dataStore.filter(s => s.kelas === kls).forEach(s => {
+                    let riwayatDalamRange = (s.riwayat || []).filter(r => {
+                        const tglRiwayat = r.timestamp.split('T')[0]; 
+                        return tglRiwayat >= tglMulai && tglRiwayat <= tglAkhir;
+                    });
+
+                    riwayatDalamRange.forEach(r => {
+                        let dt = new Date(r.timestamp);
+                        let tglStr = `${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}`;
+                        let ketHaf = r.nilaiHafalan || r.keterangan || '-';
+                        let ketJld = r.nilaiJilid || r.keterangan || '-';
+                        tableData.push([tglStr, s.nama, r.kehadiran, r.jilid, r.surah, `H: ${ketHaf}\nJ: ${ketJld}`, r.catatan || '-']);
+                    });
                 });
-                
-                if (jurnalsInRange.length > 0) {
-                    doc.setFontSize(9);
-                    doc.text(`Jurnal Terekam (${jurnalsInRange.length} Hari):`, 14, startY); // Jurnal tetap rata kiri biar rapi
-                    startY += 4;
-                    jurnalsInRange.slice(0, 3).forEach(j => { // Tampilkan max 3 jurnal biar PDF ga kepenuhan header
-                         doc.text(`- ${j.tanggal}: Tadarus(${j.tadarus||'-'}), Materi(${j.materi||'-'})`, 14, startY);
-                         startY += 4;
+
+                if (tableData.length > 0) {
+                    doc.autoTable({ 
+                        startY: startY, 
+                        head: [['Tgl', 'Nama', 'Hadir', 'Jilid', 'Hafalan', 'Nilai', 'Catatan']], 
+                        body: tableData, 
+                        theme: 'grid', 
+                        headStyles: { fillColor: [220, 38, 38] }, 
+                        styles: { cellPadding: 2, fontSize: 8 } 
                     });
-                    if(jurnalsInRange.length > 3) { doc.text(`  ...dan ${jurnalsInRange.length - 3} jurnal lainnya`, 14, startY); startY += 4; }
-                }
-            } else {
-                doc.text(`Filter: Semua Kelas`, pageWidth / 2, 27, { align: 'center' }); startY = 32;
-            }
-            
-            let rawData = [];
-            dataStore.filter(s => {
-                if(currentUserRole === 'ustadz' && !currentUserClasses.includes(s.kelas)) return false;
-                return kelasFilter === "Semua" || s.kelas === kelasFilter;
-            }).forEach(s => {
-                if(s.riwayat) {
-                    s.riwayat.forEach(r => {
-                        let rDate = new Date(r.timestamp);
-                        if(rDate >= startObj && rDate <= endObj) {
-                            rawData.push({ santri: s, record: r, date: rDate });
-                        }
-                    });
+                    startY = doc.lastAutoTable.finalY + 15;
+                } else {
+                    doc.setFontSize(9); doc.setFont(undefined, 'italic');
+                    doc.text(`Tidak ada data ngaji.`, 14, startY);
+                    startY += 12;
                 }
             });
-
-            rawData.sort((a,b) => b.date - a.date);
-
-            let tableData = rawData.map(item => {
-                 const fmtDate = `${item.date.getDate().toString().padStart(2,'0')}/${(item.date.getMonth()+1).toString().padStart(2,'0')}`;
-                 let ketHaf = item.record.nilaiHafalan || item.record.keterangan || '-';
-                 let ketJld = item.record.nilaiJilid || item.record.keterangan || '-';
-                 let cttn = item.record.catatan || '-';
-                 let kelasString = (kelasFilter === "Semua") ? `\n(${item.santri.kelas})` : '';
-                 return [fmtDate, item.santri.nama + kelasString, item.record.kehadiran, item.record.jilid, item.record.surah, `H:${ketHaf}\nJ:${ketJld}`, cttn];
-            });
-
-            doc.autoTable({ 
-                startY: startY, 
-                head: [['Tgl', 'Nama', 'Hadir', 'Jilid', 'Hafalan', 'Nilai', 'Catatan']], 
-                body: tableData, 
-                theme: 'grid', 
-                headStyles: { fillColor: [220, 38, 38] }, 
-                styles: { cellPadding: 2, fontSize: 8 } 
-            });
             
-            handlePDFOutput(doc, `Laporan_${tglMulai}_to_${tglAkhir}.pdf`);
+            handlePDFOutput(doc, `Rekap_${tglMulai}_sd_${tglAkhir}.pdf`);
         };
 
         // ==========================================
@@ -1239,14 +1174,14 @@
             errEl.classList.add('hidden');
             
             if (is_preview) {
-                if (em.includes('admin')) {
+                if (ADMIN_EMAILS.includes(em.toLowerCase())) {
                     currentUserRole = 'admin';
                     currentUserClasses = ['Semua'];
-                    currentLembagaName = "TPQ Mockup Preview";
                 } else {
                     currentUserRole = 'ustadz';
                     currentUserClasses = ['Kelas Madinah'];
                 }
+                currentLembagaName = "TPQ Mockup Preview";
                 document.getElementById('view-login').style.display = 'none';
                 document.getElementById('main-nav').classList.remove('hidden');
                 initApp();
@@ -1254,13 +1189,14 @@
                 try {
                     if (authMode === 'register') {
                         const nm = document.getElementById('reg-nama').value;
-                        const role = document.getElementById('reg-role').value;
+                        const emLower = em.toLowerCase();
+                        const role = ADMIN_EMAILS.includes(emLower) ? 'admin' : 'ustadz';
                         
                         const userCredential = await createUserWithEmailAndPassword(auth, em, pw);
                         
-                        let userData = { email: em.toLowerCase(), nama: nm, role: role };
+                        let userData = { email: emLower, nama: nm, role: role };
                         if (role === 'admin') {
-                            userData.lembaga = document.getElementById('reg-lembaga').value || 'Nama Lembaga Baru';
+                            userData.lembaga = 'Nama Lembaga Baru (Edit di Dashboard)';
                             userData.kelas = ['Semua'];
                         } else {
                             const klInput = document.getElementById('reg-kelas').value;
@@ -1283,7 +1219,6 @@
                 if(user) {
                     document.getElementById('view-login').style.display = 'none';
                     currentUserId = user.uid;
-                    const em = user.email.toLowerCase();
                     
                     try {
                         const userDocRef = doc(db, "users", user.uid);
@@ -1294,34 +1229,21 @@
                             currentUserRole = dt.role || 'ustadz';
                             let kl = dt.kelas || ['Kelas Umum'];
                             currentUserClasses = Array.isArray(kl) ? kl : [kl];
-                            currentLembagaName = dt.lembaga || 'Ringkasan Hari Ini';
-                        } else {
-                            currentUserRole = 'ustadz';
-                            currentUserClasses = ['Kelas Umum'];
                         }
-                    } catch(err) {
-                        console.error("Gagal menarik profil user:", err);
-                    }
+                    } catch(err) { console.error("Gagal menarik profil user:", err); }
                     
                     document.getElementById('main-nav').classList.remove('hidden');
 
                     onSnapshot(collection(db, "users"), (snap) => {
                         pengajarMap = {};
-                        let foundAdminLembaga = null;
                         snap.forEach((d) => {
                             const data = d.data();
+                            if (data.role === 'admin' && data.lembaga) currentLembagaName = data.lembaga;
                             if(data.kelas && data.nama) {
-                                if(Array.isArray(data.kelas)) {
-                                    data.kelas.forEach(k => { pengajarMap[k] = data.nama; });
-                                } else {
-                                    pengajarMap[data.kelas] = data.nama;
-                                }
-                            }
-                            if(data.role === 'admin' && data.lembaga) {
-                                foundAdminLembaga = data.lembaga;
+                                if(Array.isArray(data.kelas)) data.kelas.forEach(k => { pengajarMap[k] = data.nama; });
+                                else pengajarMap[data.kelas] = data.nama;
                             }
                         });
-                        if (foundAdminLembaga) currentLembagaName = foundAdminLembaga;
                         renderAll();
                     });
 

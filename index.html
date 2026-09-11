@@ -11,15 +11,16 @@
     <!-- jsPDF & AutoTable -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <!-- HTML5 QRCode Scanner & Generator -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    
     <style>
         .view-section { display: none; }
         .view-section.active { display: block; }
-        
-        /* Custom Scrollbar untuk Box Jurnal biar elegan */
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #e0e7ff; border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #818cf8; border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #6366f1; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #e0e7ff; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #4f46e5; border-radius: 4px; }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans flex flex-col min-h-screen">
@@ -31,7 +32,7 @@
                 <!-- Logo -->
                 <div class="flex items-center">
                     <i class="fa-solid fa-book-quran text-2xl mr-2"></i>
-                    <span class="font-bold text-xl tracking-wider">TPQ<span class="text-indigo-300">Salaamah Bisyafa'atil Quran</span></span>
+                    <span class="font-bold text-xl tracking-wider">NGAJI<span class="text-indigo-300">APP</span></span>
                 </div>
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex space-x-4 items-center">
@@ -75,8 +76,7 @@
                         </div>
                         <div id="field-kelas">
                             <label class="block text-gray-700 text-sm font-bold mb-2">Kelas yang Diajar</label>
-                            <input type="text" id="reg-kelas" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Cth: Kelas Madinah, Kelas Mekkah">
-                            <p class="text-[10px] text-gray-400 mt-1">Pisahkan dengan koma jika memegang lebih dari satu kelas.</p>
+                            <input type="text" id="reg-kelas" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Cth: Kelas Madinah">
                         </div>
                     </div>
 
@@ -84,11 +84,11 @@
                         <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
                         <input type="email" id="login-email" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
                         
-                        <div id="demo-hint" class="mt-4 bg-gray-50 p-3 rounded-lg border border-gray-200 hidden">
-                            <p class="text-xs text-gray-600 font-bold border-b border-gray-300 pb-1 mb-2">Daftar Akun Demo:</p>
-                            <ul class="text-xs text-gray-600 space-y-2 list-none">
-                                <li>👑 <span class="text-indigo-600 font-bold cursor-pointer hover:underline" onclick="document.getElementById('login-email').value='admin@ngaji.com'; document.getElementById('login-password').value='123456';">admin@ngaji.com</span> <br><span class="text-[10px] text-gray-400 ml-5">(Akses Semua Kelas - Read Only)</span></li>
-                                <li>👨‍🏫 <span class="text-green-600 font-bold cursor-pointer hover:underline" onclick="document.getElementById('login-email').value='saprudin@ngaji.com'; document.getElementById('login-password').value='123456';">saprudin@ngaji.com</span> <br><span class="text-[10px] text-gray-400 ml-5">(Wali Kelas Madinah - Akses Penuh)</span></li>
+                        <div id="demo-hint" class="mt-4 bg-indigo-50 p-3 rounded-lg border border-indigo-200 hidden">
+                            <p class="text-xs text-indigo-800 font-bold border-b border-indigo-200 pb-1 mb-2"><i class="fa-solid fa-bolt mr-1"></i> Data Dummy Aktif (Klik untuk Login):</p>
+                            <ul class="text-xs text-gray-700 space-y-2 list-none">
+                                <li>👑 <span class="text-indigo-600 font-bold cursor-pointer hover:underline" onclick="document.getElementById('login-email').value='admin@ngaji.com'; document.getElementById('login-password').value='123456';">admin@ngaji.com</span> <br><span class="text-[10px] text-gray-500 ml-5">(Akses Semua Kelas - Read Only)</span></li>
+                                <li>👨‍🏫 <span class="text-green-600 font-bold cursor-pointer hover:underline" onclick="document.getElementById('login-email').value='saprudin@ngaji.com'; document.getElementById('login-password').value='123456';">saprudin@ngaji.com</span> <br><span class="text-[10px] text-gray-500 ml-5">(Wali Kelas Madinah - Akses Penuh)</span></li>
                             </ul>
                         </div>
                     </div>
@@ -110,14 +110,18 @@
 
         <!-- View: Dashboard -->
         <div id="view-dashboard" class="view-section">
-            <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-3">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-3">
                 <div class="flex items-center">
                     <h2 id="dash-title" class="text-2xl font-bold text-gray-800">Nama Lembaga</h2>
                     <button id="btn-edit-lembaga" onclick="openLembagaModal()" class="ml-3 bg-gray-200 text-gray-600 px-2 py-1 rounded text-xs font-bold hover:bg-gray-300 hidden"><i class="fa-solid fa-pen"></i> Edit</button>
                 </div>
-                <select id="filter-kelas-dashboard" class="border px-3 py-2 rounded-lg text-sm bg-white shadow-sm focus:outline-none">
-                    <option value="Semua">Semua Kelas</option>
-                </select>
+                <!-- Filter Dashboard -->
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm font-bold text-gray-600"><i class="fa-solid fa-filter"></i> Filter:</span>
+                    <select id="filter-kelas-dash" class="border border-indigo-200 px-3 py-1.5 rounded-lg text-sm bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium">
+                        <option value="Semua">Semua Kelas</option>
+                    </select>
+                </div>
             </div>
             
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -147,10 +151,14 @@
         <div id="view-data-santri" class="view-section">
             <div class="flex flex-col md:flex-row justify-between items-center mb-6 space-y-3 md:space-y-0">
                 <h2 class="text-2xl font-bold text-gray-800">Manajemen Data Santri</h2>
-                <div class="flex space-x-2">
+                <div class="flex items-center space-x-2">
                     <select id="filter-kelas-tabel" class="border px-3 py-2 rounded-lg text-sm bg-white shadow-sm focus:outline-none">
                         <option value="Semua">Semua Kelas</option>
                     </select>
+                    <!-- Tombol Scanner Barcode (Sesuai instruksi gambar) -->
+                    <button id="btn-scan-absen" onclick="openScanner()" class="bg-green-600 text-white px-4 py-2 rounded-lg font-bold shadow hover:bg-green-700 transition">
+                        <i class="fa-solid fa-qrcode mr-1"></i> Scan Absen
+                    </button>
                     <button id="btn-tambah-santri" onclick="openModal('tambah')" class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-bold shadow hover:bg-indigo-700 transition">
                         <i class="fa-solid fa-plus mr-1"></i> Tambah
                     </button>
@@ -217,19 +225,19 @@
 
     <!-- Modal Form (Tambah/Edit Santri) -->
     <div id="modal-form" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-screen">
-            <div class="bg-indigo-600 px-6 py-4 flex justify-between items-center text-white shrink-0">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden">
+            <div class="bg-indigo-600 px-6 py-4 flex justify-between items-center text-white">
                 <h3 id="modal-title" class="font-bold text-lg">Update Progres</h3>
                 <button onclick="closeModal()" class="hover:text-gray-300"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
-            <form id="santri-form" class="p-6 overflow-y-auto">
+            <form id="santri-form" class="p-6">
                 <input type="hidden" id="form-id">
                 <div class="mb-4">
                     <label class="block text-sm font-bold text-gray-700 mb-1">Nama Santri</label>
                     <input type="text" id="form-nama" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500" required>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-bold text-gray-700 mb-1">Kelas / Rombel</label>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Kelas / Rombel (Bisa Pindah Kelas)</label>
                     <select id="form-kelas" class="w-full px-3 py-2 border rounded-lg bg-white focus:ring-2 focus:ring-indigo-500" required></select>
                 </div>
                 <div class="grid grid-cols-2 gap-4 mb-4">
@@ -287,7 +295,7 @@
                     <label class="block text-sm font-bold text-gray-700 mb-1">Catatan Tambahan (Opsional)</label>
                     <textarea id="form-catatan" rows="2" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="Cth: Tajwid kurang, Sering lupa huruf Dlod"></textarea>
                 </div>
-                <div class="flex justify-end space-x-2 pb-2">
+                <div class="flex justify-end space-x-2">
                     <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-bold hover:bg-gray-300">Batal</button>
                     <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold hover:bg-indigo-700">Simpan Data</button>
                 </div>
@@ -298,7 +306,7 @@
     <!-- Modal Riwayat -->
     <div id="modal-history" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[80vh] flex flex-col">
-            <div class="bg-indigo-600 px-6 py-4 flex justify-between items-center text-white rounded-t-xl shrink-0">
+            <div class="bg-indigo-600 px-6 py-4 flex justify-between items-center text-white rounded-t-xl">
                 <h3 class="font-bold text-lg">Riwayat Ngaji: <span id="hist-nama"></span></h3>
                 <button onclick="closeHistory()" class="hover:text-gray-300"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
@@ -316,6 +324,26 @@
                     </thead>
                     <tbody id="hist-tbody"></tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Barcode -->
+    <div id="modal-barcode" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden flex flex-col items-center">
+            <div class="bg-indigo-600 w-full px-6 py-4 flex justify-between items-center text-white">
+                <h3 class="font-bold text-lg"><i class="fa-solid fa-id-card mr-2"></i>ID Card Santri</h3>
+                <button onclick="closeBarcode()" class="hover:text-gray-300"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div id="barcode-print-area" class="p-6 flex flex-col items-center w-full bg-white">
+                <h2 id="barcode-nama" class="font-bold text-xl text-gray-800 mb-4 text-center">Nama Santri</h2>
+                <svg id="barcode-canvas"></svg>
+                <p class="text-xs text-gray-400 mt-2">Gunakan barcode ini untuk Absensi Scan</p>
+            </div>
+            <div class="p-4 w-full border-t flex justify-center bg-gray-50">
+                <button onclick="printBarcode()" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 shadow flex justify-center items-center">
+                    <i class="fa-solid fa-print mr-2"></i> Cetak Barcode
+                </button>
             </div>
         </div>
     </div>
@@ -342,12 +370,12 @@
 
     <!-- Modal Jurnal Harian -->
     <div id="modal-jurnal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col max-h-screen">
-            <div class="bg-indigo-600 px-6 py-4 flex justify-between items-center text-white shrink-0">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
+            <div class="bg-indigo-600 px-6 py-4 flex justify-between items-center text-white">
                 <h3 class="font-bold text-lg">Isi Jurnal Kelas Harian</h3>
                 <button onclick="closeJurnalModal()" class="hover:text-gray-300"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
-            <form id="jurnal-form" class="p-6 overflow-y-auto">
+            <form id="jurnal-form" class="p-6">
                 <input type="hidden" id="form-jurnal-kelas">
                 <div class="mb-4">
                     <label class="block text-sm font-bold text-gray-700 mb-1">Tanggal Jurnal</label>
@@ -365,11 +393,34 @@
                     <label class="block text-sm font-bold text-gray-700 mb-1">Materi Pembelajaran</label>
                     <textarea id="form-jurnal-materi" rows="3" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="Cth: Tajwid Hukum Nun Mati"></textarea>
                 </div>
-                <div class="flex justify-end space-x-2 pb-2">
+                <div class="flex justify-end space-x-2">
                     <button type="button" onclick="closeJurnalModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-bold hover:bg-gray-300">Batal</button>
                     <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold hover:bg-indigo-700">Simpan Jurnal</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Modal Scanner Barcode (Updated with Rapid Scan Log) -->
+    <div id="modal-scanner" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
+            <div class="bg-green-600 px-6 py-4 flex justify-between items-center text-white">
+                <h3 class="font-bold text-lg"><i class="fa-solid fa-qrcode mr-2"></i>Scan Barcode / QR</h3>
+                <button onclick="closeScanner()" class="hover:text-gray-300"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="p-4">
+                <div id="reader" class="w-full rounded-lg overflow-hidden border-2 border-green-200"></div>
+                
+                <!-- Log Riwayat Scan Beruntun -->
+                <div class="mt-4">
+                    <h4 class="text-xs font-bold text-gray-500 border-b pb-1 mb-2">Riwayat Scan Terakhir:</h4>
+                    <div id="scan-log" class="max-h-24 overflow-y-auto space-y-1 custom-scrollbar text-sm">
+                        <p class="text-gray-400 text-center italic text-xs py-2">Belum ada santri yang di-scan.</p>
+                    </div>
+                </div>
+
+                <p class="text-xs text-center text-gray-400 mt-4 border-t pt-2">Arahkan kamera ke ID Card. Bisa scan berurutan tanpa ditutup.</p>
+            </div>
         </div>
     </div>
 
@@ -415,8 +466,8 @@
         let jurnalStore = [];
         let classesSet = new Set();
         let pengajarMap = {};
-        
         let authMode = 'login'; 
+        let hasCheckedDailyReset = false; // Flag for Auto-Alpa
         
         if (is_preview) {
             document.getElementById('demo-hint').classList.remove('hidden');
@@ -467,6 +518,7 @@
             });
             
             if(viewId === 'rekap') renderRekap();
+            if(viewId === 'dashboard' || viewId === 'data-santri') renderAll();
         };
 
         function getStars(riwayat) {
@@ -509,56 +561,47 @@
             classesSet.clear();
             dataStore.forEach(s => { if(s.kelas) classesSet.add(s.kelas); });
             
-            const filterSelect = document.getElementById('filter-kelas-tabel');
-            let currentFilter = filterSelect.value;
-            filterSelect.innerHTML = '<option value="Semua">Semua Kelas</option>';
-            
+            const filterTabel = document.getElementById('filter-kelas-tabel');
             const filterRekap = document.getElementById('filter-kelas-rekap');
-            let currentRekapFilter = filterRekap.value;
-            filterRekap.innerHTML = '<option value="Semua">Semua Kelas</option>';
-
-            const filterDash = document.getElementById('filter-kelas-dashboard');
-            let currentDashFilter = filterDash.value;
-            filterDash.innerHTML = '<option value="Semua">Semua Kelas</option>';
-
-            Array.from(classesSet).sort().forEach(cls => {
-                filterSelect.innerHTML += `<option value="${cls}">${cls}</option>`;
-                filterRekap.innerHTML += `<option value="${cls}">${cls}</option>`;
-                filterDash.innerHTML += `<option value="${cls}">${cls}</option>`;
-            });
+            const filterDash = document.getElementById('filter-kelas-dash');
             
-            if(currentUserRole === 'ustadz') {
-                filterSelect.value = currentFilter && classesSet.has(currentFilter) ? currentFilter : currentUserClasses[0];
-                filterRekap.value = currentRekapFilter && classesSet.has(currentRekapFilter) ? currentRekapFilter : currentUserClasses[0];
-                filterDash.value = currentDashFilter && classesSet.has(currentDashFilter) ? currentDashFilter : currentUserClasses[0];
-            } else {
-                filterSelect.value = classesSet.has(currentFilter) ? currentFilter : "Semua";
-                filterRekap.value = classesSet.has(currentRekapFilter) ? currentRekapFilter : "Semua";
-                filterDash.value = classesSet.has(currentDashFilter) ? currentDashFilter : "Semua";
-            }
+            let valTabel = filterTabel.value;
+            let valRekap = filterRekap.value;
+            let valDash = filterDash.value;
+            
+            let optionsHTML = '<option value="Semua">Semua Kelas</option>';
+            Array.from(classesSet).sort().forEach(cls => { optionsHTML += `<option value="${cls}">${cls}</option>`; });
+            
+            filterTabel.innerHTML = optionsHTML;
+            filterRekap.innerHTML = optionsHTML;
+            filterDash.innerHTML = optionsHTML;
+
+            filterTabel.value = classesSet.has(valTabel) ? valTabel : (currentUserRole === 'ustadz' ? currentUserClasses[0] : "Semua");
+            filterRekap.value = classesSet.has(valRekap) ? valRekap : (currentUserRole === 'ustadz' ? currentUserClasses[0] : "Semua");
+            filterDash.value = classesSet.has(valDash) ? valDash : (currentUserRole === 'ustadz' ? currentUserClasses[0] : "Semua");
         }
 
         function renderAll() {
             extractClasses();
             
             const btnTambah = document.getElementById('btn-tambah-santri');
+            const btnScan = document.getElementById('btn-scan-absen');
             if(btnTambah) btnTambah.style.display = currentUserRole === 'admin' ? 'none' : 'block';
+            if(btnScan) btnScan.style.display = currentUserRole === 'admin' ? 'none' : 'block';
 
-            // Dashboard Title & Edit Button
             document.getElementById('dash-title').innerText = currentLembagaName;
             const btnEditLembaga = document.getElementById('btn-edit-lembaga');
             if(btnEditLembaga) btnEditLembaga.style.display = currentUserRole === 'admin' ? 'inline-block' : 'none';
 
-            // 1. Dashboard (With Dynamic Class Filter)
-            const selectedDashClass = document.getElementById('filter-kelas-dashboard').value;
-            let had = 0, iz = 0, alp = 0, totalDash = 0;
+            // 1. Dashboard Render
+            let had = 0, iz = 0, alp = 0;
             const dashCards = document.getElementById('dashboard-cards');
+            const dashFilter = document.getElementById('filter-kelas-dash').value;
             dashCards.innerHTML = '';
             
-            dataStore.filter(s => {
-                return selectedDashClass === "Semua" || s.kelas === selectedDashClass;
-            }).forEach(s => {
-                totalDash++;
+            let filteredDash = dataStore.filter(s => dashFilter === "Semua" || s.kelas === dashFilter);
+            
+            filteredDash.forEach(s => {
                 if(s.kehadiran === 'Hadir') had++;
                 else if(s.kehadiran === 'Izin' || s.kehadiran === 'Sakit') iz++;
                 else if(s.kehadiran === 'Alpa') alp++;
@@ -581,7 +624,7 @@
                 `;
             });
             
-            document.getElementById('dash-total').innerText = totalDash;
+            document.getElementById('dash-total').innerText = filteredDash.length;
             document.getElementById('dash-hadir').innerText = had;
             document.getElementById('dash-izin').innerText = iz;
             document.getElementById('dash-alpa').innerText = alp;
@@ -591,20 +634,17 @@
             const selectedClass = document.getElementById('filter-kelas-tabel').value;
             tbody.innerHTML = '';
             
-            dataStore.filter(s => {
-                return selectedClass === "Semua" || s.kelas === selectedClass;
-            }).forEach(s => {
+            dataStore.filter(s => selectedClass === "Semua" || s.kelas === selectedClass).forEach(s => {
                 let actionButtons = `
+                    <button onclick="showBarcode('${s.id}', '${s.nama}')" class="text-gray-700 hover:text-black" title="Lihat Barcode"><i class="fa-solid fa-barcode"></i></button>
                     <button onclick="showHistory('${s.id}')" class="text-green-500 hover:text-green-700" title="Riwayat"><i class="fa-solid fa-clock-rotate-left"></i></button>
                     <button onclick="exportRapor('${s.id}')" class="text-red-500 hover:text-red-700" title="Cetak Rapor"><i class="fa-solid fa-file-pdf"></i></button>
                 `;
-                if(currentUserRole !== 'admin') {
-                    if (currentUserClasses.includes(s.kelas)) {
-                        actionButtons += `
-                            <button onclick="editSantri('${s.id}')" class="text-blue-500 hover:text-blue-700" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
-                            <button onclick="deleteSantri('${s.id}')" class="text-red-300 hover:text-red-600" title="Hapus"><i class="fa-solid fa-trash"></i></button>
-                        `;
-                    }
+                if(currentUserRole === 'ustadz' && currentUserClasses.includes(s.kelas)) {
+                    actionButtons += `
+                        <button onclick="editSantri('${s.id}')" class="text-blue-500 hover:text-blue-700" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button onclick="deleteSantri('${s.id}')" class="text-red-300 hover:text-red-600" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+                    `;
                 }
 
                 let namaWaliKelas = pengajarMap[s.kelas] || '-';
@@ -613,7 +653,10 @@
 
                 tbody.innerHTML += `
                     <tr class="border-b hover:bg-gray-50">
-                        <td class="p-4 font-bold text-gray-800 whitespace-nowrap">${s.nama}</td>
+                        <td class="p-4 whitespace-nowrap">
+                            <div class="font-bold text-gray-800">${s.nama}</div>
+                            <div class="text-[9px] text-gray-400 font-mono mt-1">ID: ${s.id}</div>
+                        </td>
                         <td class="p-4 whitespace-nowrap">
                             <div class="font-medium text-gray-800">${s.kelas || '-'}</div>
                             <div class="text-xs text-indigo-600 font-bold mt-0.5"><i class="fa-solid fa-user-tie mr-1"></i> ${namaWaliKelas}</div>
@@ -627,7 +670,7 @@
                         </td>
                         <td class="p-4 text-xs italic text-gray-600 break-words whitespace-normal min-w-[150px]">${s.catatan || '-'}</td>
                         <td class="p-4 text-center whitespace-nowrap">
-                            <div class="flex justify-center space-x-3 text-lg">
+                            <div class="flex justify-center space-x-3 text-lg items-center">
                                 ${actionButtons}
                             </div>
                         </td>
@@ -641,7 +684,7 @@
             Array.from(classesSet).sort().forEach(cls => {
                 const murid = dataStore.filter(s => s.kelas === cls);
                 kelasCont.innerHTML += `
-                    <div class="bg-white rounded-xl shadow p-5">
+                    <div class="bg-white rounded-xl shadow p-5 border-t-4 ${currentUserClasses.includes(cls) ? 'border-indigo-500' : 'border-gray-200'}">
                         <div class="flex justify-between items-center mb-4 border-b pb-2">
                             <h3 class="font-bold text-lg text-indigo-700">${cls}</h3>
                             <button onclick="exportKelas('${cls}')" class="bg-red-100 text-red-600 px-2 py-1 rounded text-xs font-bold hover:bg-red-200"><i class="fa-solid fa-file-pdf mr-1"></i> Cetak</button>
@@ -656,12 +699,147 @@
         }
 
         document.getElementById('filter-kelas-tabel').addEventListener('change', renderAll);
-        document.getElementById('filter-kelas-dashboard').addEventListener('change', renderAll);
+        document.getElementById('filter-kelas-dash').addEventListener('change', renderAll);
         
-        // ==========================================
-        // 5. MODALS & CRUD
-        // ==========================================
-        
+        function checkDailyReset() {
+            // Admin doesn't trigger auto-writes to prevent accidental global overrides
+            if (hasCheckedDailyReset || currentUserRole === 'admin') return; 
+            hasCheckedDailyReset = true;
+            
+            const todayStr = new Date().toISOString().split('T')[0];
+            let needsPreviewUpdate = false;
+            
+            dataStore.forEach(s => {
+                // Only process students in the Ustadz's own classes
+                if (currentUserClasses.includes(s.kelas)) {
+                    let hasToday = s.riwayat && s.riwayat.some(r => r.timestamp.startsWith(todayStr));
+                    
+                    if (!hasToday) {
+                        const newData = {
+                            kehadiran: 'Alpa',
+                            jilid: s.jilid || '-', halaman: s.halaman || '-',
+                            surah: s.surah || '-', ayat: s.ayat || '-',
+                            nilaiHafalan: s.nilaiHafalan || '-', nilaiJilid: s.nilaiJilid || '-',
+                            catatan: 'Belum scan absen',
+                            timestamp: new Date().toISOString()
+                        };
+                        
+                        if (is_preview) {
+                            if(!s.riwayat) s.riwayat = [];
+                            s.riwayat.unshift(newData);
+                            s.kehadiran = 'Alpa';
+                            needsPreviewUpdate = true;
+                        } else {
+                            const santriRef = doc(db, "santri", s.id);
+                            let riwayatBaru = s.riwayat ? [...s.riwayat] : [];
+                            riwayatBaru.unshift(newData);
+                            setDoc(santriRef, { kehadiran: 'Alpa', riwayat: riwayatBaru }, { merge: true }).catch(e=>console.error("Auto-Alpa error:", e));
+                        }
+                    }
+                }
+            });
+            
+            if(is_preview && needsPreviewUpdate) renderAll();
+        }
+
+        let html5QrcodeScanner = null;
+        let lastScanTime = 0;
+
+        window.showBarcode = (id, nama) => {
+            document.getElementById('barcode-nama').innerText = nama;
+            JsBarcode("#barcode-canvas", id, { 
+                format: "CODE128", lineColor: "#000", width: 2.5, height: 60, displayValue: true, fontSize: 16
+            });
+            document.getElementById('modal-barcode').classList.remove('hidden');
+        };
+
+        window.closeBarcode = () => document.getElementById('modal-barcode').classList.add('hidden');
+
+        window.printBarcode = () => {
+            const printContent = document.getElementById('barcode-print-area').innerHTML;
+            document.body.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh;"><div style="border: 2px solid #000; padding: 20px; text-align: center; border-radius: 10px;">${printContent}</div></div>`;
+            window.print();
+            window.location.reload(); 
+        };
+
+        window.openScanner = () => {
+            if(currentUserRole === 'admin') return; 
+            document.getElementById('scan-log').innerHTML = '<p class="text-gray-400 text-center italic text-xs py-2">Belum ada santri yang di-scan.</p>';
+            document.getElementById('modal-scanner').classList.remove('hidden');
+            
+            html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: {width: 250, height: 250} }, false);
+            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        };
+
+        window.closeScanner = () => {
+            if(html5QrcodeScanner) html5QrcodeScanner.clear().catch(e => console.error(e));
+            document.getElementById('modal-scanner').classList.add('hidden');
+        };
+
+        async function onScanSuccess(decodedText, decodedResult) {
+            // Anti spam 3 seconds per scan attempt
+            if (Date.now() - lastScanTime < 3000) return;
+            lastScanTime = Date.now();
+
+            const studentId = decodedText;
+            const s = dataStore.find(x => x.id === studentId);
+            
+            if(!s) {
+                showToast("Santri tidak ditemukan!", "red"); return;
+            }
+            if(currentUserRole === 'ustadz' && !currentUserClasses.includes(s.kelas)) {
+                showToast("Akses ditolak! Bukan santri kelas Anda.", "red"); return;
+            }
+
+            const currentTimestamp = new Date().toISOString();
+            const newData = { kehadiran: 'Hadir', timestamp: currentTimestamp, catatan: 'Hadir via Scan Barcode' };
+            const timeStr = new Date().toLocaleTimeString('id-ID');
+
+            if (is_preview) {
+                if(!s.riwayat) s.riwayat = [];
+                let existingIndex = s.riwayat.findIndex(r => {
+                    const d1 = new Date(r.timestamp), d2 = new Date();
+                    return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
+                });
+                
+                let mergedData = { ...newData, jilid: s.jilid || '-', halaman: s.halaman || '-', surah: s.surah || '-', ayat: s.ayat || '-', nilaiHafalan: s.nilaiHafalan || '-', nilaiJilid: s.nilaiJilid || '-' };
+                if(existingIndex !== -1) s.riwayat[existingIndex] = { ...s.riwayat[existingIndex], ...newData };
+                else s.riwayat.unshift(mergedData);
+                
+                s.kehadiran = 'Hadir';
+                renderAll();
+                
+                // Add to rapid scan log
+                const logEl = document.getElementById('scan-log');
+                if(logEl.innerHTML.includes('Belum ada')) logEl.innerHTML = '';
+                logEl.innerHTML = `<div class="bg-green-50 text-green-700 p-2 rounded border border-green-200"><b>${timeStr}</b> - ✅ ${s.nama} (Hadir)</div>` + logEl.innerHTML;
+                
+                showToast(`✅ Berhasil absen: ${s.nama}`, "green");
+            } else {
+                try {
+                    const santriRef = doc(db, "santri", studentId);
+                    let riwayatBaru = s.riwayat ? [...s.riwayat] : [];
+                    let mergedData = { ...newData, jilid: s.jilid || '-', halaman: s.halaman || '-', surah: s.surah || '-', ayat: s.ayat || '-', nilaiHafalan: s.nilaiHafalan || '-', nilaiJilid: s.nilaiJilid || '-' };
+                    let existingIndex = riwayatBaru.findIndex(r => {
+                        const d1 = new Date(r.timestamp), d2 = new Date();
+                        return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
+                    });
+                    if(existingIndex !== -1) riwayatBaru[existingIndex] = { ...riwayatBaru[existingIndex], ...newData };
+                    else riwayatBaru.unshift(mergedData);
+                    
+                    await setDoc(santriRef, { kehadiran: 'Hadir', riwayat: riwayatBaru }, { merge: true });
+                    
+                    const logEl = document.getElementById('scan-log');
+                    if(logEl.innerHTML.includes('Belum ada')) logEl.innerHTML = '';
+                    logEl.innerHTML = `<div class="bg-green-50 text-green-700 p-2 rounded border border-green-200"><b>${timeStr}</b> - ✅ ${s.nama} (Hadir)</div>` + logEl.innerHTML;
+                    
+                    showToast(`✅ Berhasil absen: ${s.nama}`, "green");
+                } catch(err) { alert(err.message); }
+            }
+        }
+
+        function onScanFailure(error) { /* Abaikan error scan agar loop terus berlanjut (Continuous scanning) */ }
+
         window.openModal = (mode) => {
             if(currentUserRole === 'admin') return;
             document.getElementById('santri-form').reset();
@@ -670,10 +848,8 @@
             
             const selectKelas = document.getElementById('form-kelas');
             selectKelas.innerHTML = '';
-            let allAvailableClasses = Array.from(new Set([...currentUserClasses, ...Array.from(classesSet)])).sort();
-            allAvailableClasses.forEach(cls => { 
-                selectKelas.innerHTML += `<option value="${cls}" ${cls === currentUserClasses[0] ? 'selected' : ''}>${cls}</option>`; 
-            });
+            Array.from(classesSet).sort().forEach(cls => { selectKelas.innerHTML += `<option value="${cls}">${cls}</option>`; });
+            if(currentUserClasses.length > 0) selectKelas.value = currentUserClasses[0];
 
             document.getElementById('form-halaman').value = "-";
             document.getElementById('form-surah').value = "-";
@@ -688,8 +864,7 @@
         window.editSantri = (id) => {
             if(currentUserRole === 'admin') return;
             const s = dataStore.find(x => x.id === id);
-            
-            if(currentUserRole === 'ustadz' && !currentUserClasses.includes(s.kelas)) { alert("Hanya bisa mengedit santri dari kelas Anda sendiri."); return; }
+            if(currentUserRole === 'ustadz' && !currentUserClasses.includes(s.kelas)) { alert("Akses Ditolak."); return; }
             
             if(s) {
                 document.getElementById('form-id').value = s.id;
@@ -697,10 +872,8 @@
                 
                 const selectKelas = document.getElementById('form-kelas');
                 selectKelas.innerHTML = '';
-                let allAvailableClasses = Array.from(new Set([...currentUserClasses, ...Array.from(classesSet), s.kelas])).sort();
-                allAvailableClasses.forEach(cls => { 
-                    selectKelas.innerHTML += `<option value="${cls}" ${cls === s.kelas ? 'selected' : ''}>${cls}</option>`; 
-                });
+                Array.from(classesSet).sort().forEach(cls => { selectKelas.innerHTML += `<option value="${cls}">${cls}</option>`; });
+                selectKelas.value = s.kelas;
 
                 document.getElementById('form-kehadiran').value = s.kehadiran;
                 document.getElementById('form-jilid').value = s.jilid;
@@ -720,7 +893,7 @@
             if(currentUserRole === 'admin') return;
             
             let finalKelas = document.getElementById('form-kelas').value;
-            const id = document.getElementById('form-id').value || Date.now().toString();
+            const id = document.getElementById('form-id').value || 'ST' + Math.floor(100000 + Math.random() * 900000); 
             const currentTimestamp = new Date().toISOString();
 
             const newData = {
@@ -753,12 +926,10 @@
                     const santriRef = doc(db, "santri", id);
                     const oldDoc = dataStore.find(x => x.id === id);
                     let riwayatBaru = oldDoc && oldDoc.riwayat ? oldDoc.riwayat : [];
-                    
                     let existingIndex = riwayatBaru.findIndex(r => {
                         const d1 = new Date(r.timestamp), d2 = new Date();
                         return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
                     });
-
                     if(existingIndex !== -1) riwayatBaru[existingIndex] = { ...riwayatBaru[existingIndex], ...newData };
                     else riwayatBaru.unshift(newData);
                     
@@ -771,8 +942,7 @@
         window.deleteSantri = async (id) => {
             if(currentUserRole === 'admin') return;
             const s = dataStore.find(x => x.id === id);
-            
-            if(currentUserRole === 'ustadz' && s && !currentUserClasses.includes(s.kelas)) { alert("Hanya bisa menghapus santri dari kelas Anda sendiri."); return; }
+            if(currentUserRole === 'ustadz' && s && !currentUserClasses.includes(s.kelas)) return;
 
             if(confirm("Yakin hapus data santri ini?")) {
                 if(is_preview) {
@@ -787,7 +957,6 @@
         window.showHistory = (id) => {
             const s = dataStore.find(x => x.id === id);
             if(!s) return;
-
             document.getElementById('hist-nama').innerText = s.nama;
             const tbody = document.getElementById('hist-tbody');
             tbody.innerHTML = '';
@@ -820,7 +989,6 @@
         };
         window.closeHistory = () => document.getElementById('modal-history').classList.add('hidden');
 
-        // --- LEMBAGA CRUD (ADMIN) ---
         window.openLembagaModal = () => {
             if (currentUserRole !== 'admin') return;
             document.getElementById('form-edit-lembaga').value = currentLembagaName;
@@ -831,11 +999,9 @@
         document.getElementById('lembaga-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             if (currentUserRole !== 'admin') return;
-            
             const newName = document.getElementById('form-edit-lembaga').value;
             if (is_preview) {
-                currentLembagaName = newName;
-                document.getElementById('dash-title').innerText = currentLembagaName;
+                currentLembagaName = newName; document.getElementById('dash-title').innerText = currentLembagaName;
                 closeLembagaModal(); showToast();
             } else {
                 try {
@@ -850,26 +1016,18 @@
             }
         });
 
-        // --- JURNAL KELAS HARIAN CRUD ---
-        window.openJurnalModal = (kelasSpesifik, tanggalSpesifik) => {
+        window.openJurnalModal = (kelasSpesifik, tanggalSpesifik = null) => {
             if(currentUserRole === 'admin') return; 
             const kelas = kelasSpesifik || document.getElementById('filter-kelas-rekap').value;
             if (kelas === "Semua") { alert("Pilih satu kelas spesifik terlebih dahulu!"); return; }
-            
-            if(currentUserRole === 'ustadz' && !currentUserClasses.includes(kelas)) { alert("Hanya bisa mengisi jurnal kelas Anda sendiri!"); return; }
-            
-            const tanggalInput = document.getElementById('form-jurnal-tanggal');
-            if (tanggalSpesifik) {
-                tanggalInput.value = tanggalSpesifik;
-            } else if (!tanggalInput.value) {
-                tanggalInput.valueAsDate = new Date();
-            }
-            
-            const tgl = tanggalInput.value;
-            const jId = `${kelas}_${tgl}`;
-            const targetJurnal = jurnalStore.find(j => j.id === jId);
+            if (currentUserRole === 'ustadz' && !currentUserClasses.includes(kelas)) { alert("Akses Ditolak."); return; }
             
             document.getElementById('form-jurnal-kelas').value = kelas;
+            const dp = document.getElementById('form-jurnal-tanggal');
+            if (tanggalSpesifik) dp.value = tanggalSpesifik;
+            else if (!dp.value) dp.valueAsDate = new Date();
+            
+            const targetJurnal = jurnalStore.find(j => j.id === `${kelas}_${dp.value}`);
             if(targetJurnal) {
                 document.getElementById('form-jurnal-tadarus').value = targetJurnal.tadarus || '';
                 document.getElementById('form-jurnal-murojaah').value = targetJurnal.murojaah || '';
@@ -884,30 +1042,20 @@
         window.closeJurnalModal = () => document.getElementById('modal-jurnal').classList.add('hidden');
 
         document.getElementById('form-jurnal-tanggal').addEventListener('change', () => {
-            const kelas = document.getElementById('form-jurnal-kelas').value;
-            window.openJurnalModal(kelas, document.getElementById('form-jurnal-tanggal').value); 
+            window.openJurnalModal(document.getElementById('form-jurnal-kelas').value, document.getElementById('form-jurnal-tanggal').value); 
         });
 
         document.getElementById('jurnal-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             if(currentUserRole === 'admin') return; 
-            
             const tgl = document.getElementById('form-jurnal-tanggal').value;
             const kelas = document.getElementById('form-jurnal-kelas').value;
             const jId = `${kelas}_${tgl}`;
-            
-            const newData = {
-                id: jId, kelas: kelas, tanggal: tgl,
-                tadarus: document.getElementById('form-jurnal-tadarus').value,
-                murojaah: document.getElementById('form-jurnal-murojaah').value,
-                materi: document.getElementById('form-jurnal-materi').value,
-                timestamp: new Date().toISOString()
-            };
+            const newData = { id: jId, kelas: kelas, tanggal: tgl, tadarus: document.getElementById('form-jurnal-tadarus').value, murojaah: document.getElementById('form-jurnal-murojaah').value, materi: document.getElementById('form-jurnal-materi').value, timestamp: new Date().toISOString() };
 
             if (is_preview) {
                 let existingIndex = jurnalStore.findIndex(j => j.id === jId);
-                if(existingIndex !== -1) jurnalStore[existingIndex] = newData;
-                else jurnalStore.push(newData);
+                if(existingIndex !== -1) jurnalStore[existingIndex] = newData; else jurnalStore.push(newData);
                 closeJurnalModal(); renderRekap(); showToast();
             } else {
                 try {
@@ -917,7 +1065,7 @@
             }
         });
 
-        // --- REKAP & JURNAL RENDER (DATE RANGE + S.I.A) ---
+        // --- REKAP & JURNAL RENDER ---
         let hariIni = new Date();
         let semingguLalu = new Date(); semingguLalu.setDate(hariIni.getDate() - 6);
         document.getElementById('filter-tanggal-mulai').valueAsDate = semingguLalu;
@@ -933,259 +1081,120 @@
             const kelasFilter = document.getElementById('filter-kelas-rekap').value;
             const container = document.getElementById('rekap-container');
             container.innerHTML = '';
-            
             if(!tglMulai || !tglAkhir) return;
 
             let kelasRenderList = kelasFilter === "Semua" ? Array.from(classesSet).sort() : [kelasFilter];
 
             kelasRenderList.forEach(kls => {
                 const pengajar = pengajarMap[kls] || "Belum diatur";
-                let jurnalHTML = '';
+                let btnTambahJurnal = (currentUserRole === 'admin' || !currentUserClasses.includes(kls)) ? '' : `<button onclick="openJurnalModal('${kls}')" class="bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-sm font-bold shadow hover:bg-indigo-700 transition whitespace-nowrap"><i class="fa-solid fa-plus mr-1"></i> Jurnal Hari Ini</button>`;
                 
-                // Cari Jurnal dalam range tanggal
+                let jurnalHTML = '';
                 let jurnalKelasIni = jurnalStore.filter(j => j.kelas === kls && j.tanggal >= tglMulai && j.tanggal <= tglAkhir).sort((a,b) => b.tanggal.localeCompare(a.tanggal));
                 
-                // --- JURNAL CARD GRID LAYOUT ---
                 if (jurnalKelasIni.length > 0) {
-                    let jurnalCards = '';
+                    let cardList = '';
                     jurnalKelasIni.forEach(j => {
-                        let btnEdit = (currentUserRole === 'admin' || (currentUserRole === 'ustadz' && !currentUserClasses.includes(kls))) 
-                            ? '' 
-                            : `<button onclick="openJurnalModal('${kls}', '${j.tanggal}')" class="text-[11px] bg-indigo-100 text-indigo-700 px-2 py-1 rounded hover:bg-indigo-200 transition font-bold"><i class="fa-solid fa-pen"></i> Edit</button>`;
-                            
-                        jurnalCards += `
-                            <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm flex flex-col justify-between">
-                                <div>
-                                    <div class="flex justify-between items-center mb-2 border-b border-gray-100 pb-2">
-                                        <span class="font-bold text-sm text-indigo-700"><i class="fa-regular fa-calendar-check mr-1"></i> ${j.tanggal}</span>
-                                        ${btnEdit}
-                                    </div>
-                                    <div class="text-xs space-y-1 text-gray-700 break-words whitespace-normal">
-                                        <p><span class="font-bold text-indigo-500 w-16 inline-block">Tadarus</span>: ${j.tadarus || '-'}</p>
-                                        <p><span class="font-bold text-indigo-500 w-16 inline-block">Murojaah</span>: ${j.murojaah || '-'}</p>
-                                        <p><span class="font-bold text-indigo-500 w-16 inline-block">Materi</span>: ${j.materi || '-'}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
+                        let btnEditCard = (currentUserRole === 'admin' || !currentUserClasses.includes(kls)) ? '' : `<button onclick="openJurnalModal('${kls}', '${j.tanggal}')" class="bg-indigo-500 text-white px-2 py-1 rounded text-xs font-bold hover:bg-indigo-600">Isi/Edit Jurnal</button>`;
+                        cardList += `<div class="bg-white p-3 rounded-lg border border-indigo-100 shadow-sm"><div class="flex justify-between items-center mb-2 border-b border-gray-100 pb-2"><h4 class="font-bold text-sm text-indigo-800"><i class="fa-solid fa-book-journal-whills mr-1"></i> Jurnal Tgl: ${j.tanggal}</h4>${btnEditCard}</div><div class="grid grid-cols-3 gap-2"><div class="bg-gray-50 p-2 rounded"><p class="text-[10px] text-indigo-500 font-bold mb-0.5">Tadarus</p><p class="text-xs font-medium text-gray-800">${j.tadarus || '-'}</p></div><div class="bg-gray-50 p-2 rounded"><p class="text-[10px] text-indigo-500 font-bold mb-0.5">Murojaah</p><p class="text-xs font-medium text-gray-800">${j.murojaah || '-'}</p></div><div class="bg-gray-50 p-2 rounded"><p class="text-[10px] text-indigo-500 font-bold mb-0.5">Materi</p><p class="text-xs font-medium text-gray-800">${j.materi || '-'}</p></div></div></div>`;
                     });
-
-                    let btnTambahJurnal = (currentUserRole === 'admin' || (currentUserRole === 'ustadz' && !currentUserClasses.includes(kls))) 
-                            ? '' 
-                            : `<button onclick="openJurnalModal('${kls}')" class="bg-indigo-600 text-white px-3 py-1.5 rounded text-xs font-bold shadow hover:bg-indigo-700 transition">+ Jurnal Baru</button>`;
-
-                    jurnalHTML = `
-                        <div class="mb-6 bg-indigo-50 p-4 rounded-xl border border-indigo-100">
-                            <div class="flex justify-between items-center mb-3">
-                                <h4 class="font-bold text-indigo-800"><i class="fa-solid fa-book-journal-whills mr-2"></i>Jurnal Kelas Harian</h4>
-                                ${btnTambahJurnal}
-                            </div>
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-72 overflow-y-auto p-1 custom-scrollbar">
-                                ${jurnalCards}
-                            </div>
-                        </div>
-                    `;
+                    jurnalHTML = `<div class="bg-indigo-50 p-4 rounded-xl shadow-sm mb-4 border border-indigo-100 relative"><div class="absolute top-4 right-4">${btnTambahJurnal}</div><h4 class="font-bold text-gray-700 mb-3"><i class="fa-solid fa-layer-group mr-2"></i>Kumpulan Jurnal</h4><div class="max-h-60 overflow-y-auto pr-2 space-y-3 custom-scrollbar">${cardList}</div></div>`;
                 } else {
-                    let btnTambahJurnal = (currentUserRole === 'admin' || (currentUserRole === 'ustadz' && !currentUserClasses.includes(kls))) 
-                            ? '' 
-                            : `<button onclick="openJurnalModal('${kls}')" class="bg-indigo-600 text-white px-3 py-1.5 rounded text-sm font-bold shadow hover:bg-indigo-700 transition">Isi Jurnal Baru</button>`;
-
-                    jurnalHTML = `
-                        <div class="bg-indigo-50 p-4 rounded-xl shadow-sm mb-6 border border-indigo-100 flex justify-between items-center">
-                            <p class="text-sm text-indigo-800 italic"><i class="fa-solid fa-book-journal-whills mr-2"></i>Belum ada jurnal untuk rentang tanggal ini.</p>
-                            ${btnTambahJurnal}
-                        </div>`;
+                    jurnalHTML = `<div class="bg-indigo-50 p-4 rounded-xl shadow-sm mb-4 border border-indigo-100 flex justify-between items-center"><p class="text-sm text-indigo-800 italic">Belum ada jurnal untuk rentang tanggal ini.</p>${btnTambahJurnal}</div>`;
                 }
 
-                let tabelTbody = '';
-                let rekapSIA = {}; 
-                let tabelSIA = '';
-                let adaDataSantri = false;
+                let tabelSIAHTML = '', rekapSIATbody = '', tabelTbody = '', adaDataSantri = false;
 
                 dataStore.filter(s => s.kelas === kls).forEach(s => {
-                    let riwayatDalamRange = (s.riwayat || []).filter(r => {
-                        const tglRiwayat = r.timestamp.split('T')[0]; 
-                        return tglRiwayat >= tglMulai && tglRiwayat <= tglAkhir;
-                    });
+                    let riwayatDalamRange = (s.riwayat || []).filter(r => { const tglRiwayat = r.timestamp.split('T')[0]; return tglRiwayat >= tglMulai && tglRiwayat <= tglAkhir; });
+                    let countH = 0, countS = 0, countI = 0, countA = 0;
 
                     if(riwayatDalamRange.length > 0) {
                         adaDataSantri = true;
-                        rekapSIA[s.id] = { nama: s.nama, H: 0, S: 0, I: 0, A: 0 };
-
                         riwayatDalamRange.forEach(adaData => {
-                            if(adaData.kehadiran === 'Hadir') rekapSIA[s.id].H++;
-                            else if(adaData.kehadiran === 'Sakit') rekapSIA[s.id].S++;
-                            else if(adaData.kehadiran === 'Izin') rekapSIA[s.id].I++;
-                            else if(adaData.kehadiran === 'Alpa') rekapSIA[s.id].A++;
-
-                            let dtRaw = new Date(adaData.timestamp);
-                            let tglCetak = `${String(dtRaw.getDate()).padStart(2,'0')}/${String(dtRaw.getMonth()+1).padStart(2,'0')}`;
-                            let badgeHafalan = getKetBadge(adaData.nilaiHafalan || adaData.keterangan);
-                            let badgeJilid = getKetBadge(adaData.nilaiJilid || adaData.keterangan);
-
-                            tabelTbody += `
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3 text-xs text-gray-500 font-bold whitespace-nowrap">${tglCetak}</td>
-                                    <td class="p-3 font-bold text-gray-800 whitespace-nowrap">${s.nama}</td>
-                                    <td class="p-3 whitespace-nowrap">${getStatusBadge(adaData.kehadiran)}</td>
-                                    <td class="p-3 whitespace-nowrap">${adaData.surah} <br><span class="text-gray-500 text-[10px]">(Ayat ${adaData.ayat})</span></td>
-                                    <td class="p-3 whitespace-nowrap">${adaData.jilid} <br><span class="text-gray-500 text-[10px]">(Hal ${adaData.halaman})</span></td>
-                                    <td class="p-3 whitespace-nowrap">
-                                        <div class="mb-1 flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">H:</span> ${badgeHafalan}</div>
-                                        <div class="flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">J:</span> ${badgeJilid}</div>
-                                    </td>
-                                    <td class="p-3 text-xs italic text-gray-600 break-words whitespace-normal min-w-[150px]">${adaData.catatan || '-'}</td>
-                                </tr>
-                            `;
+                            if(adaData.kehadiran === 'Hadir') countH++; if(adaData.kehadiran === 'Sakit') countS++; if(adaData.kehadiran === 'Izin') countI++; if(adaData.kehadiran === 'Alpa') countA++;
+                            let dtRaw = new Date(adaData.timestamp); let tglCetak = `${String(dtRaw.getDate()).padStart(2,'0')}/${String(dtRaw.getMonth()+1).padStart(2,'0')}`;
+                            let badgeHafalan = getKetBadge(adaData.nilaiHafalan || adaData.keterangan); let badgeJilid = getKetBadge(adaData.nilaiJilid || adaData.keterangan);
+                            tabelTbody += `<tr class="border-b hover:bg-gray-50"><td class="p-3 text-xs text-gray-500 font-bold whitespace-nowrap">${tglCetak}</td><td class="p-3 font-bold text-gray-800 whitespace-nowrap">${s.nama}</td><td class="p-3 whitespace-nowrap">${getStatusBadge(adaData.kehadiran)}</td><td class="p-3 whitespace-nowrap">${adaData.surah} <br><span class="text-gray-500 text-[10px]">(Ayat ${adaData.ayat})</span></td><td class="p-3 whitespace-nowrap">${adaData.jilid} <br><span class="text-gray-500 text-[10px]">(Hal ${adaData.halaman})</span></td><td class="p-3 whitespace-nowrap"><div class="mb-1 flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">H:</span> ${badgeHafalan}</div><div class="flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">J:</span> ${badgeJilid}</div></td><td class="p-3 text-xs italic text-gray-600 break-words whitespace-normal min-w-[150px]">${adaData.catatan || '-'}</td></tr>`;
                         });
+                        rekapSIATbody += `<tr class="border-b hover:bg-gray-50 text-center font-bold"><td class="p-3 text-left text-gray-800">${s.nama}</td><td class="p-3 text-green-600">${countH}</td><td class="p-3 text-orange-500">${countS}</td><td class="p-3 text-yellow-500">${countI}</td><td class="p-3 text-red-600">${countA}</td></tr>`;
                     }
                 });
 
                 if(!adaDataSantri) {
-                     tabelTbody = '<tr><td colspan="7" class="p-4 text-center text-gray-400">Tidak ada data ngaji di rentang tanggal ini</td></tr>';
+                     tabelTbody = '<tr><td colspan="7" class="p-4 text-center text-gray-400">Tidak ada data ngaji di rentang tanggal ini</td></tr>'; tabelSIAHTML = '';
                 } else {
-                     tabelSIA = `
-                        <div class="mb-4 bg-white rounded-xl shadow overflow-hidden p-4">
-                            <h4 class="font-bold text-gray-700 mb-2"><i class="fa-solid fa-calculator text-indigo-500 mr-1"></i> Rekapitulasi Absensi</h4>
-                            <div class="overflow-x-auto">
-                                <table class="w-full text-left border-collapse text-sm">
-                                    <thead>
-                                        <tr class="bg-gray-100 border-b text-gray-700 uppercase text-xs">
-                                            <th class="p-3">Nama Santri</th>
-                                            <th class="p-3 text-center">Hadir (H)</th>
-                                            <th class="p-3 text-center">Sakit (S)</th>
-                                            <th class="p-3 text-center">Izin (I)</th>
-                                            <th class="p-3 text-center">Alpa (A)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${Object.values(rekapSIA).map(r => `
-                                            <tr class="border-b">
-                                                <td class="p-3 font-bold text-gray-800">${r.nama}</td>
-                                                <td class="p-3 text-center text-green-600 font-bold">${r.H}</td>
-                                                <td class="p-3 text-center text-orange-500 font-bold">${r.S}</td>
-                                                <td class="p-3 text-center text-yellow-500 font-bold">${r.I}</td>
-                                                <td class="p-3 text-center text-red-600 font-bold">${r.A}</td>
-                                            </tr>
-                                        `).join('')}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    `;
+                     tabelSIAHTML = `<div class="bg-white rounded-xl shadow overflow-hidden p-4 mb-4 border border-gray-100"><h4 class="font-bold text-gray-700 mb-3"><i class="fa-solid fa-calculator mr-2 text-indigo-400"></i>Rekapitulasi Absensi</h4><div class="overflow-x-auto"><table class="w-full text-left border-collapse text-sm"><thead><tr class="bg-gray-100 border-b text-gray-700 uppercase text-[10px] text-center"><th class="p-3 whitespace-nowrap text-left">Nama Santri</th><th class="p-3 whitespace-nowrap">Hadir (H)</th><th class="p-3 whitespace-nowrap">Sakit (S)</th><th class="p-3 whitespace-nowrap">Izin (I)</th><th class="p-3 whitespace-nowrap">Alpa (A)</th></tr></thead><tbody>${rekapSIATbody}</tbody></table></div></div>`;
                 }
 
                 if (jurnalKelasIni.length > 0 || adaDataSantri) {
-                    container.innerHTML += `
-                        <div class="mb-10">
-                            <h3 class="text-xl font-bold text-gray-800 mb-1 border-b-2 border-indigo-200 pb-2">${kls}</h3>
-                            <p class="text-sm text-indigo-600 font-bold mb-4"><i class="fa-solid fa-user-tie mr-1"></i> Pengajar: ${pengajar}</p>
-                            ${jurnalHTML}
-                            ${tabelSIA}
-                            <div class="bg-white rounded-xl shadow overflow-hidden p-4">
-                                <h4 class="font-bold text-gray-700 mb-2"><i class="fa-solid fa-list-check text-indigo-500 mr-1"></i> Rincian Progres Harian</h4>
-                                <div class="overflow-x-auto">
-                                    <table class="w-full text-left border-collapse text-sm">
-                                        <thead>
-                                            <tr class="bg-gray-100 border-b text-gray-700 uppercase text-xs">
-                                                <th class="p-3 whitespace-nowrap">Tgl</th>
-                                                <th class="p-3 whitespace-nowrap">Nama Santri</th>
-                                                <th class="p-3 whitespace-nowrap">Status</th>
-                                                <th class="p-3 whitespace-nowrap">Hafalan</th>
-                                                <th class="p-3 whitespace-nowrap">Jilid</th>
-                                                <th class="p-3 whitespace-nowrap">Nilai</th>
-                                                <th class="p-3 w-1/4">Catatan</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>${tabelTbody}</tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+                    container.innerHTML += `<div class="mb-10"><h3 class="text-xl font-bold text-gray-800 mb-1 border-b-2 border-indigo-200 pb-2">${kls}</h3><p class="text-sm text-indigo-600 font-bold mb-4"><i class="fa-solid fa-user-tie mr-1"></i> Pengajar: ${pengajar}</p>${jurnalHTML}${tabelSIAHTML}<div class="bg-white rounded-xl shadow overflow-hidden p-4"><div class="overflow-x-auto"><table class="w-full text-left border-collapse text-sm"><thead><tr class="bg-gray-100 border-b text-gray-700 uppercase text-xs"><th class="p-3 whitespace-nowrap">Tgl</th><th class="p-3 whitespace-nowrap">Nama Santri</th><th class="p-3 whitespace-nowrap">Status</th><th class="p-3 whitespace-nowrap">Hafalan</th><th class="p-3 whitespace-nowrap">Jilid</th><th class="p-3 whitespace-nowrap">Nilai</th><th class="p-3 w-1/4">Catatan</th></tr></thead><tbody>${tabelTbody}</tbody></table></div></div></div>`;
                 }
             });
-            
-            if(container.innerHTML === '') {
-                 container.innerHTML = '<div class="text-center text-gray-400 p-10 bg-white rounded-xl shadow">Tidak ada aktivitas ngaji atau jurnal untuk kelas ini di rentang tanggal yang dipilih.</div>';
-            }
+            if(container.innerHTML === '') container.innerHTML = '<div class="text-center text-gray-400 p-10 bg-white rounded-xl shadow">Tidak ada aktivitas ngaji atau jurnal untuk semua kelas di rentang tanggal ini.</div>';
         }
 
-        window.showToast = () => {
+        window.showToast = (msg = "Berhasil disimpan!", color = "green") => {
             const toast = document.getElementById('toast');
-            toast.classList.remove('opacity-0', 'pointer-events-none');
-            setTimeout(() => toast.classList.add('opacity-0', 'pointer-events-none'), 3000);
+            toast.innerText = msg; toast.className = `fixed bottom-5 right-5 text-white px-6 py-3 rounded-lg shadow-lg font-bold transition-opacity duration-300 z-50 opacity-100 pointer-events-auto bg-${color}-500`;
+            setTimeout(() => { toast.classList.remove('opacity-100', 'pointer-events-auto'); toast.classList.add('opacity-0', 'pointer-events-none'); }, 3000);
         };
 
-        // ==========================================
-        // 6. PDF EXPORT 
-        // ==========================================
-        
         function handlePDFOutput(doc, filename) {
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
             if (isMobile) doc.save(filename);
-            else {
-                const blob = doc.output('blob');
-                window.open(URL.createObjectURL(blob), '_blank');
-            }
+            else { const blob = doc.output('blob'); window.open(URL.createObjectURL(blob), '_blank'); }
         }
 
         window.exportRapor = (id) => {
             if(!window.jspdf) return;
             const s = dataStore.find(x => x.id === id);
-            
-            const doc = new window.jspdf.jsPDF();
-            const pageWidth = doc.internal.pageSize.getWidth();
-            
+            const doc = new window.jspdf.jsPDF(); const pageWidth = doc.internal.pageSize.getWidth();
             doc.setFontSize(18); doc.text(`Rapor Ngaji: ${s.nama}`, pageWidth / 2, 22, { align: 'center' });
             doc.setFontSize(11); doc.text(`Kelas: ${s.kelas || '-'}`, pageWidth / 2, 30, { align: 'center' });
-            
-            const tableData = (s.riwayat || []).map(r => {
-                const dt = new Date(r.timestamp);
-                let ketHaf = r.nilaiHafalan || r.keterangan || '-';
-                let ketJld = r.nilaiJilid || r.keterangan || '-';
-                return [`${dt.getDate()}/${dt.getMonth()+1}/${dt.getFullYear()}`, r.kehadiran, r.jilid + ' - ' + r.halaman, r.surah + ' (' + r.ayat + ')', `Haf: ${ketHaf}\nJld: ${ketJld}`, r.catatan || '-'];
-            });
-
+            const tableData = (s.riwayat || []).map(r => { const dt = new Date(r.timestamp); return [`${dt.getDate()}/${dt.getMonth()+1}/${dt.getFullYear()}`, r.kehadiran, r.jilid + ' - ' + r.halaman, r.surah + ' (' + r.ayat + ')', `Haf: ${r.nilaiHafalan || r.keterangan || '-'}\nJld: ${r.nilaiJilid || r.keterangan || '-'}`, r.catatan || '-']; });
             doc.autoTable({ startY: 40, head: [['Tanggal', 'Kehadiran', 'Jilid/Hal', 'Hafalan', 'Nilai', 'Catatan']], body: tableData, theme: 'grid', headStyles: { fillColor: [79, 70, 229] }, styles: { cellPadding: 3, fontSize: 9 } });
-            
             handlePDFOutput(doc, `Rapor_${s.nama.replace(/\s+/g, '_')}.pdf`);
         };
 
         window.exportKelas = (kelas) => {
             if(!window.jspdf) return;
-            const doc = new window.jspdf.jsPDF();
-            const pageWidth = doc.internal.pageSize.getWidth();
-
+            const doc = new window.jspdf.jsPDF(); const pageWidth = doc.internal.pageSize.getWidth();
             doc.setFontSize(16); doc.text(`Daftar Santri: ${kelas}`, pageWidth / 2, 22, { align: 'center' });
-            const tableData = dataStore.filter(x => x.kelas === kelas).map((m, i) => [i+1, m.nama, m.kehadiran, m.jilid, m.surah]);
-            doc.autoTable({ startY: 30, head: [['No', 'Nama Santri', 'Status Terakhir', 'Jilid', 'Hafalan']], body: tableData, theme: 'striped', headStyles: { fillColor: [79, 70, 229] } });
-            
+            const tableData = dataStore.filter(x => x.kelas === kelas).map((m, i) => [i+1, m.nama, m.id, m.kehadiran, m.jilid, m.surah]);
+            doc.autoTable({ startY: 30, head: [['No', 'Nama Santri', 'ID Absen', 'Status Terakhir', 'Jilid', 'Hafalan']], body: tableData, theme: 'striped', headStyles: { fillColor: [79, 70, 229] } });
             handlePDFOutput(doc, `Kelas_${kelas.replace(/\s+/g, '_')}.pdf`);
         };
 
         window.exportGlobalPDF = () => {
             if(!window.jspdf) return;
-            const doc = new window.jspdf.jsPDF();
-            const pageWidth = doc.internal.pageSize.getWidth();
-
-            const tglMulai = document.getElementById('filter-tanggal-mulai').value;
-            const tglAkhir = document.getElementById('filter-tanggal-akhir').value;
-            const kelasFilter = document.getElementById('filter-kelas-rekap').value;
-            
+            const doc = new window.jspdf.jsPDF(); const pageWidth = doc.internal.pageSize.getWidth();
+            const tglMulai = document.getElementById('filter-tanggal-mulai').value; const tglAkhir = document.getElementById('filter-tanggal-akhir').value; const kelasFilter = document.getElementById('filter-kelas-rekap').value;
             doc.setFontSize(16); doc.text(`Laporan Progres Santri`, pageWidth / 2, 22, { align: 'center' });
             doc.setFontSize(10); doc.text(`Periode: ${tglMulai} s/d ${tglAkhir}`, pageWidth / 2, 28, { align: 'center' });
-            
             let startY = 36;
             let kelasRenderList = kelasFilter === "Semua" ? Array.from(classesSet).sort() : [kelasFilter];
 
             kelasRenderList.forEach((kls, index) => {
                 if (index > 0 && startY > doc.internal.pageSize.getHeight() - 40) { doc.addPage(); startY = 20; }
-                
-                const pengajar = pengajarMap[kls] || "Belum diatur";
-                doc.setFontSize(11); doc.setFont(undefined, 'bold');
-                doc.text(`Kelas: ${kls} | Pengajar: ${pengajar}`, 14, startY);
-                startY += 8;
+                const pengajar = pengajarMap[kls] || "Belum diatur"; doc.setFontSize(11); doc.setFont(undefined, 'bold'); doc.text(`Kelas: ${kls} | Pengajar: ${pengajar}`, 14, startY); startY += 8;
+                let tableSIAData = []; let tableData = [];
+                dataStore.filter(s => s.kelas === kls).forEach(s => {
+                    let riwayatDalamRange = (s.riwayat || []).filter(r => { const tglRiwayat = r.timestamp.split('T')[0]; return tglRiwayat >= tglMulai && tglRiwayat <= tglAkhir; });
+                    let cH = 0, cS = 0, cI = 0, cA = 0;
+                    riwayatDalamRange.forEach(r => {
+                        if(r.kehadiran === 'Hadir') cH++; if(r.kehadiran === 'Sakit') cS++; if(r.kehadiran === 'Izin') cI++; if(r.kehadiran === 'Alpa') cA++;
+                        let dt = new Date(r.timestamp); let tglStr = `${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}`;
+                        tableData.push([tglStr, s.nama, r.kehadiran, r.jilid, r.surah, `H: ${r.nilaiHafalan || r.keterangan || '-'}\nJ: ${r.nilaiJilid || r.keterangan || '-'}`, r.catatan || '-']);
+                    });
+                    if(riwayatDalamRange.length > 0) tableSIAData.push([s.nama, cH, cS, cI, cA]);
+                });
+
+                if (tableSIAData.length > 0) {
+                    doc.setFontSize(9); doc.setFont(undefined, 'bold'); doc.text(`Rekapitulasi Kehadiran (H/S/I/A)`, 14, startY); startY += 4;
+                    doc.autoTable({ startY: startY, head: [['Nama Santri', 'Hadir', 'Sakit', 'Izin', 'Alpa']], body: tableSIAData, theme: 'grid', headStyles: { fillColor: [79, 70, 229] }, styles: { fontSize: 8, halign: 'center' }, columnStyles: { 0: { halign: 'left' } } });
+                    startY = doc.lastAutoTable.finalY + 10;
+                }
 
                 let jurnalKelasIni = jurnalStore.filter(j => j.kelas === kls && j.tanggal >= tglMulai && j.tanggal <= tglAkhir).sort((a,b) => a.tanggal.localeCompare(b.tanggal));
                 if(jurnalKelasIni.length > 0) {
@@ -1198,72 +1207,55 @@
                     startY += 2;
                 }
 
-                let tableData = [];
-                let rekapSIA = {};
-
-                dataStore.filter(s => s.kelas === kls).forEach(s => {
-                    let riwayatDalamRange = (s.riwayat || []).filter(r => {
-                        const tglRiwayat = r.timestamp.split('T')[0]; 
-                        return tglRiwayat >= tglMulai && tglRiwayat <= tglAkhir;
-                    });
-
-                    if(riwayatDalamRange.length > 0) {
-                        rekapSIA[s.nama] = { H: 0, S: 0, I: 0, A: 0 };
-                        riwayatDalamRange.forEach(r => {
-                            if(r.kehadiran === 'Hadir') rekapSIA[s.nama].H++;
-                            else if(r.kehadiran === 'Sakit') rekapSIA[s.nama].S++;
-                            else if(r.kehadiran === 'Izin') rekapSIA[s.nama].I++;
-                            else if(r.kehadiran === 'Alpa') rekapSIA[s.nama].A++;
-
-                            let dt = new Date(r.timestamp);
-                            let tglStr = `${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}`;
-                            let ketHaf = r.nilaiHafalan || r.keterangan || '-';
-                            let ketJld = r.nilaiJilid || r.keterangan || '-';
-                            tableData.push([tglStr, s.nama, r.kehadiran, r.jilid, r.surah, `H: ${ketHaf}\nJ: ${ketJld}`, r.catatan || '-']);
-                        });
-                    }
-                });
-
-                if (Object.keys(rekapSIA).length > 0) {
-                    let siaBody = Object.entries(rekapSIA).map(([nama, counts]) => [nama, counts.H, counts.S, counts.I, counts.A]);
-                    
-                    doc.setFontSize(9); doc.setFont(undefined, 'bold');
-                    doc.text("Ringkasan Kehadiran (H/S/I/A):", 14, startY); startY += 4;
-                    doc.autoTable({ 
-                        startY: startY, 
-                        head: [['Nama Santri', 'Hadir', 'Sakit', 'Izin', 'Alpa']], 
-                        body: siaBody, 
-                        theme: 'grid', 
-                        headStyles: { fillColor: [79, 70, 229] }, 
-                        styles: { cellPadding: 2, fontSize: 8 } 
-                    });
-                    startY = doc.lastAutoTable.finalY + 10;
-
-                    doc.setFontSize(9); doc.setFont(undefined, 'bold');
-                    doc.text("Rincian Progres Harian:", 14, startY); startY += 4;
-                    doc.autoTable({ 
-                        startY: startY, 
-                        head: [['Tgl', 'Nama', 'Hadir', 'Jilid', 'Hafalan', 'Nilai', 'Catatan']], 
-                        body: tableData, 
-                        theme: 'grid', 
-                        headStyles: { fillColor: [220, 38, 38] }, 
-                        styles: { cellPadding: 2, fontSize: 8 } 
-                    });
+                if (tableData.length > 0) {
+                    doc.autoTable({ startY: startY, head: [['Tgl', 'Nama', 'Hadir', 'Jilid', 'Hafalan', 'Nilai', 'Catatan']], body: tableData, theme: 'grid', headStyles: { fillColor: [220, 38, 38] }, styles: { cellPadding: 2, fontSize: 8 } });
                     startY = doc.lastAutoTable.finalY + 15;
-                } else {
-                    doc.setFontSize(9); doc.setFont(undefined, 'italic');
-                    doc.text(`Tidak ada data ngaji di rentang tanggal ini.`, 14, startY);
-                    startY += 12;
-                }
+                } else { doc.setFontSize(9); doc.setFont(undefined, 'italic'); doc.text(`Tidak ada data ngaji.`, 14, startY); startY += 12; }
             });
-            
             handlePDFOutput(doc, `Rekap_${tglMulai}_sd_${tglAkhir}.pdf`);
         };
 
-        // ==========================================
-        // 7. INITIALIZATION & AUTH LOGIC
-        // ==========================================
+        function injectDummyData() {
+            const today = new Date();
+            // Data dimundurkan ke H-1 agar memicu fungsi Auto-Alpa hari ini untuk Ustadz saat login
+            const yesterday = new Date(today); yesterday.setDate(yesterday.getDate() - 1); 
+            
+            const yDateStr = yesterday.toISOString().split('T')[0];
+
+            pengajarMap = { "Kelas Madinah": "Ust. Saprudin S.Ag", "Kelas Mekkah": "Ust. Fulan, Lc" };
+            classesSet = new Set(["Kelas Madinah", "Kelas Mekkah"]);
+            currentLembagaName = "TPQ Mockup Preview";
+
+            jurnalStore = [
+                { id: `Kelas Madinah_${yDateStr}`, kelas: "Kelas Madinah", tanggal: yDateStr, tadarus: "Al-Qalam", murojaah: "An-Naba", materi: "Hukum Nun Mati", timestamp: yesterday.toISOString() },
+                { id: `Kelas Mekkah_${yDateStr}`, kelas: "Kelas Mekkah", tanggal: yDateStr, tadarus: "Yasin 1-20", murojaah: "Al-Baqarah", materi: "Tajwid Lanjutan", timestamp: yesterday.toISOString() }
+            ];
+
+            dataStore = [
+                {
+                    id: "ST111111", nama: "Ahmad Rafli", kelas: "Kelas Madinah", kehadiran: "Hadir", jilid: "Jilid 4", halaman: "12", surah: "Al-Mulk", ayat: "5-10", nilaiHafalan: "Lancar", nilaiJilid: "Lancar", catatan: "Data Kemarin", timestamp: yesterday.toISOString(),
+                    riwayat: [
+                        { kehadiran: "Hadir", jilid: "Jilid 4", halaman: "10", surah: "Al-Mulk", ayat: "1-4", nilaiHafalan: "Mengulang", nilaiJilid: "Lancar", catatan: "Tajwid diperbaiki", timestamp: yesterday.toISOString() }
+                    ]
+                },
+                {
+                    id: "ST222222", nama: "Budi Santoso", kelas: "Kelas Madinah", kehadiran: "Izin", jilid: "Jilid 3", halaman: "20", surah: "An-Naba", ayat: "1-15", nilaiHafalan: "Kurang Lancar", nilaiJilid: "Lancar", catatan: "Data Kemarin", timestamp: yesterday.toISOString(),
+                    riwayat: [
+                        { kehadiran: "Hadir", jilid: "Jilid 3", halaman: "20", surah: "An-Naba", ayat: "1-15", nilaiHafalan: "Kurang Lancar", nilaiJilid: "Lancar", catatan: "Belum hafal lancar", timestamp: yesterday.toISOString() }
+                    ]
+                },
+                {
+                    id: "ST333333", nama: "Siti Aminah", kelas: "Kelas Mekkah", kehadiran: "Hadir", jilid: "Al-Quran", halaman: "Juz 2", surah: "Al-Baqarah", ayat: "145", nilaiHafalan: "Lancar", nilaiJilid: "Lancar", catatan: "Data Kemarin", timestamp: yesterday.toISOString(),
+                    riwayat: [
+                        { kehadiran: "Hadir", jilid: "Al-Quran", halaman: "Juz 2", surah: "Al-Baqarah", ayat: "145", nilaiHafalan: "Lancar", nilaiJilid: "Lancar", catatan: "-", timestamp: yesterday.toISOString() }
+                    ]
+                }
+            ];
+        }
+
         function initApp() {
+            if (is_preview && dataStore.length === 0) injectDummyData();
+            checkDailyReset(); 
             renderAll();
             const lastView = localStorage.getItem('activeView') || 'dashboard';
             switchView(lastView);
@@ -1273,15 +1265,12 @@
             if (is_preview) {
                 document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
                 const loginView = document.getElementById('view-login');
-                loginView.style.display = ''; 
-                loginView.classList.add('active');
+                loginView.style.display = ''; loginView.classList.add('active');
                 document.getElementById('main-nav').classList.add('hidden');
                 localStorage.removeItem('activeView');
                 document.getElementById('auth-form').reset();
                 document.getElementById('mobile-menu').classList.add('hidden');
-            } else {
-                signOut(auth);
-            }
+            } else { signOut(auth); }
         };
 
         document.getElementById('btn-logout').addEventListener('click', doLogout);
@@ -1289,68 +1278,37 @@
 
         document.getElementById('auth-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const em = document.getElementById('login-email').value;
-            const pw = document.getElementById('login-password').value;
-            const errEl = document.getElementById('login-error');
-            errEl.classList.add('hidden');
+            const em = document.getElementById('login-email').value; const pw = document.getElementById('login-password').value;
+            const errEl = document.getElementById('login-error'); errEl.classList.add('hidden');
             
             if (is_preview) {
-                if (ADMIN_EMAILS.includes(em.toLowerCase())) {
-                    currentUserRole = 'admin';
-                    currentUserClasses = ['Semua'];
-                } else {
-                    currentUserRole = 'ustadz';
-                    currentUserClasses = ['Kelas Madinah'];
-                }
-                currentLembagaName = "TPQ Mockup Preview";
+                if (ADMIN_EMAILS.includes(em.toLowerCase())) { currentUserRole = 'admin'; currentUserClasses = ['Semua']; } 
+                else { currentUserRole = 'ustadz'; currentUserClasses = ['Kelas Madinah']; }
                 document.getElementById('view-login').style.display = 'none';
                 document.getElementById('main-nav').classList.remove('hidden');
                 initApp();
             } else {
                 try {
                     if (authMode === 'register') {
-                        const nm = document.getElementById('reg-nama').value;
-                        const emLower = em.toLowerCase();
+                        const nm = document.getElementById('reg-nama').value; const emLower = em.toLowerCase();
                         const role = ADMIN_EMAILS.includes(emLower) ? 'admin' : 'ustadz';
-                        
                         const userCredential = await createUserWithEmailAndPassword(auth, em, pw);
-                        
                         let userData = { email: emLower, nama: nm, role: role };
-                        if (role === 'admin') {
-                            userData.lembaga = 'Nama Lembaga Baru (Edit di Dashboard)';
-                            userData.kelas = ['Semua'];
-                        } else {
-                            const klInput = document.getElementById('reg-kelas').value;
-                            userData.kelas = klInput.split(',').map(k => k.trim()).filter(k => k.length > 0);
-                        }
-                        
+                        if (role === 'admin') { userData.lembaga = 'Nama Lembaga Baru (Edit di Dashboard)'; userData.kelas = ['Semua']; } 
+                        else { const klInput = document.getElementById('reg-kelas').value; userData.kelas = klInput.split(',').map(k => k.trim()).filter(k => k.length > 0); }
                         await setDoc(doc(db, "users", userCredential.user.uid), userData);
-                    } else {
-                        await signInWithEmailAndPassword(auth, em, pw);
-                    }
-                } catch(error) {
-                    errEl.innerText = "Error: " + error.message;
-                    errEl.classList.remove('hidden');
-                }
+                    } else { await signInWithEmailAndPassword(auth, em, pw); }
+                } catch(error) { errEl.innerText = "Error: " + error.message; errEl.classList.remove('hidden'); }
             }
         });
 
         if (!is_preview) {
             onAuthStateChanged(auth, async (user) => {
                 if(user) {
-                    document.getElementById('view-login').style.display = 'none';
-                    currentUserId = user.uid;
-                    
+                    document.getElementById('view-login').style.display = 'none'; currentUserId = user.uid;
                     try {
-                        const userDocRef = doc(db, "users", user.uid);
-                        let userDoc = await getDoc(userDocRef);
-                        
-                        if(userDoc.exists()) {
-                            const dt = userDoc.data();
-                            currentUserRole = dt.role || 'ustadz';
-                            let kl = dt.kelas || ['Kelas Umum'];
-                            currentUserClasses = Array.isArray(kl) ? kl : [kl];
-                        }
+                        const userDocRef = doc(db, "users", user.uid); let userDoc = await getDoc(userDocRef);
+                        if(userDoc.exists()) { const dt = userDoc.data(); currentUserRole = dt.role || 'ustadz'; let kl = dt.kelas || ['Kelas Umum']; currentUserClasses = Array.isArray(kl) ? kl : [kl]; }
                     } catch(err) { console.error("Gagal menarik profil user:", err); }
                     
                     document.getElementById('main-nav').classList.remove('hidden');
@@ -1360,30 +1318,19 @@
                         snap.forEach((d) => {
                             const data = d.data();
                             if (data.role === 'admin' && data.lembaga) currentLembagaName = data.lembaga;
-                            if(data.kelas && data.nama) {
-                                if(Array.isArray(data.kelas)) data.kelas.forEach(k => { pengajarMap[k] = data.nama; });
-                                else pengajarMap[data.kelas] = data.nama;
-                            }
+                            if(data.kelas && data.nama) { if(Array.isArray(data.kelas)) data.kelas.forEach(k => { pengajarMap[k] = data.nama; }); else pengajarMap[data.kelas] = data.nama; }
                         });
                         renderAll();
                     });
-
-                    onSnapshot(collection(db, "jurnal"), (snapshot) => {
-                        jurnalStore = [];
-                        snapshot.forEach((docSnap) => { jurnalStore.push({ id: docSnap.id, ...docSnap.data() }); });
-                        renderRekap();
-                    });
-
-                    onSnapshot(collection(db, "santri"), (snapshot) => {
-                        dataStore = [];
-                        snapshot.forEach((docSnap) => { dataStore.push({ id: docSnap.id, ...docSnap.data() }); });
-                        initApp();
+                    onSnapshot(collection(db, "jurnal"), (snapshot) => { jurnalStore = []; snapshot.forEach((docSnap) => { jurnalStore.push({ id: docSnap.id, ...docSnap.data() }); }); renderRekap(); });
+                    onSnapshot(collection(db, "santri"), (snapshot) => { 
+                        dataStore = []; snapshot.forEach((docSnap) => { dataStore.push({ id: docSnap.id, ...docSnap.data() }); }); 
+                        hasCheckedDailyReset = false; // Reset the flag so auto-alpa triggers on fresh reload
+                        initApp(); 
                     });
                 } else {
                     document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-                    const loginView = document.getElementById('view-login');
-                    loginView.style.display = 'block';
-                    loginView.classList.add('active');
+                    const loginView = document.getElementById('view-login'); loginView.style.display = 'block'; loginView.classList.add('active');
                     document.getElementById('main-nav').classList.add('hidden');
                 }
             });

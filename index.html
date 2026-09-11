@@ -151,11 +151,15 @@
         <div id="view-data-santri" class="view-section">
             <div class="flex flex-col md:flex-row justify-between items-center mb-6 space-y-3 md:space-y-0">
                 <h2 class="text-2xl font-bold text-gray-800">Manajemen Data Santri</h2>
-                <div class="flex items-center space-x-2">
+                <div class="flex space-x-2">
                     <select id="filter-kelas-tabel" class="border px-3 py-2 rounded-lg text-sm bg-white shadow-sm focus:outline-none">
                         <option value="Semua">Semua Kelas</option>
                     </select>
-                    <!-- Tombol Scanner Barcode (Sesuai instruksi gambar) -->
+                    <!-- Tombol Cetak Barcode Massal Per Kelas -->
+                    <button onclick="exportBarcodeKelas()" class="bg-blue-600 text-white px-3 py-2 rounded-lg font-bold shadow hover:bg-blue-700 transition" title="Cetak Semua Barcode Kelas">
+                        <i class="fa-solid fa-print"></i><span class="hidden md:inline ml-1">Barcode</span>
+                    </button>
+                    <!-- Tombol Scanner Barcode -->
                     <button id="btn-scan-absen" onclick="openScanner()" class="bg-green-600 text-white px-4 py-2 rounded-lg font-bold shadow hover:bg-green-700 transition">
                         <i class="fa-solid fa-qrcode mr-1"></i> Scan Absen
                     </button>
@@ -1164,6 +1168,74 @@
             const tableData = dataStore.filter(x => x.kelas === kelas).map((m, i) => [i+1, m.nama, m.id, m.kehadiran, m.jilid, m.surah]);
             doc.autoTable({ startY: 30, head: [['No', 'Nama Santri', 'ID Absen', 'Status Terakhir', 'Jilid', 'Hafalan']], body: tableData, theme: 'striped', headStyles: { fillColor: [79, 70, 229] } });
             handlePDFOutput(doc, `Kelas_${kelas.replace(/\s+/g, '_')}.pdf`);
+        };
+
+        window.exportBarcodeKelas = () => {
+            if(!window.jspdf) return;
+            const kelas = document.getElementById('filter-kelas-tabel').value;
+            
+            if(kelas === "Semua") {
+                alert("Silakan pilih kelas spesifik terlebih dahulu pada dropdown filter untuk mencetak barcode!");
+                return;
+            }
+
+            const murid = dataStore.filter(s => s.kelas === kelas);
+            if(murid.length === 0) {
+                alert("Tidak ada data santri di kelas ini.");
+                return;
+            }
+
+            const doc = new window.jspdf.jsPDF();
+            const pageWidth = doc.internal.pageSize.getWidth();
+            
+            doc.setFontSize(16);
+            doc.text(`Kumpulan Barcode ID - ${kelas}`, pageWidth / 2, 15, { align: 'center' });
+
+            const tempCanvas = document.createElement('canvas');
+            
+            let startX = 20;
+            let startY = 30;
+            const colWidth = 85;
+            const rowHeight = 45; 
+            let col = 0;
+
+            murid.forEach((m, index) => {
+                // Gambar barcode di canvas
+                JsBarcode(tempCanvas, m.id, { 
+                    format: "CODE128", 
+                    width: 2, 
+                    height: 40, 
+                    displayValue: true,
+                    fontSize: 14,
+                    margin: 2
+                });
+                
+                const imgData = tempCanvas.toDataURL("image/jpeg", 1.0);
+                let x = startX + (col * colWidth);
+                let y = startY;
+
+                // Tulis Nama Anak di atas barcode
+                doc.setFontSize(10);
+                doc.setFont(undefined, 'bold');
+                doc.text(m.nama, x + 37.5, y, { align: 'center' }); 
+                // Tempel gambar barcode
+                doc.addImage(imgData, 'JPEG', x, y + 2, 75, 25);
+                
+                col++;
+                if (col > 1) { 
+                    col = 0;
+                    startY += rowHeight;
+                }
+
+                // Kalau udah sampai ujung bawah kertas, tambah halaman baru
+                if (startY > doc.internal.pageSize.getHeight() - 40 && index < murid.length - 1) {
+                    doc.addPage();
+                    startY = 20;
+                    col = 0;
+                }
+            });
+
+            handlePDFOutput(doc, `Barcode_Massal_${kelas.replace(/\s+/g, '_')}.pdf`);
         };
 
         window.exportGlobalPDF = () => {

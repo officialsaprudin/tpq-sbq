@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aplikasi Progres Santri</title>
+    <link rel="icon" type="image/png" href="poto.png">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
@@ -115,7 +116,6 @@
                     <h2 id="dash-title" class="text-2xl font-bold text-gray-800">Nama Lembaga</h2>
                     <button id="btn-edit-lembaga" onclick="openLembagaModal()" class="ml-3 bg-gray-200 text-gray-600 px-2 py-1 rounded text-xs font-bold hover:bg-gray-300 hidden"><i class="fa-solid fa-pen"></i> Edit</button>
                 </div>
-                <!-- Filter Dashboard -->
                 <div class="flex items-center space-x-2">
                     <span class="text-sm font-bold text-gray-600"><i class="fa-solid fa-filter"></i> Filter:</span>
                     <select id="filter-kelas-dash" class="border border-indigo-200 px-3 py-1.5 rounded-lg text-sm bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium">
@@ -155,15 +155,15 @@
                     <select id="filter-kelas-tabel" class="border px-3 py-2 rounded-lg text-sm bg-white shadow-sm focus:outline-none">
                         <option value="Semua">Semua Kelas</option>
                     </select>
-                    <!-- Tombol Ekspor Barcode Massal -->
-                    <button id="btn-mass-barcode" onclick="exportMassBarcode()" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold shadow hover:bg-blue-700 transition hidden">
-                        <i class="fa-solid fa-file-pdf mr-1"></i> Barcode
+                    <!-- Tombol Cetak Massal (Baru) -->
+                    <button id="btn-mass-barcode" onclick="exportMassBarcode()" class="bg-blue-500 text-white px-4 py-2 rounded-lg font-bold shadow hover:bg-blue-600 transition hidden whitespace-nowrap">
+                        <i class="fa-solid fa-print mr-1"></i> Barcode
                     </button>
-                    <!-- Tombol Scanner Barcode -->
-                    <button id="btn-scan-absen" onclick="openScanner()" class="bg-green-600 text-white px-4 py-2 rounded-lg font-bold shadow hover:bg-green-700 transition">
+                    <!-- Tombol Scanner -->
+                    <button id="btn-scan-absen" onclick="openScanner()" class="bg-green-600 text-white px-4 py-2 rounded-lg font-bold shadow hover:bg-green-700 transition whitespace-nowrap">
                         <i class="fa-solid fa-qrcode mr-1"></i> Scan Absen
                     </button>
-                    <button id="btn-tambah-santri" onclick="openModal('tambah')" class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-bold shadow hover:bg-indigo-700 transition">
+                    <button id="btn-tambah-santri" onclick="openModal('tambah')" class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-bold shadow hover:bg-indigo-700 transition whitespace-nowrap">
                         <i class="fa-solid fa-plus mr-1"></i> Tambah
                     </button>
                 </div>
@@ -224,7 +224,6 @@
             <!-- Area Dinamis untuk Rekap -->
             <div id="rekap-container" class="space-y-8"></div>
         </div>
-
     </main>
 
     <!-- Modal Form (Tambah/Edit Santri) -->
@@ -332,7 +331,7 @@
         </div>
     </div>
 
-    <!-- Modal Barcode (Single) -->
+    <!-- Modal Barcode Single -->
     <div id="modal-barcode" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden flex flex-col items-center">
             <div class="bg-indigo-600 w-full px-6 py-4 flex justify-between items-center text-white">
@@ -352,7 +351,25 @@
         </div>
     </div>
 
-    <!-- Modal Edit Lembaga -->
+    <!-- Modal Scanner Barcode -->
+    <div id="modal-scanner" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col">
+            <div class="bg-green-600 px-6 py-4 flex justify-between items-center text-white">
+                <h3 class="font-bold text-lg"><i class="fa-solid fa-qrcode mr-2"></i>Scan Barcode Absen</h3>
+                <button onclick="closeScanner()" class="hover:text-gray-300"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="p-4 flex flex-col flex-grow h-[70vh]">
+                <div id="reader" class="w-full rounded-lg overflow-hidden border-2 border-green-200"></div>
+                <p class="text-[10px] text-center text-gray-500 font-bold mt-2">Cooldown 2 Menit/Anak. Nyeken berurutan otomatis masuk!</p>
+                <!-- Papan Log History -->
+                <div id="scan-log" class="mt-3 flex-grow overflow-y-auto bg-gray-50 border border-gray-200 rounded-lg p-2 text-xs space-y-1 custom-scrollbar">
+                    <div class="text-gray-400 italic text-center py-2">Riwayat scan hari ini akan muncul di sini...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Jurnal & Lembaga -->
     <div id="modal-lembaga" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden">
             <div class="bg-indigo-600 px-6 py-4 flex justify-between items-center text-white">
@@ -372,7 +389,6 @@
         </div>
     </div>
 
-    <!-- Modal Jurnal Harian -->
     <div id="modal-jurnal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="bg-indigo-600 px-6 py-4 flex justify-between items-center text-white">
@@ -405,34 +421,15 @@
         </div>
     </div>
 
-    <!-- Modal Scanner Barcode -->
-    <div id="modal-scanner" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
-            <div class="bg-green-600 px-6 py-4 flex justify-between items-center text-white flex-shrink-0">
-                <h3 class="font-bold text-lg"><i class="fa-solid fa-qrcode mr-2"></i>Scan Barcode / QR</h3>
-                <button onclick="closeScanner()" class="hover:text-gray-300"><i class="fa-solid fa-xmark text-xl"></i></button>
-            </div>
-            <div class="p-4 flex-grow overflow-y-auto">
-                <div id="reader" class="w-full rounded-lg overflow-hidden border-2 border-green-200"></div>
-                <p class="text-sm text-center text-gray-600 font-bold mt-4 mb-2">Arahkan kamera ke Barcode / QR ID Card Santri</p>
-                <div class="mt-4 bg-gray-50 rounded-lg p-2 border border-gray-200 h-40 overflow-y-auto custom-scrollbar" id="scan-log">
-                    <div class="text-center text-xs text-gray-400 mt-12">Riwayat scan cepat akan muncul di sini...</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-5 right-5 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg font-bold transition-opacity duration-300 opacity-0 pointer-events-none z-50">
         Berhasil disimpan!
     </div>
 
-    <!-- Firebase SDK (Modular v9) -->
     <script type="module">
-        const is_preview = false; // Set ke false untuk produksi (Firebase Asli)
-        
-        // GANTI EMAIL INI DENGAN EMAIL ANDA AGAR OTOMATIS JADI ADMIN
+        const is_preview = false; 
         const ADMIN_EMAILS = ['admin@ngaji.com', 'saprudin@ngaji.com']; 
+        let isFirstRender = true; // Kunci biar dropdown default jalan sekali saat login
 
         const firebaseConfig = {
   apiKey: "AIzaSyCfapSUazt_uCVVI5uttatd2iGR7DyLk54",
@@ -442,7 +439,7 @@
   messagingSenderId: "691555762548",
   appId: "1:691555762548:web:f7037fd32e00abf488ac21",
   measurementId: "G-NHSDJKXSD6"
-        };
+};
 
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -456,64 +453,44 @@
 
         if (!is_preview) {
             const app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-            auth = getAuth(app);
+            db = getFirestore(app); auth = getAuth(app);
         }
 
         let dataStore = [];
         let jurnalStore = [];
         let classesSet = new Set();
         let pengajarMap = {};
-        
         let authMode = 'login'; 
         
-        if (is_preview) {
-            document.getElementById('demo-hint').classList.remove('hidden');
-        }
+        if (is_preview) document.getElementById('demo-hint').classList.remove('hidden');
 
         window.toggleAuthMode = () => {
             authMode = authMode === 'login' ? 'register' : 'login';
             document.getElementById('auth-title').innerText = authMode === 'login' ? 'Masuk ke Akun' : 'Daftar Akun Baru';
-            
             if(authMode === 'register') {
                 document.getElementById('signup-fields').classList.remove('hidden');
-                document.getElementById('reg-nama').required = true;
-                document.getElementById('reg-kelas').required = true;
+                document.getElementById('reg-nama').required = true; document.getElementById('reg-kelas').required = true;
                 document.getElementById('demo-hint').classList.add('hidden');
-                document.getElementById('auth-btn').innerText = 'Daftar & Masuk';
-                document.getElementById('toggle-auth-text').innerText = 'Sudah punya akun? Masuk di sini';
+                document.getElementById('auth-btn').innerText = 'Daftar & Masuk'; document.getElementById('toggle-auth-text').innerText = 'Sudah punya akun? Masuk di sini';
             } else {
                 document.getElementById('signup-fields').classList.add('hidden');
-                document.getElementById('reg-nama').required = false;
-                document.getElementById('reg-kelas').required = false;
+                document.getElementById('reg-nama').required = false; document.getElementById('reg-kelas').required = false;
                 if (is_preview) document.getElementById('demo-hint').classList.remove('hidden');
-                document.getElementById('auth-btn').innerText = 'Masuk';
-                document.getElementById('toggle-auth-text').innerText = 'Belum punya akun? Daftar di sini';
+                document.getElementById('auth-btn').innerText = 'Masuk'; document.getElementById('toggle-auth-text').innerText = 'Belum punya akun? Daftar di sini';
             }
         };
 
-        window.toggleMobileMenu = () => {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
-        };
+        window.toggleMobileMenu = () => document.getElementById('mobile-menu').classList.toggle('hidden');
 
         window.switchView = (viewId) => {
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
             const targetView = document.getElementById(`view-${viewId}`);
-            if(targetView) {
-                targetView.style.display = ''; 
-                targetView.classList.add('active');
-            }
+            if(targetView) { targetView.style.display = ''; targetView.classList.add('active'); }
             
-            if(viewId === 'login') {
-                document.getElementById('main-nav').classList.add('hidden');
-            } else {
-                document.getElementById('main-nav').classList.remove('hidden');
-                localStorage.setItem('activeView', viewId);
-            }
+            if(viewId === 'login') { document.getElementById('main-nav').classList.add('hidden'); } 
+            else { document.getElementById('main-nav').classList.remove('hidden'); localStorage.setItem('activeView', viewId); }
             
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.toggle('bg-indigo-800', btn.dataset.target === viewId);
-            });
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.toggle('bg-indigo-800', btn.dataset.target === viewId));
             
             if(viewId === 'rekap') renderRekap();
             if(viewId === 'dashboard' || viewId === 'data-santri') renderAll();
@@ -523,24 +500,18 @@
             if(!riwayat || riwayat.length === 0) return '<span class="text-xs text-gray-400 italic">Belum ada bintang</span>';
             let curr = new Date();
             let first = curr.getDate() - curr.getDay() + (curr.getDay() === 0 ? -6 : 1); 
-            let monday = new Date(curr.setDate(first));
-            monday.setHours(0,0,0,0);
-            
-            let stars = 0;
-            let adaAbsen = false;
+            let monday = new Date(curr.setDate(first)); monday.setHours(0,0,0,0);
+            let stars = 0; let adaAbsen = false;
 
             riwayat.forEach(r => {
                 let rDate = new Date(r.timestamp);
                 if(rDate >= monday && rDate.getDay() >= 1 && rDate.getDay() <= 5) {
-                    if (r.kehadiran === 'Hadir') stars++;
-                    else adaAbsen = true; 
+                    if (r.kehadiran === 'Hadir') stars++; else adaAbsen = true; 
                 }
             });
 
             if (adaAbsen) return '<span class="text-xs text-red-500 font-bold bg-red-100 px-2 py-0.5 rounded">Hangus (Ada Absen)</span>';
-            
-            stars = Math.min(stars, 5);
-            return stars > 0 ? '<span class="text-yellow-400 text-sm">' + '⭐'.repeat(stars) + '</span>' : '<span class="text-xs text-gray-400 italic">Belum ada bintang</span>';
+            stars = Math.min(stars, 5); return stars > 0 ? '<span class="text-yellow-400 text-sm">' + '⭐'.repeat(stars) + '</span>' : '<span class="text-xs text-gray-400 italic">Belum ada bintang</span>';
         }
 
         function getStatusBadge(status) {
@@ -557,22 +528,29 @@
 
         function extractClasses() {
             classesSet.clear();
+            // Ambil dari murid yang ada & dari Ustadz terdaftar biar nggak ada kelas Ghaib
             dataStore.forEach(s => { if(s.kelas) classesSet.add(s.kelas); });
+            Object.keys(pengajarMap).forEach(cls => classesSet.add(cls));
+            if (currentUserRole === 'ustadz') {
+                currentUserClasses.forEach(cls => { if(cls !== 'Semua') classesSet.add(cls); });
+            }
             
             const filterTabel = document.getElementById('filter-kelas-tabel');
             const filterRekap = document.getElementById('filter-kelas-rekap');
             const filterDash = document.getElementById('filter-kelas-dash');
             
-            let valTabel = filterTabel.value;
-            let valRekap = filterRekap.value;
-            let valDash = filterDash.value;
+            let valTabel = filterTabel.value; let valRekap = filterRekap.value; let valDash = filterDash.value;
             
+            // PAKSA OVERRIDE DEFAULT SAAT AWAL LOGIN
+            if (currentUserRole === 'ustadz' && isFirstRender) {
+                valTabel = currentUserClasses[0]; valRekap = currentUserClasses[0]; valDash = currentUserClasses[0];
+                isFirstRender = false;
+            }
+
             let optionsHTML = '<option value="Semua">Semua Kelas</option>';
             Array.from(classesSet).sort().forEach(cls => { optionsHTML += `<option value="${cls}">${cls}</option>`; });
             
-            filterTabel.innerHTML = optionsHTML;
-            filterRekap.innerHTML = optionsHTML;
-            filterDash.innerHTML = optionsHTML;
+            filterTabel.innerHTML = optionsHTML; filterRekap.innerHTML = optionsHTML; filterDash.innerHTML = optionsHTML;
 
             filterTabel.value = classesSet.has(valTabel) ? valTabel : (currentUserRole === 'ustadz' ? currentUserClasses[0] : "Semua");
             filterRekap.value = classesSet.has(valRekap) ? valRekap : (currentUserRole === 'ustadz' ? currentUserClasses[0] : "Semua");
@@ -581,197 +559,134 @@
 
         function renderAll() {
             extractClasses();
-            
             const btnTambah = document.getElementById('btn-tambah-santri');
             const btnScan = document.getElementById('btn-scan-absen');
-            const btnMass = document.getElementById('btn-mass-barcode');
+            const btnMassBarcode = document.getElementById('btn-mass-barcode');
             
             if(btnTambah) btnTambah.style.display = currentUserRole === 'admin' ? 'none' : 'block';
             if(btnScan) btnScan.style.display = currentUserRole === 'admin' ? 'none' : 'block';
             
-            // Mass Barcode Export Button Logic
-            if(btnMass) {
-                const selectedClass = document.getElementById('filter-kelas-tabel').value;
-                btnMass.style.display = (currentUserRole === 'admin' || selectedClass === 'Semua') ? 'none' : 'block';
-            }
+            const selectedClass = document.getElementById('filter-kelas-tabel').value;
+            if(btnMassBarcode) btnMassBarcode.style.display = (selectedClass === "Semua" || currentUserRole === 'admin') ? 'none' : 'block';
 
             document.getElementById('dash-title').innerText = currentLembagaName;
             const btnEditLembaga = document.getElementById('btn-edit-lembaga');
             if(btnEditLembaga) btnEditLembaga.style.display = currentUserRole === 'admin' ? 'inline-block' : 'none';
 
-            // 1. Dashboard Render
             let had = 0, iz = 0, alp = 0;
             const dashCards = document.getElementById('dashboard-cards');
             const dashFilter = document.getElementById('filter-kelas-dash').value;
             dashCards.innerHTML = '';
             
             let filteredDash = dataStore.filter(s => dashFilter === "Semua" || s.kelas === dashFilter);
-            
             filteredDash.forEach(s => {
-                if(s.kehadiran === 'Hadir') had++;
-                else if(s.kehadiran === 'Izin' || s.kehadiran === 'Sakit') iz++;
-                else if(s.kehadiran === 'Alpa') alp++;
-
-                dashCards.innerHTML += `
-                    <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 ${s.kehadiran === 'Hadir' ? 'border-green-500' : (s.kehadiran === 'Alpa' ? 'border-red-500' : 'border-yellow-500')}">
-                        <div class="flex justify-between items-start mb-2">
-                            <div>
-                                <h4 class="font-bold text-gray-800">${s.nama}</h4>
-                                <p class="text-xs text-gray-500">${s.kelas || '-'}</p>
-                            </div>
-                            ${getStatusBadge(s.kehadiran)}
-                        </div>
-                        <div class="mb-2">Bintang Sen-Jum: ${getStars(s.riwayat)}</div>
-                        <div class="text-sm text-gray-600 space-y-1">
-                            <p><i class="fa-solid fa-book-open text-indigo-400 mr-2"></i>${s.jilid} - Hal ${s.halaman}</p>
-                            <p><i class="fa-solid fa-headphones text-indigo-400 mr-2"></i>${s.surah} (Ayat ${s.ayat})</p>
-                        </div>
-                    </div>
-                `;
+                if(s.kehadiran === 'Hadir') had++; else if(s.kehadiran === 'Izin' || s.kehadiran === 'Sakit') iz++; else if(s.kehadiran === 'Alpa') alp++;
+                dashCards.innerHTML += `<div class="bg-white p-4 rounded-xl shadow-sm border-l-4 ${s.kehadiran === 'Hadir' ? 'border-green-500' : (s.kehadiran === 'Alpa' ? 'border-red-500' : 'border-yellow-500')}"><div class="flex justify-between items-start mb-2"><div><h4 class="font-bold text-gray-800">${s.nama}</h4><p class="text-xs text-gray-500">${s.kelas || '-'}</p></div>${getStatusBadge(s.kehadiran)}</div><div class="mb-2">Bintang Sen-Jum: ${getStars(s.riwayat)}</div><div class="text-sm text-gray-600 space-y-1"><p><i class="fa-solid fa-book-open text-indigo-400 mr-2"></i>${s.jilid} - Hal ${s.halaman}</p><p><i class="fa-solid fa-headphones text-indigo-400 mr-2"></i>${s.surah} (Ayat ${s.ayat})</p></div></div>`;
             });
-            
             document.getElementById('dash-total').innerText = filteredDash.length;
-            document.getElementById('dash-hadir').innerText = had;
-            document.getElementById('dash-izin').innerText = iz;
-            document.getElementById('dash-alpa').innerText = alp;
+            document.getElementById('dash-hadir').innerText = had; document.getElementById('dash-izin').innerText = iz; document.getElementById('dash-alpa').innerText = alp;
 
-            // 2. Data Santri Table
-            const tbody = document.getElementById('santri-tbody');
-            const selectedClass = document.getElementById('filter-kelas-tabel').value;
-            tbody.innerHTML = '';
-            
+            const tbody = document.getElementById('santri-tbody'); tbody.innerHTML = '';
             dataStore.filter(s => selectedClass === "Semua" || s.kelas === selectedClass).forEach(s => {
-                let actionButtons = `
-                    <button onclick="showBarcode('${s.id}', '${s.nama}')" class="text-gray-700 hover:text-black" title="Lihat Barcode"><i class="fa-solid fa-barcode"></i></button>
-                    <button onclick="showHistory('${s.id}')" class="text-green-500 hover:text-green-700" title="Riwayat"><i class="fa-solid fa-clock-rotate-left"></i></button>
-                    <button onclick="exportRapor('${s.id}')" class="text-red-500 hover:text-red-700" title="Cetak Rapor"><i class="fa-solid fa-file-pdf"></i></button>
-                `;
-                if(currentUserRole === 'ustadz' && currentUserClasses.includes(s.kelas)) {
-                    actionButtons += `
-                        <button onclick="editSantri('${s.id}')" class="text-blue-500 hover:text-blue-700" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button onclick="deleteSantri('${s.id}')" class="text-red-300 hover:text-red-600" title="Hapus"><i class="fa-solid fa-trash"></i></button>
-                    `;
-                }
-
+                let actionButtons = `<button onclick="showBarcode('${s.id}', '${s.nama}')" class="text-gray-700 hover:text-black" title="Lihat Barcode"><i class="fa-solid fa-barcode"></i></button> <button onclick="showHistory('${s.id}')" class="text-green-500 hover:text-green-700" title="Riwayat"><i class="fa-solid fa-clock-rotate-left"></i></button> <button onclick="exportRapor('${s.id}')" class="text-red-500 hover:text-red-700" title="Cetak Rapor"><i class="fa-solid fa-file-pdf"></i></button>`;
+                if(currentUserRole === 'ustadz' && currentUserClasses.includes(s.kelas)) { actionButtons += ` <button onclick="editSantri('${s.id}')" class="text-blue-500 hover:text-blue-700" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button> <button onclick="deleteSantri('${s.id}')" class="text-red-300 hover:text-red-600" title="Hapus"><i class="fa-solid fa-trash"></i></button>`; }
                 let namaWaliKelas = pengajarMap[s.kelas] || '-';
-                let badgeHafalan = getKetBadge(s.nilaiHafalan || s.keterangan);
-                let badgeJilid = getKetBadge(s.nilaiJilid || s.keterangan);
-
-                tbody.innerHTML += `
-                    <tr class="border-b hover:bg-gray-50">
-                        <td class="p-4 whitespace-nowrap">
-                            <div class="font-bold text-gray-800">${s.nama}</div>
-                            <div class="text-[9px] text-gray-400 font-mono mt-1">ID: ${s.id}</div>
-                        </td>
-                        <td class="p-4 whitespace-nowrap">
-                            <div class="font-medium text-gray-800">${s.kelas || '-'}</div>
-                            <div class="text-xs text-indigo-600 font-bold mt-0.5"><i class="fa-solid fa-user-tie mr-1"></i> ${namaWaliKelas}</div>
-                        </td>
-                        <td class="p-4 whitespace-nowrap">${getStatusBadge(s.kehadiran)}</td>
-                        <td class="p-4 whitespace-nowrap">${s.surah} <br><span class="text-gray-500 text-[11px]">(Ayat ${s.ayat})</span></td>
-                        <td class="p-4 whitespace-nowrap">${s.jilid} <br><span class="text-gray-500 text-[11px]">(Hal ${s.halaman})</span></td>
-                        <td class="p-4 whitespace-nowrap">
-                            <div class="mb-1 flex items-center space-x-1"><span class="text-[10px] text-gray-400 w-6">Haf:</span> ${badgeHafalan}</div>
-                            <div class="flex items-center space-x-1"><span class="text-[10px] text-gray-400 w-6">Jld:</span> ${badgeJilid}</div>
-                        </td>
-                        <td class="p-4 text-xs italic text-gray-600 break-words whitespace-normal min-w-[150px]">${s.catatan || '-'}</td>
-                        <td class="p-4 text-center whitespace-nowrap">
-                            <div class="flex justify-center space-x-3 text-lg items-center">
-                                ${actionButtons}
-                            </div>
-                        </td>
-                    </tr>
-                `;
+                tbody.innerHTML += `<tr class="border-b hover:bg-gray-50"><td class="p-4 whitespace-nowrap"><div class="font-bold text-gray-800">${s.nama}</div><div class="text-[9px] text-gray-400 font-mono mt-1">ID: ${s.id}</div></td><td class="p-4 whitespace-nowrap"><div class="font-medium text-gray-800">${s.kelas || '-'}</div><div class="text-xs text-indigo-600 font-bold mt-0.5"><i class="fa-solid fa-user-tie mr-1"></i> ${namaWaliKelas}</div></td><td class="p-4 whitespace-nowrap">${getStatusBadge(s.kehadiran)}</td><td class="p-4 whitespace-nowrap">${s.surah} <br><span class="text-gray-500 text-[11px]">(Ayat ${s.ayat})</span></td><td class="p-4 whitespace-nowrap">${s.jilid} <br><span class="text-gray-500 text-[11px]">(Hal ${s.halaman})</span></td><td class="p-4 whitespace-nowrap"><div class="mb-1 flex items-center space-x-1"><span class="text-[10px] text-gray-400 w-6">Haf:</span> ${getKetBadge(s.nilaiHafalan || s.keterangan)}</div><div class="flex items-center space-x-1"><span class="text-[10px] text-gray-400 w-6">Jld:</span> ${getKetBadge(s.nilaiJilid || s.keterangan)}</div></td><td class="p-4 text-xs italic text-gray-600 break-words whitespace-normal min-w-[150px]">${s.catatan || '-'}</td><td class="p-4 text-center whitespace-nowrap"><div class="flex justify-center space-x-3 text-lg items-center">${actionButtons}</div></td></tr>`;
             });
 
-            // 3. Menu Kelas
-            const kelasCont = document.getElementById('kelas-container');
-            kelasCont.innerHTML = '';
+            const kelasCont = document.getElementById('kelas-container'); kelasCont.innerHTML = '';
             Array.from(classesSet).sort().forEach(cls => {
                 const murid = dataStore.filter(s => s.kelas === cls);
-                kelasCont.innerHTML += `
-                    <div class="bg-white rounded-xl shadow p-5 border-t-4 ${currentUserClasses.includes(cls) ? 'border-indigo-500' : 'border-gray-200'}">
-                        <div class="flex justify-between items-center mb-4 border-b pb-2">
-                            <h3 class="font-bold text-lg text-indigo-700">${cls}</h3>
-                            <button onclick="exportKelas('${cls}')" class="bg-red-100 text-red-600 px-2 py-1 rounded text-xs font-bold hover:bg-red-200"><i class="fa-solid fa-file-pdf mr-1"></i> Cetak</button>
-                        </div>
-                        <p class="text-sm text-gray-500 mb-3"><i class="fa-solid fa-users mr-2"></i>Total: ${murid.length} Santri</p>
-                        <ul class="text-sm space-y-2">
-                            ${murid.map(m => `<li class="flex justify-between"><span>${m.nama}</span> ${getStatusBadge(m.kehadiran)}</li>`).join('')}
-                        </ul>
-                    </div>
-                `;
+                kelasCont.innerHTML += `<div class="bg-white rounded-xl shadow p-5 border-t-4 ${currentUserClasses.includes(cls) ? 'border-indigo-500' : 'border-gray-200'}"><div class="flex justify-between items-center mb-4 border-b pb-2"><h3 class="font-bold text-lg text-indigo-700">${cls}</h3><button onclick="exportKelas('${cls}')" class="bg-red-100 text-red-600 px-2 py-1 rounded text-xs font-bold hover:bg-red-200"><i class="fa-solid fa-file-pdf mr-1"></i> Cetak</button></div><p class="text-sm text-gray-500 mb-3"><i class="fa-solid fa-users mr-2"></i>Total: ${murid.length} Santri</p><ul class="text-sm space-y-2">${murid.map(m => `<li class="flex justify-between"><span>${m.nama}</span> ${getStatusBadge(m.kehadiran)}</li>`).join('')}</ul></div>`;
             });
         }
 
         document.getElementById('filter-kelas-tabel').addEventListener('change', renderAll);
         document.getElementById('filter-kelas-dash').addEventListener('change', renderAll);
         
-        // ==========================================
-        // SCAN & GENERATE BARCODE
-        // ==========================================
         let html5QrcodeScanner = null;
-        let scanCooldowns = {};
+        let scanHistoryMap = {}; // Penyimpanan Waktu Scan per ID Santri
 
         window.showBarcode = (id, nama) => {
             document.getElementById('barcode-nama').innerText = nama;
             JsBarcode("#barcode-canvas", id, { format: "CODE128", lineColor: "#000", width: 2.5, height: 60, displayValue: true, fontSize: 16 });
             document.getElementById('modal-barcode').classList.remove('hidden');
         };
-
         window.closeBarcode = () => document.getElementById('modal-barcode').classList.add('hidden');
 
         window.printBarcode = () => {
             const printContent = document.getElementById('barcode-print-area').innerHTML;
             document.body.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh;"><div style="border: 2px solid #000; padding: 20px; text-align: center; border-radius: 10px;">${printContent}</div></div>`;
-            window.print();
-            window.location.reload(); 
+            window.print(); window.location.reload(); 
         };
+
+        window.exportMassBarcode = () => {
+            const kls = document.getElementById('filter-kelas-tabel').value;
+            if(kls === "Semua") return;
+            const murid = dataStore.filter(x => x.kelas === kls);
+            if(murid.length === 0) return alert("Tidak ada santri di kelas ini.");
+
+            if(!window.jspdf) return;
+            const doc = new window.jspdf.jsPDF();
+            doc.setFontSize(16); doc.text(`ID Card Barcode: ${kls}`, 105, 15, { align: 'center' });
+            
+            let startX = 20, startY = 30, col = 0;
+            murid.forEach((m, index) => {
+                if (startY > 270) { doc.addPage(); startY = 20; col = 0; }
+                let canvas = document.createElement('canvas');
+                JsBarcode(canvas, m.id, { format: "CODE128", displayValue: true, fontSize: 14, width: 2, height: 40 });
+                let imgData = canvas.toDataURL("image/png");
+                
+                doc.setFontSize(10); doc.text(m.nama, startX + 35, startY - 2, { align: 'center' });
+                doc.addImage(imgData, 'PNG', startX, startY, 70, 20);
+                
+                col++;
+                if(col === 2) { col = 0; startX = 20; startY += 40; } else { startX = 110; }
+            });
+            handlePDFOutput(doc, `Barcode_Massal_${kls.replace(/\s+/g, '_')}.pdf`);
+        }
 
         window.openScanner = () => {
             if(currentUserRole === 'admin') return; 
-            document.getElementById('scan-log').innerHTML = '<div class="text-center text-xs text-gray-400 mt-12">Riwayat scan cepat akan muncul di sini...</div>';
             document.getElementById('modal-scanner').classList.remove('hidden');
+            const logBox = document.getElementById('scan-log');
+            logBox.innerHTML = '<div class="text-gray-400 italic text-center py-2">Riwayat scan hari ini akan muncul di sini...</div>';
             
             html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: {width: 250, height: 250} }, false);
             html5QrcodeScanner.render(onScanSuccess, onScanFailure);
         };
-
         window.closeScanner = () => {
             if(html5QrcodeScanner) html5QrcodeScanner.clear().catch(e => console.error(e));
             document.getElementById('modal-scanner').classList.add('hidden');
         };
 
+        function logScanUI(msg, isSuccess) {
+            const logBox = document.getElementById('scan-log');
+            if(logBox.innerHTML.includes('Riwayat scan hari ini')) logBox.innerHTML = '';
+            const time = new Date().toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+            const color = isSuccess ? 'text-green-600' : 'text-red-500';
+            const icon = isSuccess ? 'fa-check-circle' : 'fa-xmark-circle';
+            logBox.innerHTML = `<div class="${color} font-bold p-1 border-b"><i class="fa-solid ${icon} mr-1"></i> [${time}] ${msg}</div>` + logBox.innerHTML;
+        }
+
         async function onScanSuccess(decodedText, decodedResult) {
             const studentId = decodedText;
             const now = Date.now();
-
-            // SMART COOLDOWN (2 Menit per Santri)
-            if (scanCooldowns[studentId] && (now - scanCooldowns[studentId] < 120000)) {
-                return; // Abaikan diam-diam
+            
+            // Cooldown 2 Menit (120,000 ms) per ID Santri 
+            if (scanHistoryMap[studentId] && (now - scanHistoryMap[studentId] < 120000)) {
+                return; // Cuek (Tidak Double Scan)
             }
+            scanHistoryMap[studentId] = now;
 
             const s = dataStore.find(x => x.id === studentId);
-            if(!s) {
-                scanCooldowns[studentId] = now - 117000; // Penalti 3 detik aja buat error
-                showToast("Santri tidak ditemukan!", "red"); return;
-            }
+            if(!s) { logScanUI(`ID ${studentId} Tidak Dikenal!`, false); return; }
             if(currentUserRole === 'ustadz' && !currentUserClasses.includes(s.kelas)) {
-                scanCooldowns[studentId] = now - 117000;
-                showToast("Akses ditolak! Bukan kelas Anda.", "red"); return;
+                logScanUI(`${s.nama} - Ditolak (Beda Kelas)`, false); return;
             }
-
-            // Kunci scan anak ini selama 2 menit
-            scanCooldowns[studentId] = now;
 
             const currentTimestamp = new Date().toISOString();
             const newData = { kehadiran: 'Hadir', timestamp: currentTimestamp, catatan: 'Hadir via Scan Barcode' };
-
-            // UPDATE UI LOG RAPID SCAN
-            const logContainer = document.getElementById('scan-log');
-            if (logContainer.innerHTML.includes('akan muncul di sini')) logContainer.innerHTML = '';
-            const timeStr = new Date().toLocaleTimeString('id-ID');
-            logContainer.innerHTML = `<div class="flex justify-between items-center bg-white p-2 mb-2 rounded shadow-sm text-sm border-l-4 border-green-500"><span class="font-bold">${s.nama}</span><span class="text-xs text-green-600"><i class="fa-solid fa-check-circle mr-1"></i>Hadir (${timeStr})</span></div>` + logContainer.innerHTML;
 
             if (is_preview) {
                 if(!s.riwayat) s.riwayat = [];
@@ -784,9 +699,7 @@
                 if(existingIndex !== -1) s.riwayat[existingIndex] = { ...s.riwayat[existingIndex], ...newData };
                 else s.riwayat.unshift(mergedData);
                 
-                s.kehadiran = 'Hadir';
-                renderAll();
-                showToast(`✅ Hadir: ${s.nama}`, "green");
+                s.kehadiran = 'Hadir'; renderAll(); logScanUI(`${s.nama} - BERHASIL HADIR`, true);
             } else {
                 try {
                     const santriRef = doc(db, "santri", studentId);
@@ -800,146 +713,66 @@
                     else riwayatBaru.unshift(mergedData);
                     
                     await setDoc(santriRef, { kehadiran: 'Hadir', riwayat: riwayatBaru }, { merge: true });
-                    showToast(`✅ Hadir: ${s.nama}`, "green");
-                } catch(err) { alert(err.message); }
+                    logScanUI(`${s.nama} - BERHASIL HADIR`, true);
+                } catch(err) { logScanUI(`Gagal: ${err.message}`, false); }
             }
         }
+        function onScanFailure(error) { /* Abaikan scanner mencari.. */ }
 
-        function onScanFailure(error) { /* Continue looping */ }
-
-        // ==========================================
-        // AUTO-ALPA LOGIC
-        // ==========================================
-        function autoAlpaCheck() {
-            const todayStr = new Date().toISOString().split('T')[0];
-            let hasChanges = false;
-            
-            dataStore.forEach(s => {
-                if (!s.riwayat) s.riwayat = [];
-                // Cek apakah hari ini ada riwayat ngaji
-                const hasToday = s.riwayat.some(r => r.timestamp.startsWith(todayStr));
-                
-                if (!hasToday) {
-                    const alpaData = {
-                        kehadiran: 'Alpa',
-                        jilid: s.jilid || '-', halaman: s.halaman || '-',
-                        surah: s.surah || '-', ayat: s.ayat || '-',
-                        nilaiHafalan: s.nilaiHafalan || '-', nilaiJilid: s.nilaiJilid || '-',
-                        catatan: 'Belum Scan Absen',
-                        timestamp: new Date().toISOString()
-                    };
-                    s.riwayat.unshift(alpaData);
-                    s.kehadiran = 'Alpa';
-                    hasChanges = true;
-                    
-                    if (!is_preview) {
-                        const santriRef = doc(db, "santri", s.id);
-                        setDoc(santriRef, { kehadiran: 'Alpa', riwayat: s.riwayat }, { merge: true });
-                    }
-                }
-            });
-            
-            if (hasChanges && is_preview) renderAll();
-        }
-
-        // ==========================================
-        // MODALS & CRUD
-        // ==========================================
         window.openModal = (mode) => {
             if(currentUserRole === 'admin') return;
             document.getElementById('santri-form').reset();
             document.getElementById('form-id').value = '';
             document.getElementById('modal-title').innerText = 'Tambah Santri Baru';
             
-            const selectKelas = document.getElementById('form-kelas');
-            selectKelas.innerHTML = '';
+            const selectKelas = document.getElementById('form-kelas'); selectKelas.innerHTML = '';
             Array.from(classesSet).sort().forEach(cls => { selectKelas.innerHTML += `<option value="${cls}">${cls}</option>`; });
             if(currentUserClasses.length > 0) selectKelas.value = currentUserClasses[0];
 
-            document.getElementById('form-halaman').value = "-";
-            document.getElementById('form-surah').value = "-";
-            document.getElementById('form-ayat').value = "-";
-            document.getElementById('form-nilai-hafalan').value = "Lancar";
-            document.getElementById('form-nilai-jilid').value = "Lancar";
+            document.getElementById('form-halaman').value = "-"; document.getElementById('form-surah').value = "-"; document.getElementById('form-ayat').value = "-";
+            document.getElementById('form-nilai-hafalan').value = "Lancar"; document.getElementById('form-nilai-jilid').value = "Lancar";
             document.getElementById('modal-form').classList.remove('hidden');
         };
-
         window.closeModal = () => document.getElementById('modal-form').classList.add('hidden');
 
         window.editSantri = (id) => {
             if(currentUserRole === 'admin') return;
             const s = dataStore.find(x => x.id === id);
             if(currentUserRole === 'ustadz' && !currentUserClasses.includes(s.kelas)) { alert("Akses Ditolak."); return; }
-            
             if(s) {
-                document.getElementById('form-id').value = s.id;
-                document.getElementById('form-nama').value = s.nama;
-                
-                const selectKelas = document.getElementById('form-kelas');
-                selectKelas.innerHTML = '';
+                document.getElementById('form-id').value = s.id; document.getElementById('form-nama').value = s.nama;
+                const selectKelas = document.getElementById('form-kelas'); selectKelas.innerHTML = '';
                 Array.from(classesSet).sort().forEach(cls => { selectKelas.innerHTML += `<option value="${cls}">${cls}</option>`; });
                 selectKelas.value = s.kelas;
-
-                document.getElementById('form-kehadiran').value = s.kehadiran;
-                document.getElementById('form-jilid').value = s.jilid;
-                document.getElementById('form-halaman').value = s.halaman;
-                document.getElementById('form-surah').value = s.surah;
-                document.getElementById('form-ayat').value = s.ayat;
-                document.getElementById('form-nilai-hafalan').value = s.nilaiHafalan || s.keterangan || 'Lancar';
-                document.getElementById('form-nilai-jilid').value = s.nilaiJilid || s.keterangan || 'Lancar';
-                document.getElementById('form-catatan').value = s.catatan || '';
-                document.getElementById('modal-title').innerText = 'Update Progres Santri';
-                document.getElementById('modal-form').classList.remove('hidden');
+                document.getElementById('form-kehadiran').value = s.kehadiran; document.getElementById('form-jilid').value = s.jilid; document.getElementById('form-halaman').value = s.halaman; document.getElementById('form-surah').value = s.surah; document.getElementById('form-ayat').value = s.ayat; document.getElementById('form-nilai-hafalan').value = s.nilaiHafalan || s.keterangan || 'Lancar'; document.getElementById('form-nilai-jilid').value = s.nilaiJilid || s.keterangan || 'Lancar'; document.getElementById('form-catatan').value = s.catatan || '';
+                document.getElementById('modal-title').innerText = 'Update Progres Santri'; document.getElementById('modal-form').classList.remove('hidden');
             }
         };
 
         document.getElementById('santri-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             if(currentUserRole === 'admin') return;
-            
             let finalKelas = document.getElementById('form-kelas').value;
             const id = document.getElementById('form-id').value || 'ST' + Math.floor(100000 + Math.random() * 900000); 
             const currentTimestamp = new Date().toISOString();
-
-            const newData = {
-                id: id, nama: document.getElementById('form-nama').value, kelas: finalKelas,
-                kehadiran: document.getElementById('form-kehadiran').value, jilid: document.getElementById('form-jilid').value,
-                halaman: document.getElementById('form-halaman').value, surah: document.getElementById('form-surah').value,
-                ayat: document.getElementById('form-ayat').value, nilaiHafalan: document.getElementById('form-nilai-hafalan').value,
-                nilaiJilid: document.getElementById('form-nilai-jilid').value, catatan: document.getElementById('form-catatan').value,
-                timestamp: currentTimestamp 
-            };
+            const newData = { id: id, nama: document.getElementById('form-nama').value, kelas: finalKelas, kehadiran: document.getElementById('form-kehadiran').value, jilid: document.getElementById('form-jilid').value, halaman: document.getElementById('form-halaman').value, surah: document.getElementById('form-surah').value, ayat: document.getElementById('form-ayat').value, nilaiHafalan: document.getElementById('form-nilai-hafalan').value, nilaiJilid: document.getElementById('form-nilai-jilid').value, catatan: document.getElementById('form-catatan').value, timestamp: currentTimestamp };
 
             if (is_preview) {
                 let existing = dataStore.find(x => x.id === id);
                 if(existing) {
                     if(!existing.riwayat) existing.riwayat = [];
-                    let existingIndex = existing.riwayat.findIndex(r => {
-                        const d1 = new Date(r.timestamp), d2 = new Date();
-                        return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
-                    });
-                    if(existingIndex !== -1) existing.riwayat[existingIndex] = { ...existing.riwayat[existingIndex], ...newData };
-                    else existing.riwayat.unshift({...newData});
+                    let existingIndex = existing.riwayat.findIndex(r => { const d1 = new Date(r.timestamp), d2 = new Date(); return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate(); });
+                    if(existingIndex !== -1) existing.riwayat[existingIndex] = { ...existing.riwayat[existingIndex], ...newData }; else existing.riwayat.unshift({...newData});
                     Object.assign(existing, newData);
-                } else {
-                    newData.riwayat = [{...newData}];
-                    dataStore.push(newData);
-                }
+                } else { newData.riwayat = [{...newData}]; dataStore.push(newData); }
                 closeModal(); renderAll(); showToast();
             } else {
                 try {
-                    const santriRef = doc(db, "santri", id);
-                    const oldDoc = dataStore.find(x => x.id === id);
+                    const santriRef = doc(db, "santri", id); const oldDoc = dataStore.find(x => x.id === id);
                     let riwayatBaru = oldDoc && oldDoc.riwayat ? oldDoc.riwayat : [];
-                    let existingIndex = riwayatBaru.findIndex(r => {
-                        const d1 = new Date(r.timestamp), d2 = new Date();
-                        return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
-                    });
-                    if(existingIndex !== -1) riwayatBaru[existingIndex] = { ...riwayatBaru[existingIndex], ...newData };
-                    else riwayatBaru.unshift(newData);
-                    
-                    await setDoc(santriRef, { ...newData, riwayat: riwayatBaru });
-                    closeModal(); showToast();
+                    let existingIndex = riwayatBaru.findIndex(r => { const d1 = new Date(r.timestamp), d2 = new Date(); return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate(); });
+                    if(existingIndex !== -1) riwayatBaru[existingIndex] = { ...riwayatBaru[existingIndex], ...newData }; else riwayatBaru.unshift(newData);
+                    await setDoc(santriRef, { ...newData, riwayat: riwayatBaru }); closeModal(); showToast();
                 } catch(err) { alert(err.message); }
             }
         });
@@ -948,77 +781,31 @@
             if(currentUserRole === 'admin') return;
             const s = dataStore.find(x => x.id === id);
             if(currentUserRole === 'ustadz' && s && !currentUserClasses.includes(s.kelas)) return;
-
-            if(confirm("Yakin hapus data santri ini?")) {
-                if(is_preview) {
-                    dataStore = dataStore.filter(x => x.id !== id);
-                    renderAll();
-                } else {
-                    await deleteDoc(doc(db, "santri", id));
-                }
-            }
+            if(confirm("Yakin hapus data santri ini?")) { if(is_preview) { dataStore = dataStore.filter(x => x.id !== id); renderAll(); } else { await deleteDoc(doc(db, "santri", id)); } }
         };
 
         window.showHistory = (id) => {
-            const s = dataStore.find(x => x.id === id);
-            if(!s) return;
-            document.getElementById('hist-nama').innerText = s.nama;
-            const tbody = document.getElementById('hist-tbody');
-            tbody.innerHTML = '';
-            
+            const s = dataStore.find(x => x.id === id); if(!s) return;
+            document.getElementById('hist-nama').innerText = s.nama; const tbody = document.getElementById('hist-tbody'); tbody.innerHTML = '';
             if(s.riwayat && s.riwayat.length > 0) {
                 s.riwayat.forEach(r => {
-                    const dt = new Date(r.timestamp);
-                    const fmt = `${dt.getDate()}/${dt.getMonth()+1}/${dt.getFullYear()} ${dt.getHours()}:${String(dt.getMinutes()).padStart(2,'0')}`;
-                    let badgeHafalan = getKetBadge(r.nilaiHafalan || r.keterangan);
-                    let badgeJilid = getKetBadge(r.nilaiJilid || r.keterangan);
-
-                    tbody.innerHTML += `
-                        <tr class="border-b hover:bg-gray-50">
-                            <td class="p-2 text-gray-600 whitespace-nowrap">${fmt}</td>
-                            <td class="p-2 whitespace-nowrap">${getStatusBadge(r.kehadiran)}</td>
-                            <td class="p-2 whitespace-nowrap">${r.surah} <br><span class="text-gray-500 text-[10px]">(${r.ayat})</span></td>
-                            <td class="p-2 whitespace-nowrap">${r.jilid} <br><span class="text-gray-500 text-[10px]">(Hal ${r.halaman})</span></td>
-                            <td class="p-2 whitespace-nowrap">
-                                <div class="mb-1 flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">H:</span> ${badgeHafalan}</div>
-                                <div class="flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">J:</span> ${badgeJilid}</div>
-                            </td>
-                            <td class="p-2 text-xs italic text-gray-600 break-words whitespace-normal min-w-[150px]">${r.catatan || '-'}</td>
-                        </tr>
-                    `;
+                    const dt = new Date(r.timestamp); const fmt = `${dt.getDate()}/${dt.getMonth()+1}/${dt.getFullYear()} ${dt.getHours()}:${String(dt.getMinutes()).padStart(2,'0')}`;
+                    tbody.innerHTML += `<tr class="border-b hover:bg-gray-50"><td class="p-2 text-gray-600 whitespace-nowrap">${fmt}</td><td class="p-2 whitespace-nowrap">${getStatusBadge(r.kehadiran)}</td><td class="p-2 whitespace-nowrap">${r.surah} <br><span class="text-gray-500 text-[10px]">(${r.ayat})</span></td><td class="p-2 whitespace-nowrap">${r.jilid} <br><span class="text-gray-500 text-[10px]">(Hal ${r.halaman})</span></td><td class="p-2 whitespace-nowrap"><div class="mb-1 flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">H:</span> ${getKetBadge(r.nilaiHafalan || r.keterangan)}</div><div class="flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">J:</span> ${getKetBadge(r.nilaiJilid || r.keterangan)}</div></td><td class="p-2 text-xs italic text-gray-600 break-words whitespace-normal min-w-[150px]">${r.catatan || '-'}</td></tr>`;
                 });
-            } else {
-                tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-gray-400">Belum ada riwayat</td></tr>';
-            }
+            } else { tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-gray-400">Belum ada riwayat</td></tr>'; }
             document.getElementById('modal-history').classList.remove('hidden');
         };
         window.closeHistory = () => document.getElementById('modal-history').classList.add('hidden');
 
-        // --- LEMBAGA & JURNAL CRUD ---
-        window.openLembagaModal = () => {
-            if (currentUserRole !== 'admin') return;
-            document.getElementById('form-edit-lembaga').value = currentLembagaName;
-            document.getElementById('modal-lembaga').classList.remove('hidden');
-        };
+        window.openLembagaModal = () => { if (currentUserRole !== 'admin') return; document.getElementById('form-edit-lembaga').value = currentLembagaName; document.getElementById('modal-lembaga').classList.remove('hidden'); };
         window.closeLembagaModal = () => document.getElementById('modal-lembaga').classList.add('hidden');
         
         document.getElementById('lembaga-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (currentUserRole !== 'admin') return;
+            e.preventDefault(); if (currentUserRole !== 'admin') return;
             const newName = document.getElementById('form-edit-lembaga').value;
-            if (is_preview) {
-                currentLembagaName = newName; document.getElementById('dash-title').innerText = currentLembagaName;
-                closeLembagaModal(); showToast();
-            } else {
-                try {
-                    let updatePromises = [];
-                    const usersSnap = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js").then(m => m.getDocs(collection(db, "users")));
-                    usersSnap.forEach(docSnap => {
-                        if (docSnap.data().role === 'admin') updatePromises.push(setDoc(doc(db, "users", docSnap.id), { lembaga: newName }, { merge: true }));
-                    });
-                    await Promise.all(updatePromises);
-                    closeLembagaModal(); showToast();
-                } catch(err) { alert(err.message); }
+            if (is_preview) { currentLembagaName = newName; document.getElementById('dash-title').innerText = currentLembagaName; closeLembagaModal(); showToast(); } 
+            else {
+                try { let updatePromises = []; const usersSnap = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js").then(m => m.getDocs(collection(db, "users"))); usersSnap.forEach(docSnap => { if (docSnap.data().role === 'admin') updatePromises.push(setDoc(doc(db, "users", docSnap.id), { lembaga: newName }, { merge: true })); }); await Promise.all(updatePromises); closeLembagaModal(); showToast(); } catch(err) { alert(err.message); }
             }
         });
 
@@ -1030,63 +817,30 @@
             
             document.getElementById('form-jurnal-kelas').value = kelas;
             const dp = document.getElementById('form-jurnal-tanggal');
-            if (tanggalSpesifik) dp.value = tanggalSpesifik;
-            else if (!dp.value) dp.valueAsDate = new Date();
+            if (tanggalSpesifik) dp.value = tanggalSpesifik; else if (!dp.value) dp.valueAsDate = new Date();
             
             const targetJurnal = jurnalStore.find(j => j.id === `${kelas}_${dp.value}`);
-            if(targetJurnal) {
-                document.getElementById('form-jurnal-tadarus').value = targetJurnal.tadarus || '';
-                document.getElementById('form-jurnal-murojaah').value = targetJurnal.murojaah || '';
-                document.getElementById('form-jurnal-materi').value = targetJurnal.materi || '';
-            } else {
-                document.getElementById('form-jurnal-tadarus').value = '';
-                document.getElementById('form-jurnal-murojaah').value = '';
-                document.getElementById('form-jurnal-materi').value = '';
-            }
+            if(targetJurnal) { document.getElementById('form-jurnal-tadarus').value = targetJurnal.tadarus || ''; document.getElementById('form-jurnal-murojaah').value = targetJurnal.murojaah || ''; document.getElementById('form-jurnal-materi').value = targetJurnal.materi || ''; } else { document.getElementById('form-jurnal-tadarus').value = ''; document.getElementById('form-jurnal-murojaah').value = ''; document.getElementById('form-jurnal-materi').value = ''; }
             document.getElementById('modal-jurnal').classList.remove('hidden');
         };
         window.closeJurnalModal = () => document.getElementById('modal-jurnal').classList.add('hidden');
-
-        document.getElementById('form-jurnal-tanggal').addEventListener('change', () => {
-            window.openJurnalModal(document.getElementById('form-jurnal-kelas').value, document.getElementById('form-jurnal-tanggal').value); 
-        });
+        document.getElementById('form-jurnal-tanggal').addEventListener('change', () => { window.openJurnalModal(document.getElementById('form-jurnal-kelas').value, document.getElementById('form-jurnal-tanggal').value); });
 
         document.getElementById('jurnal-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if(currentUserRole === 'admin') return; 
-            const tgl = document.getElementById('form-jurnal-tanggal').value;
-            const kelas = document.getElementById('form-jurnal-kelas').value;
-            const jId = `${kelas}_${tgl}`;
+            e.preventDefault(); if(currentUserRole === 'admin') return; 
+            const tgl = document.getElementById('form-jurnal-tanggal').value; const kelas = document.getElementById('form-jurnal-kelas').value; const jId = `${kelas}_${tgl}`;
             const newData = { id: jId, kelas: kelas, tanggal: tgl, tadarus: document.getElementById('form-jurnal-tadarus').value, murojaah: document.getElementById('form-jurnal-murojaah').value, materi: document.getElementById('form-jurnal-materi').value, timestamp: new Date().toISOString() };
-
-            if (is_preview) {
-                let existingIndex = jurnalStore.findIndex(j => j.id === jId);
-                if(existingIndex !== -1) jurnalStore[existingIndex] = newData; else jurnalStore.push(newData);
-                closeJurnalModal(); renderRekap(); showToast();
-            } else {
-                try {
-                    await setDoc(doc(db, "jurnal", jId), newData);
-                    closeJurnalModal(); showToast();
-                } catch(err) { alert(err.message); }
-            }
+            if (is_preview) { let existingIndex = jurnalStore.findIndex(j => j.id === jId); if(existingIndex !== -1) jurnalStore[existingIndex] = newData; else jurnalStore.push(newData); closeJurnalModal(); renderRekap(); showToast(); } 
+            else { try { await setDoc(doc(db, "jurnal", jId), newData); closeJurnalModal(); showToast(); } catch(err) { alert(err.message); } }
         });
 
-        // --- REKAP & JURNAL RENDER ---
-        let hariIni = new Date();
-        let semingguLalu = new Date(); semingguLalu.setDate(hariIni.getDate() - 6);
-        document.getElementById('filter-tanggal-mulai').valueAsDate = semingguLalu;
-        document.getElementById('filter-tanggal-akhir').valueAsDate = hariIni;
-
-        document.getElementById('filter-tanggal-mulai').addEventListener('change', renderRekap);
-        document.getElementById('filter-tanggal-akhir').addEventListener('change', renderRekap);
-        document.getElementById('filter-kelas-rekap').addEventListener('change', renderRekap);
+        let hariIni = new Date(); let semingguLalu = new Date(); semingguLalu.setDate(hariIni.getDate() - 6);
+        document.getElementById('filter-tanggal-mulai').valueAsDate = semingguLalu; document.getElementById('filter-tanggal-akhir').valueAsDate = hariIni;
+        document.getElementById('filter-tanggal-mulai').addEventListener('change', renderRekap); document.getElementById('filter-tanggal-akhir').addEventListener('change', renderRekap); document.getElementById('filter-kelas-rekap').addEventListener('change', renderRekap);
         
         function renderRekap() {
-            const tglMulai = document.getElementById('filter-tanggal-mulai').value;
-            const tglAkhir = document.getElementById('filter-tanggal-akhir').value;
-            const kelasFilter = document.getElementById('filter-kelas-rekap').value;
-            const container = document.getElementById('rekap-container');
-            container.innerHTML = '';
+            const tglMulai = document.getElementById('filter-tanggal-mulai').value; const tglAkhir = document.getElementById('filter-tanggal-akhir').value; const kelasFilter = document.getElementById('filter-kelas-rekap').value;
+            const container = document.getElementById('rekap-container'); container.innerHTML = '';
             if(!tglMulai || !tglAkhir) return;
 
             let kelasRenderList = kelasFilter === "Semua" ? Array.from(classesSet).sort() : [kelasFilter];
@@ -1094,9 +848,7 @@
             kelasRenderList.forEach(kls => {
                 const pengajar = pengajarMap[kls] || "Belum diatur";
                 let btnTambahJurnal = (currentUserRole === 'admin' || !currentUserClasses.includes(kls)) ? '' : `<button onclick="openJurnalModal('${kls}')" class="bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-sm font-bold shadow hover:bg-indigo-700 transition whitespace-nowrap"><i class="fa-solid fa-plus mr-1"></i> Jurnal Hari Ini</button>`;
-                
-                let jurnalHTML = '';
-                let jurnalKelasIni = jurnalStore.filter(j => j.kelas === kls && j.tanggal >= tglMulai && j.tanggal <= tglAkhir).sort((a,b) => b.tanggal.localeCompare(a.tanggal));
+                let jurnalHTML = ''; let jurnalKelasIni = jurnalStore.filter(j => j.kelas === kls && j.tanggal >= tglMulai && j.tanggal <= tglAkhir).sort((a,b) => b.tanggal.localeCompare(a.tanggal));
                 
                 if (jurnalKelasIni.length > 0) {
                     let cardList = '';
@@ -1105,33 +857,25 @@
                         cardList += `<div class="bg-white p-3 rounded-lg border border-indigo-100 shadow-sm"><div class="flex justify-between items-center mb-2 border-b border-gray-100 pb-2"><h4 class="font-bold text-sm text-indigo-800"><i class="fa-solid fa-book-journal-whills mr-1"></i> Jurnal Tgl: ${j.tanggal}</h4>${btnEditCard}</div><div class="grid grid-cols-3 gap-2"><div class="bg-gray-50 p-2 rounded"><p class="text-[10px] text-indigo-500 font-bold mb-0.5">Tadarus</p><p class="text-xs font-medium text-gray-800">${j.tadarus || '-'}</p></div><div class="bg-gray-50 p-2 rounded"><p class="text-[10px] text-indigo-500 font-bold mb-0.5">Murojaah</p><p class="text-xs font-medium text-gray-800">${j.murojaah || '-'}</p></div><div class="bg-gray-50 p-2 rounded"><p class="text-[10px] text-indigo-500 font-bold mb-0.5">Materi</p><p class="text-xs font-medium text-gray-800">${j.materi || '-'}</p></div></div></div>`;
                     });
                     jurnalHTML = `<div class="bg-indigo-50 p-4 rounded-xl shadow-sm mb-4 border border-indigo-100 relative"><div class="absolute top-4 right-4">${btnTambahJurnal}</div><h4 class="font-bold text-gray-700 mb-3"><i class="fa-solid fa-layer-group mr-2"></i>Kumpulan Jurnal</h4><div class="max-h-60 overflow-y-auto pr-2 space-y-3 custom-scrollbar">${cardList}</div></div>`;
-                } else {
-                    jurnalHTML = `<div class="bg-indigo-50 p-4 rounded-xl shadow-sm mb-4 border border-indigo-100 flex justify-between items-center"><p class="text-sm text-indigo-800 italic">Belum ada jurnal untuk rentang tanggal ini.</p>${btnTambahJurnal}</div>`;
-                }
+                } else { jurnalHTML = `<div class="bg-indigo-50 p-4 rounded-xl shadow-sm mb-4 border border-indigo-100 flex justify-between items-center"><p class="text-sm text-indigo-800 italic">Belum ada jurnal untuk rentang tanggal ini.</p>${btnTambahJurnal}</div>`; }
 
                 let tabelSIAHTML = '', rekapSIATbody = '', tabelTbody = '', adaDataSantri = false;
-
                 dataStore.filter(s => s.kelas === kls).forEach(s => {
                     let riwayatDalamRange = (s.riwayat || []).filter(r => { const tglRiwayat = r.timestamp.split('T')[0]; return tglRiwayat >= tglMulai && tglRiwayat <= tglAkhir; });
                     let countH = 0, countS = 0, countI = 0, countA = 0;
-
                     if(riwayatDalamRange.length > 0) {
                         adaDataSantri = true;
                         riwayatDalamRange.forEach(adaData => {
                             if(adaData.kehadiran === 'Hadir') countH++; if(adaData.kehadiran === 'Sakit') countS++; if(adaData.kehadiran === 'Izin') countI++; if(adaData.kehadiran === 'Alpa') countA++;
                             let dtRaw = new Date(adaData.timestamp); let tglCetak = `${String(dtRaw.getDate()).padStart(2,'0')}/${String(dtRaw.getMonth()+1).padStart(2,'0')}`;
-                            let badgeHafalan = getKetBadge(adaData.nilaiHafalan || adaData.keterangan); let badgeJilid = getKetBadge(adaData.nilaiJilid || adaData.keterangan);
-                            tabelTbody += `<tr class="border-b hover:bg-gray-50"><td class="p-3 text-xs text-gray-500 font-bold whitespace-nowrap">${tglCetak}</td><td class="p-3 font-bold text-gray-800 whitespace-nowrap">${s.nama}</td><td class="p-3 whitespace-nowrap">${getStatusBadge(adaData.kehadiran)}</td><td class="p-3 whitespace-nowrap">${adaData.surah} <br><span class="text-gray-500 text-[10px]">(Ayat ${adaData.ayat})</span></td><td class="p-3 whitespace-nowrap">${adaData.jilid} <br><span class="text-gray-500 text-[10px]">(Hal ${adaData.halaman})</span></td><td class="p-3 whitespace-nowrap"><div class="mb-1 flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">H:</span> ${badgeHafalan}</div><div class="flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">J:</span> ${badgeJilid}</div></td><td class="p-3 text-xs italic text-gray-600 break-words whitespace-normal min-w-[150px]">${adaData.catatan || '-'}</td></tr>`;
+                            tabelTbody += `<tr class="border-b hover:bg-gray-50"><td class="p-3 text-xs text-gray-500 font-bold whitespace-nowrap">${tglCetak}</td><td class="p-3 font-bold text-gray-800 whitespace-nowrap">${s.nama}</td><td class="p-3 whitespace-nowrap">${getStatusBadge(adaData.kehadiran)}</td><td class="p-3 whitespace-nowrap">${adaData.surah} <br><span class="text-gray-500 text-[10px]">(Ayat ${adaData.ayat})</span></td><td class="p-3 whitespace-nowrap">${adaData.jilid} <br><span class="text-gray-500 text-[10px]">(Hal ${adaData.halaman})</span></td><td class="p-3 whitespace-nowrap"><div class="mb-1 flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">H:</span> ${getKetBadge(adaData.nilaiHafalan || adaData.keterangan)}</div><div class="flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">J:</span> ${getKetBadge(adaData.nilaiJilid || adaData.keterangan)}</div></td><td class="p-3 text-xs italic text-gray-600 break-words whitespace-normal min-w-[150px]">${adaData.catatan || '-'}</td></tr>`;
                         });
                         rekapSIATbody += `<tr class="border-b hover:bg-gray-50 text-center font-bold"><td class="p-3 text-left text-gray-800">${s.nama}</td><td class="p-3 text-green-600">${countH}</td><td class="p-3 text-orange-500">${countS}</td><td class="p-3 text-yellow-500">${countI}</td><td class="p-3 text-red-600">${countA}</td></tr>`;
                     }
                 });
 
-                if(!adaDataSantri) {
-                     tabelTbody = '<tr><td colspan="7" class="p-4 text-center text-gray-400">Tidak ada data ngaji di rentang tanggal ini</td></tr>'; tabelSIAHTML = '';
-                } else {
-                     tabelSIAHTML = `<div class="bg-white rounded-xl shadow overflow-hidden p-4 mb-4 border border-gray-100"><h4 class="font-bold text-gray-700 mb-3"><i class="fa-solid fa-calculator mr-2 text-indigo-400"></i>Rekapitulasi Absensi</h4><div class="overflow-x-auto"><table class="w-full text-left border-collapse text-sm"><thead><tr class="bg-gray-100 border-b text-gray-700 uppercase text-[10px] text-center"><th class="p-3 whitespace-nowrap text-left">Nama Santri</th><th class="p-3 whitespace-nowrap">Hadir (H)</th><th class="p-3 whitespace-nowrap">Sakit (S)</th><th class="p-3 whitespace-nowrap">Izin (I)</th><th class="p-3 whitespace-nowrap">Alpa (A)</th></tr></thead><tbody>${rekapSIATbody}</tbody></table></div></div>`;
-                }
+                if(!adaDataSantri) { tabelTbody = '<tr><td colspan="7" class="p-4 text-center text-gray-400">Tidak ada data ngaji di rentang tanggal ini</td></tr>'; tabelSIAHTML = ''; } 
+                else { tabelSIAHTML = `<div class="bg-white rounded-xl shadow overflow-hidden p-4 mb-4 border border-gray-100"><h4 class="font-bold text-gray-700 mb-3"><i class="fa-solid fa-calculator mr-2 text-indigo-400"></i>Rekapitulasi Absensi</h4><div class="overflow-x-auto"><table class="w-full text-left border-collapse text-sm"><thead><tr class="bg-gray-100 border-b text-gray-700 uppercase text-[10px] text-center"><th class="p-3 whitespace-nowrap text-left">Nama Santri</th><th class="p-3 whitespace-nowrap">Hadir (H)</th><th class="p-3 whitespace-nowrap">Sakit (S)</th><th class="p-3 whitespace-nowrap">Izin (I)</th><th class="p-3 whitespace-nowrap">Alpa (A)</th></tr></thead><tbody>${rekapSIATbody}</tbody></table></div></div>`; }
 
                 if (jurnalKelasIni.length > 0 || adaDataSantri) {
                     container.innerHTML += `<div class="mb-10"><h3 class="text-xl font-bold text-gray-800 mb-1 border-b-2 border-indigo-200 pb-2">${kls}</h3><p class="text-sm text-indigo-600 font-bold mb-4"><i class="fa-solid fa-user-tie mr-1"></i> Pengajar: ${pengajar}</p>${jurnalHTML}${tabelSIAHTML}<div class="bg-white rounded-xl shadow overflow-hidden p-4"><div class="overflow-x-auto"><table class="w-full text-left border-collapse text-sm"><thead><tr class="bg-gray-100 border-b text-gray-700 uppercase text-xs"><th class="p-3 whitespace-nowrap">Tgl</th><th class="p-3 whitespace-nowrap">Nama Santri</th><th class="p-3 whitespace-nowrap">Status</th><th class="p-3 whitespace-nowrap">Hafalan</th><th class="p-3 whitespace-nowrap">Jilid</th><th class="p-3 whitespace-nowrap">Nilai</th><th class="p-3 w-1/4">Catatan</th></tr></thead><tbody>${tabelTbody}</tbody></table></div></div></div>`;
@@ -1141,67 +885,25 @@
         }
 
         window.showToast = (msg = "Berhasil disimpan!", color = "green") => {
-            const toast = document.getElementById('toast');
-            toast.innerText = msg; toast.className = `fixed bottom-5 right-5 text-white px-6 py-3 rounded-lg shadow-lg font-bold transition-opacity duration-300 z-50 opacity-100 pointer-events-auto bg-${color}-500`;
+            const toast = document.getElementById('toast'); toast.innerText = msg; toast.className = `fixed bottom-5 right-5 text-white px-6 py-3 rounded-lg shadow-lg font-bold transition-opacity duration-300 z-50 opacity-100 pointer-events-auto bg-${color}-500`;
             setTimeout(() => { toast.classList.remove('opacity-100', 'pointer-events-auto'); toast.classList.add('opacity-0', 'pointer-events-none'); }, 3000);
         };
 
-        // ==========================================
-        // PDF EXPORT
-        // ==========================================
         function handlePDFOutput(doc, filename) {
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-            if (isMobile) doc.save(filename);
-            else { const blob = doc.output('blob'); window.open(URL.createObjectURL(blob), '_blank'); }
+            if (isMobile) doc.save(filename); else { const blob = doc.output('blob'); window.open(URL.createObjectURL(blob), '_blank'); }
         }
 
-        // Export Mass Barcode
-        window.exportMassBarcode = () => {
-            const kelas = document.getElementById('filter-kelas-tabel').value;
-            if (kelas === 'Semua') { showToast("Pilih kelas spesifik terlebih dahulu!", "red"); return; }
-            
-            const murid = dataStore.filter(s => s.kelas === kelas);
-            if (murid.length === 0) { showToast("Tidak ada santri di kelas ini", "red"); return; }
-
-            const doc = new window.jspdf.jsPDF();
-            const pageWidth = doc.internal.pageSize.getWidth();
-            doc.setFontSize(16); doc.text(`Barcode Santri: ${kelas}`, pageWidth / 2, 15, { align: 'center' });
-
-            let x = 20, y = 30;
-            murid.forEach((s) => {
-                const canvas = document.createElement("canvas");
-                JsBarcode(canvas, s.id, { format: "CODE128", displayValue: true, width: 2, height: 40, fontSize: 14 });
-                const imgData = canvas.toDataURL("image/jpeg");
-                
-                doc.setFontSize(10);
-                doc.text(s.nama, x + 25, y - 2, { align: 'center' });
-                doc.addImage(imgData, 'JPEG', x, y, 50, 20);
-                
-                x += 90; // geser kolom kanan
-                if (x > 150) { 
-                    x = 20; y += 35; // ganti baris
-                }
-                if (y > 270) { 
-                    doc.addPage(); y = 30; x = 20; // ganti halaman
-                }
-            });
-            handlePDFOutput(doc, `Barcode_${kelas.replace(/\s+/g, '_')}.pdf`);
-        };
-
         window.exportRapor = (id) => {
-            if(!window.jspdf) return;
-            const s = dataStore.find(x => x.id === id);
-            const doc = new window.jspdf.jsPDF(); const pageWidth = doc.internal.pageSize.getWidth();
-            doc.setFontSize(18); doc.text(`Rapor Ngaji: ${s.nama}`, pageWidth / 2, 22, { align: 'center' });
-            doc.setFontSize(11); doc.text(`Kelas: ${s.kelas || '-'}`, pageWidth / 2, 30, { align: 'center' });
+            if(!window.jspdf) return; const s = dataStore.find(x => x.id === id); const doc = new window.jspdf.jsPDF(); const pageWidth = doc.internal.pageSize.getWidth();
+            doc.setFontSize(18); doc.text(`Rapor Ngaji: ${s.nama}`, pageWidth / 2, 22, { align: 'center' }); doc.setFontSize(11); doc.text(`Kelas: ${s.kelas || '-'}`, pageWidth / 2, 30, { align: 'center' });
             const tableData = (s.riwayat || []).map(r => { const dt = new Date(r.timestamp); return [`${dt.getDate()}/${dt.getMonth()+1}/${dt.getFullYear()}`, r.kehadiran, r.jilid + ' - ' + r.halaman, r.surah + ' (' + r.ayat + ')', `Haf: ${r.nilaiHafalan || r.keterangan || '-'}\nJld: ${r.nilaiJilid || r.keterangan || '-'}`, r.catatan || '-']; });
             doc.autoTable({ startY: 40, head: [['Tanggal', 'Kehadiran', 'Jilid/Hal', 'Hafalan', 'Nilai', 'Catatan']], body: tableData, theme: 'grid', headStyles: { fillColor: [79, 70, 229] }, styles: { cellPadding: 3, fontSize: 9 } });
             handlePDFOutput(doc, `Rapor_${s.nama.replace(/\s+/g, '_')}.pdf`);
         };
 
         window.exportKelas = (kelas) => {
-            if(!window.jspdf) return;
-            const doc = new window.jspdf.jsPDF(); const pageWidth = doc.internal.pageSize.getWidth();
+            if(!window.jspdf) return; const doc = new window.jspdf.jsPDF(); const pageWidth = doc.internal.pageSize.getWidth();
             doc.setFontSize(16); doc.text(`Daftar Santri: ${kelas}`, pageWidth / 2, 22, { align: 'center' });
             const tableData = dataStore.filter(x => x.kelas === kelas).map((m, i) => [i+1, m.nama, m.id, m.kehadiran, m.jilid, m.surah]);
             doc.autoTable({ startY: 30, head: [['No', 'Nama Santri', 'ID Absen', 'Status Terakhir', 'Jilid', 'Hafalan']], body: tableData, theme: 'striped', headStyles: { fillColor: [79, 70, 229] } });
@@ -1209,13 +911,10 @@
         };
 
         window.exportGlobalPDF = () => {
-            if(!window.jspdf) return;
-            const doc = new window.jspdf.jsPDF(); const pageWidth = doc.internal.pageSize.getWidth();
+            if(!window.jspdf) return; const doc = new window.jspdf.jsPDF(); const pageWidth = doc.internal.pageSize.getWidth();
             const tglMulai = document.getElementById('filter-tanggal-mulai').value; const tglAkhir = document.getElementById('filter-tanggal-akhir').value; const kelasFilter = document.getElementById('filter-kelas-rekap').value;
-            doc.setFontSize(16); doc.text(`Laporan Progres Santri`, pageWidth / 2, 22, { align: 'center' });
-            doc.setFontSize(10); doc.text(`Periode: ${tglMulai} s/d ${tglAkhir}`, pageWidth / 2, 28, { align: 'center' });
-            let startY = 36;
-            let kelasRenderList = kelasFilter === "Semua" ? Array.from(classesSet).sort() : [kelasFilter];
+            doc.setFontSize(16); doc.text(`Laporan Progres Santri`, pageWidth / 2, 22, { align: 'center' }); doc.setFontSize(10); doc.text(`Periode: ${tglMulai} s/d ${tglAkhir}`, pageWidth / 2, 28, { align: 'center' });
+            let startY = 36; let kelasRenderList = kelasFilter === "Semua" ? Array.from(classesSet).sort() : [kelasFilter];
 
             kelasRenderList.forEach((kls, index) => {
                 if (index > 0 && startY > doc.internal.pageSize.getHeight() - 40) { doc.addPage(); startY = 20; }
@@ -1234,10 +933,8 @@
 
                 if (tableSIAData.length > 0) {
                     doc.setFontSize(9); doc.setFont(undefined, 'bold'); doc.text(`Rekapitulasi Kehadiran (H/S/I/A)`, 14, startY); startY += 4;
-                    doc.autoTable({ startY: startY, head: [['Nama Santri', 'Hadir', 'Sakit', 'Izin', 'Alpa']], body: tableSIAData, theme: 'grid', headStyles: { fillColor: [79, 70, 229] }, styles: { fontSize: 8, halign: 'center' }, columnStyles: { 0: { halign: 'left' } } });
-                    startY = doc.lastAutoTable.finalY + 10;
+                    doc.autoTable({ startY: startY, head: [['Nama Santri', 'Hadir', 'Sakit', 'Izin', 'Alpa']], body: tableSIAData, theme: 'grid', headStyles: { fillColor: [79, 70, 229] }, styles: { fontSize: 8, halign: 'center' }, columnStyles: { 0: { halign: 'left' } } }); startY = doc.lastAutoTable.finalY + 10;
                 }
-
                 let jurnalKelasIni = jurnalStore.filter(j => j.kelas === kls && j.tanggal >= tglMulai && j.tanggal <= tglAkhir).sort((a,b) => a.tanggal.localeCompare(b.tanggal));
                 if(jurnalKelasIni.length > 0) {
                     doc.setFontSize(9); doc.setFont(undefined, 'normal');
@@ -1245,104 +942,77 @@
                         if (startY > doc.internal.pageSize.getHeight() - 20) { doc.addPage(); startY = 20; }
                         doc.text(`[${j.tanggal}] Tadarus: ${j.tadarus||'-'} | Murojaah: ${j.murojaah||'-'}`, 14, startY); startY += 5;
                         doc.text(`Materi: ${j.materi||'-'}`, 14, startY); startY += 6;
-                    });
-                    startY += 2;
+                    }); startY += 2;
                 }
-
                 if (tableData.length > 0) {
-                    doc.autoTable({ startY: startY, head: [['Tgl', 'Nama', 'Hadir', 'Jilid', 'Hafalan', 'Nilai', 'Catatan']], body: tableData, theme: 'grid', headStyles: { fillColor: [220, 38, 38] }, styles: { cellPadding: 2, fontSize: 8 } });
-                    startY = doc.lastAutoTable.finalY + 15;
+                    doc.autoTable({ startY: startY, head: [['Tgl', 'Nama', 'Hadir', 'Jilid', 'Hafalan', 'Nilai', 'Catatan']], body: tableData, theme: 'grid', headStyles: { fillColor: [220, 38, 38] }, styles: { cellPadding: 2, fontSize: 8 } }); startY = doc.lastAutoTable.finalY + 15;
                 } else { doc.setFontSize(9); doc.setFont(undefined, 'italic'); doc.text(`Tidak ada data ngaji.`, 14, startY); startY += 12; }
             });
             handlePDFOutput(doc, `Rekap_${tglMulai}_sd_${tglAkhir}.pdf`);
         };
 
-        // ==========================================
-        // INITIALIZATION & DUMMY DATA
-        // ==========================================
         function injectDummyData() {
-            const today = new Date();
-            const yesterday = new Date(today); yesterday.setDate(yesterday.getDate() - 1);
-            
-            const tDateStr = today.toISOString().split('T')[0];
-            const yDateStr = yesterday.toISOString().split('T')[0];
-
+            const today = new Date(); const yesterday = new Date(today); yesterday.setDate(yesterday.getDate() - 1);
+            const tDateStr = today.toISOString().split('T')[0]; const yDateStr = yesterday.toISOString().split('T')[0];
             pengajarMap = { "Kelas Madinah": "Ust. Saprudin S.Ag", "Kelas Mekkah": "Ust. Fulan, Lc" };
-            classesSet = new Set(["Kelas Madinah", "Kelas Mekkah"]);
-            currentLembagaName = "TPQ Mockup Preview";
-
-            jurnalStore = [
-                { id: `Kelas Madinah_${tDateStr}`, kelas: "Kelas Madinah", tanggal: tDateStr, tadarus: "Al-Mulk 1-10", murojaah: "Juz 30", materi: "Makhrojul Huruf", timestamp: today.toISOString() },
-                { id: `Kelas Madinah_${yDateStr}`, kelas: "Kelas Madinah", tanggal: yDateStr, tadarus: "Al-Qalam", murojaah: "An-Naba", materi: "Hukum Nun Mati", timestamp: yesterday.toISOString() },
-                { id: `Kelas Mekkah_${tDateStr}`, kelas: "Kelas Mekkah", tanggal: tDateStr, tadarus: "Yasin 1-20", murojaah: "Al-Baqarah", materi: "Tajwid Lanjutan", timestamp: today.toISOString() }
-            ];
-
-            // Riwayat disetting kemarin, supaya fitur Auto-Alpa bisa dites hari ini!
+            classesSet = new Set(["Kelas Madinah", "Kelas Mekkah"]); currentLembagaName = "TPQ Mockup Preview";
+            jurnalStore = [ { id: `Kelas Madinah_${tDateStr}`, kelas: "Kelas Madinah", tanggal: tDateStr, tadarus: "Al-Mulk 1-10", murojaah: "Juz 30", materi: "Makhrojul Huruf", timestamp: today.toISOString() }, { id: `Kelas Madinah_${yDateStr}`, kelas: "Kelas Madinah", tanggal: yDateStr, tadarus: "Al-Qalam", murojaah: "An-Naba", materi: "Hukum Nun Mati", timestamp: yesterday.toISOString() }, { id: `Kelas Mekkah_${tDateStr}`, kelas: "Kelas Mekkah", tanggal: tDateStr, tadarus: "Yasin 1-20", murojaah: "Al-Baqarah", materi: "Tajwid Lanjutan", timestamp: today.toISOString() } ];
+            // Data Santri Sengaja Dibuat Kemarin, biar Auto-Alpa bisa dipamerkan!
             dataStore = [
-                {
-                    id: "ST111111", nama: "Ahmad Rafli", kelas: "Kelas Madinah", kehadiran: "Hadir", jilid: "Jilid 4", halaman: "12", surah: "Al-Mulk", ayat: "5-10", nilaiHafalan: "Lancar", nilaiJilid: "Lancar", catatan: "Rajin sekali", timestamp: yesterday.toISOString(),
-                    riwayat: [
-                        { kehadiran: "Hadir", jilid: "Jilid 4", halaman: "12", surah: "Al-Mulk", ayat: "5-10", nilaiHafalan: "Lancar", nilaiJilid: "Lancar", catatan: "Rajin sekali", timestamp: yesterday.toISOString() }
-                    ]
-                },
-                {
-                    id: "ST222222", nama: "Budi Santoso", kelas: "Kelas Madinah", kehadiran: "Izin", jilid: "Jilid 3", halaman: "20", surah: "An-Naba", ayat: "1-15", nilaiHafalan: "Kurang Lancar", nilaiJilid: "Lancar", catatan: "Sakit demam", timestamp: yesterday.toISOString(),
-                    riwayat: [
-                        { kehadiran: "Izin", jilid: "Jilid 3", halaman: "20", surah: "An-Naba", ayat: "1-15", nilaiHafalan: "Kurang Lancar", nilaiJilid: "Lancar", catatan: "Sakit demam", timestamp: yesterday.toISOString() }
-                    ]
-                },
-                {
-                    id: "ST333333", nama: "Siti Aminah", kelas: "Kelas Mekkah", kehadiran: "Hadir", jilid: "Al-Quran", halaman: "Juz 2", surah: "Al-Baqarah", ayat: "145", nilaiHafalan: "Lancar", nilaiJilid: "Lancar", catatan: "-", timestamp: yesterday.toISOString(),
-                    riwayat: [
-                        { kehadiran: "Hadir", jilid: "Al-Quran", halaman: "Juz 2", surah: "Al-Baqarah", ayat: "145", nilaiHafalan: "Lancar", nilaiJilid: "Lancar", catatan: "-", timestamp: yesterday.toISOString() }
-                    ]
-                }
+                { id: "ST111111", nama: "Ahmad Rafli", kelas: "Kelas Madinah", kehadiran: "Hadir", jilid: "Jilid 4", halaman: "12", surah: "Al-Mulk", ayat: "5-10", nilaiHafalan: "Lancar", nilaiJilid: "Lancar", catatan: "Rajin sekali", timestamp: yesterday.toISOString(), riwayat: [ { kehadiran: "Hadir", jilid: "Jilid 4", halaman: "10", surah: "Al-Mulk", ayat: "1-4", nilaiHafalan: "Mengulang", nilaiJilid: "Lancar", catatan: "Tajwid diperbaiki", timestamp: yesterday.toISOString() } ] },
+                { id: "ST222222", nama: "Budi Santoso", kelas: "Kelas Madinah", kehadiran: "Izin", jilid: "Jilid 3", halaman: "20", surah: "An-Naba", ayat: "1-15", nilaiHafalan: "Kurang Lancar", nilaiJilid: "Lancar", catatan: "Sakit demam", timestamp: yesterday.toISOString(), riwayat: [ { kehadiran: "Hadir", jilid: "Jilid 3", halaman: "20", surah: "An-Naba", ayat: "1-15", nilaiHafalan: "Kurang Lancar", nilaiJilid: "Lancar", catatan: "Belum hafal lancar", timestamp: yesterday.toISOString() } ] },
+                { id: "ST333333", nama: "Siti Aminah", kelas: "Kelas Mekkah", kehadiran: "Hadir", jilid: "Al-Quran", halaman: "Juz 2", surah: "Al-Baqarah", ayat: "145", nilaiHafalan: "Lancar", nilaiJilid: "Lancar", catatan: "-", timestamp: yesterday.toISOString(), riwayat: [ { kehadiran: "Hadir", jilid: "Al-Quran", halaman: "Juz 2", surah: "Al-Baqarah", ayat: "145", nilaiHafalan: "Lancar", nilaiJilid: "Lancar", catatan: "-", timestamp: yesterday.toISOString() } ] }
             ];
+        }
+
+        // MESIN AUTO-ALPA (Jalan otomatis pas login)
+        function autoAlpaCheck() {
+            if (currentUserRole === 'admin') return;
+            const todayStr = new Date().toISOString().split('T')[0];
+            let isChanged = false;
+
+            dataStore.forEach(s => {
+                if (!currentUserClasses.includes(s.kelas)) return; // Cuma ngurus kelasnya sendiri
+                if (!s.riwayat) s.riwayat = [];
+                
+                let hasToday = s.riwayat.some(r => r.timestamp.split('T')[0] === todayStr);
+                if (!hasToday) {
+                    let mergedData = { kehadiran: 'Alpa', jilid: s.jilid || '-', halaman: s.halaman || '-', surah: s.surah || '-', ayat: s.ayat || '-', nilaiHafalan: s.nilaiHafalan || '-', nilaiJilid: s.nilaiJilid || '-', catatan: 'Belum Scan Absen (Auto-Alpa)', timestamp: new Date().toISOString() };
+                    s.riwayat.unshift(mergedData);
+                    s.kehadiran = 'Alpa';
+                    isChanged = true;
+                    if (!is_preview) { setDoc(doc(db, "santri", s.id), { kehadiran: 'Alpa', riwayat: s.riwayat }, { merge: true }).catch(e => console.error(e)); }
+                }
+            });
+            // Nggak perlu call renderAll disini karena dipanggil berbarengan di initApp
         }
 
         function initApp() {
             if (is_preview && dataStore.length === 0) injectDummyData();
-            autoAlpaCheck(); // Jalankan Auto-Alpa tiap kali buka web
+            autoAlpaCheck(); // Menghukum santri yang belum diabsen
             renderAll();
-            const lastView = localStorage.getItem('activeView') || 'dashboard';
-            switchView(lastView);
+            const lastView = localStorage.getItem('activeView') || 'dashboard'; switchView(lastView);
         }
 
         window.doLogout = () => {
-            if (is_preview) {
-                document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-                const loginView = document.getElementById('view-login');
-                loginView.style.display = ''; loginView.classList.add('active');
-                document.getElementById('main-nav').classList.add('hidden');
-                localStorage.removeItem('activeView');
-                document.getElementById('auth-form').reset();
-                document.getElementById('mobile-menu').classList.add('hidden');
-            } else { signOut(auth); }
+            if (is_preview) { document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active')); const loginView = document.getElementById('view-login'); loginView.style.display = ''; loginView.classList.add('active'); document.getElementById('main-nav').classList.add('hidden'); localStorage.removeItem('activeView'); document.getElementById('auth-form').reset(); document.getElementById('mobile-menu').classList.add('hidden'); isFirstRender = true; } 
+            else { signOut(auth); }
         };
 
-        document.getElementById('btn-logout').addEventListener('click', doLogout);
-        document.getElementById('btn-logout-mobile').addEventListener('click', doLogout);
+        document.getElementById('btn-logout').addEventListener('click', doLogout); document.getElementById('btn-logout-mobile').addEventListener('click', doLogout);
 
         document.getElementById('auth-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const em = document.getElementById('login-email').value; const pw = document.getElementById('login-password').value;
-            const errEl = document.getElementById('login-error'); errEl.classList.add('hidden');
-            
+            e.preventDefault(); const em = document.getElementById('login-email').value; const pw = document.getElementById('login-password').value; const errEl = document.getElementById('login-error'); errEl.classList.add('hidden');
             if (is_preview) {
-                if (ADMIN_EMAILS.includes(em.toLowerCase())) { currentUserRole = 'admin'; currentUserClasses = ['Semua']; } 
-                else { currentUserRole = 'ustadz'; currentUserClasses = ['Kelas Madinah']; }
-                document.getElementById('view-login').style.display = 'none';
-                document.getElementById('main-nav').classList.remove('hidden');
-                initApp();
+                if (ADMIN_EMAILS.includes(em.toLowerCase())) { currentUserRole = 'admin'; currentUserClasses = ['Semua']; } else { currentUserRole = 'ustadz'; currentUserClasses = ['Kelas Madinah']; }
+                document.getElementById('view-login').style.display = 'none'; document.getElementById('main-nav').classList.remove('hidden'); initApp();
             } else {
                 try {
                     if (authMode === 'register') {
-                        const nm = document.getElementById('reg-nama').value; const emLower = em.toLowerCase();
-                        const role = ADMIN_EMAILS.includes(emLower) ? 'admin' : 'ustadz';
+                        const nm = document.getElementById('reg-nama').value; const emLower = em.toLowerCase(); const role = ADMIN_EMAILS.includes(emLower) ? 'admin' : 'ustadz';
                         const userCredential = await createUserWithEmailAndPassword(auth, em, pw);
                         let userData = { email: emLower, nama: nm, role: role };
-                        if (role === 'admin') { userData.lembaga = 'Nama Lembaga Baru (Edit di Dashboard)'; userData.kelas = ['Semua']; } 
-                        else { const klInput = document.getElementById('reg-kelas').value; userData.kelas = klInput.split(',').map(k => k.trim()).filter(k => k.length > 0); }
+                        if (role === 'admin') { userData.lembaga = 'Nama Lembaga Baru (Edit di Dashboard)'; userData.kelas = ['Semua']; } else { const klInput = document.getElementById('reg-kelas').value; userData.kelas = klInput.split(',').map(k => k.trim()).filter(k => k.length > 0); }
                         await setDoc(doc(db, "users", userCredential.user.uid), userData);
                     } else { await signInWithEmailAndPassword(auth, em, pw); }
                 } catch(error) { errEl.innerText = "Error: " + error.message; errEl.classList.remove('hidden'); }
@@ -1357,25 +1027,16 @@
                         const userDocRef = doc(db, "users", user.uid); let userDoc = await getDoc(userDocRef);
                         if(userDoc.exists()) { const dt = userDoc.data(); currentUserRole = dt.role || 'ustadz'; let kl = dt.kelas || ['Kelas Umum']; currentUserClasses = Array.isArray(kl) ? kl : [kl]; }
                     } catch(err) { console.error("Gagal menarik profil user:", err); }
-                    
                     document.getElementById('main-nav').classList.remove('hidden');
 
                     onSnapshot(collection(db, "users"), (snap) => {
                         pengajarMap = {};
-                        snap.forEach((d) => {
-                            const data = d.data();
-                            if (data.role === 'admin' && data.lembaga) currentLembagaName = data.lembaga;
-                            if(data.kelas && data.nama) { if(Array.isArray(data.kelas)) data.kelas.forEach(k => { pengajarMap[k] = data.nama; }); else pengajarMap[data.kelas] = data.nama; }
-                        });
+                        snap.forEach((d) => { const data = d.data(); if (data.role === 'admin' && data.lembaga) currentLembagaName = data.lembaga; if(data.kelas && data.nama) { if(Array.isArray(data.kelas)) data.kelas.forEach(k => { pengajarMap[k] = data.nama; }); else pengajarMap[data.kelas] = data.nama; } });
                         renderAll();
                     });
                     onSnapshot(collection(db, "jurnal"), (snapshot) => { jurnalStore = []; snapshot.forEach((docSnap) => { jurnalStore.push({ id: docSnap.id, ...docSnap.data() }); }); renderRekap(); });
                     onSnapshot(collection(db, "santri"), (snapshot) => { dataStore = []; snapshot.forEach((docSnap) => { dataStore.push({ id: docSnap.id, ...docSnap.data() }); }); initApp(); });
-                } else {
-                    document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-                    const loginView = document.getElementById('view-login'); loginView.style.display = 'block'; loginView.classList.add('active');
-                    document.getElementById('main-nav').classList.add('hidden');
-                }
+                } else { document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active')); const loginView = document.getElementById('view-login'); loginView.style.display = 'block'; loginView.classList.add('active'); document.getElementById('main-nav').classList.add('hidden'); isFirstRender = true; }
             });
         }
     </script>

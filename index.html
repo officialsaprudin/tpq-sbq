@@ -155,9 +155,9 @@
                     <select id="filter-kelas-tabel" class="border px-3 py-2 rounded-lg text-sm bg-white shadow-sm focus:outline-none">
                         <option value="Semua">Semua Kelas</option>
                     </select>
-                    <!-- Tombol Cetak Barcode Massal Per Kelas -->
-                    <button onclick="exportBarcodeKelas()" class="bg-blue-600 text-white px-3 py-2 rounded-lg font-bold shadow hover:bg-blue-700 transition" title="Cetak Semua Barcode Kelas">
-                        <i class="fa-solid fa-print"></i><span class="hidden md:inline ml-1">Barcode</span>
+                    <!-- Tombol Ekspor Barcode Massal -->
+                    <button id="btn-mass-barcode" onclick="exportMassBarcode()" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold shadow hover:bg-blue-700 transition hidden">
+                        <i class="fa-solid fa-file-pdf mr-1"></i> Barcode
                     </button>
                     <!-- Tombol Scanner Barcode -->
                     <button id="btn-scan-absen" onclick="openScanner()" class="bg-green-600 text-white px-4 py-2 rounded-lg font-bold shadow hover:bg-green-700 transition">
@@ -332,7 +332,7 @@
         </div>
     </div>
 
-    <!-- Modal Barcode -->
+    <!-- Modal Barcode (Single) -->
     <div id="modal-barcode" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden flex flex-col items-center">
             <div class="bg-indigo-600 w-full px-6 py-4 flex justify-between items-center text-white">
@@ -405,25 +405,19 @@
         </div>
     </div>
 
-    <!-- Modal Scanner Barcode (Updated with Rapid Scan Log) -->
+    <!-- Modal Scanner Barcode -->
     <div id="modal-scanner" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
-            <div class="bg-green-600 px-6 py-4 flex justify-between items-center text-white">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="bg-green-600 px-6 py-4 flex justify-between items-center text-white flex-shrink-0">
                 <h3 class="font-bold text-lg"><i class="fa-solid fa-qrcode mr-2"></i>Scan Barcode / QR</h3>
                 <button onclick="closeScanner()" class="hover:text-gray-300"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
-            <div class="p-4">
+            <div class="p-4 flex-grow overflow-y-auto">
                 <div id="reader" class="w-full rounded-lg overflow-hidden border-2 border-green-200"></div>
-                
-                <!-- Log Riwayat Scan Beruntun -->
-                <div class="mt-4">
-                    <h4 class="text-xs font-bold text-gray-500 border-b pb-1 mb-2">Riwayat Scan Terakhir:</h4>
-                    <div id="scan-log" class="max-h-24 overflow-y-auto space-y-1 custom-scrollbar text-sm">
-                        <p class="text-gray-400 text-center italic text-xs py-2">Belum ada santri yang di-scan.</p>
-                    </div>
+                <p class="text-sm text-center text-gray-600 font-bold mt-4 mb-2">Arahkan kamera ke Barcode / QR ID Card Santri</p>
+                <div class="mt-4 bg-gray-50 rounded-lg p-2 border border-gray-200 h-40 overflow-y-auto custom-scrollbar" id="scan-log">
+                    <div class="text-center text-xs text-gray-400 mt-12">Riwayat scan cepat akan muncul di sini...</div>
                 </div>
-
-                <p class="text-xs text-center text-gray-400 mt-4 border-t pt-2">Arahkan kamera ke ID Card. Bisa scan berurutan tanpa ditutup.</p>
             </div>
         </div>
     </div>
@@ -470,8 +464,8 @@
         let jurnalStore = [];
         let classesSet = new Set();
         let pengajarMap = {};
+        
         let authMode = 'login'; 
-        let hasCheckedDailyReset = false; // Flag for Auto-Alpa
         
         if (is_preview) {
             document.getElementById('demo-hint').classList.remove('hidden');
@@ -590,8 +584,16 @@
             
             const btnTambah = document.getElementById('btn-tambah-santri');
             const btnScan = document.getElementById('btn-scan-absen');
+            const btnMass = document.getElementById('btn-mass-barcode');
+            
             if(btnTambah) btnTambah.style.display = currentUserRole === 'admin' ? 'none' : 'block';
             if(btnScan) btnScan.style.display = currentUserRole === 'admin' ? 'none' : 'block';
+            
+            // Mass Barcode Export Button Logic
+            if(btnMass) {
+                const selectedClass = document.getElementById('filter-kelas-tabel').value;
+                btnMass.style.display = (currentUserRole === 'admin' || selectedClass === 'Semua') ? 'none' : 'block';
+            }
 
             document.getElementById('dash-title').innerText = currentLembagaName;
             const btnEditLembaga = document.getElementById('btn-edit-lembaga');
@@ -705,55 +707,15 @@
         document.getElementById('filter-kelas-tabel').addEventListener('change', renderAll);
         document.getElementById('filter-kelas-dash').addEventListener('change', renderAll);
         
-        function checkDailyReset() {
-            // Admin doesn't trigger auto-writes to prevent accidental global overrides
-            if (hasCheckedDailyReset || currentUserRole === 'admin') return; 
-            hasCheckedDailyReset = true;
-            
-            const todayStr = new Date().toISOString().split('T')[0];
-            let needsPreviewUpdate = false;
-            
-            dataStore.forEach(s => {
-                // Only process students in the Ustadz's own classes
-                if (currentUserClasses.includes(s.kelas)) {
-                    let hasToday = s.riwayat && s.riwayat.some(r => r.timestamp.startsWith(todayStr));
-                    
-                    if (!hasToday) {
-                        const newData = {
-                            kehadiran: 'Alpa',
-                            jilid: s.jilid || '-', halaman: s.halaman || '-',
-                            surah: s.surah || '-', ayat: s.ayat || '-',
-                            nilaiHafalan: s.nilaiHafalan || '-', nilaiJilid: s.nilaiJilid || '-',
-                            catatan: 'Belum scan absen',
-                            timestamp: new Date().toISOString()
-                        };
-                        
-                        if (is_preview) {
-                            if(!s.riwayat) s.riwayat = [];
-                            s.riwayat.unshift(newData);
-                            s.kehadiran = 'Alpa';
-                            needsPreviewUpdate = true;
-                        } else {
-                            const santriRef = doc(db, "santri", s.id);
-                            let riwayatBaru = s.riwayat ? [...s.riwayat] : [];
-                            riwayatBaru.unshift(newData);
-                            setDoc(santriRef, { kehadiran: 'Alpa', riwayat: riwayatBaru }, { merge: true }).catch(e=>console.error("Auto-Alpa error:", e));
-                        }
-                    }
-                }
-            });
-            
-            if(is_preview && needsPreviewUpdate) renderAll();
-        }
-
+        // ==========================================
+        // SCAN & GENERATE BARCODE
+        // ==========================================
         let html5QrcodeScanner = null;
-        let lastScanTime = 0;
+        let scanCooldowns = {};
 
         window.showBarcode = (id, nama) => {
             document.getElementById('barcode-nama').innerText = nama;
-            JsBarcode("#barcode-canvas", id, { 
-                format: "CODE128", lineColor: "#000", width: 2.5, height: 60, displayValue: true, fontSize: 16
-            });
+            JsBarcode("#barcode-canvas", id, { format: "CODE128", lineColor: "#000", width: 2.5, height: 60, displayValue: true, fontSize: 16 });
             document.getElementById('modal-barcode').classList.remove('hidden');
         };
 
@@ -768,7 +730,7 @@
 
         window.openScanner = () => {
             if(currentUserRole === 'admin') return; 
-            document.getElementById('scan-log').innerHTML = '<p class="text-gray-400 text-center italic text-xs py-2">Belum ada santri yang di-scan.</p>';
+            document.getElementById('scan-log').innerHTML = '<div class="text-center text-xs text-gray-400 mt-12">Riwayat scan cepat akan muncul di sini...</div>';
             document.getElementById('modal-scanner').classList.remove('hidden');
             
             html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: {width: 250, height: 250} }, false);
@@ -781,23 +743,35 @@
         };
 
         async function onScanSuccess(decodedText, decodedResult) {
-            // Anti spam 3 seconds per scan attempt
-            if (Date.now() - lastScanTime < 3000) return;
-            lastScanTime = Date.now();
-
             const studentId = decodedText;
+            const now = Date.now();
+
+            // SMART COOLDOWN (2 Menit per Santri)
+            if (scanCooldowns[studentId] && (now - scanCooldowns[studentId] < 120000)) {
+                return; // Abaikan diam-diam
+            }
+
             const s = dataStore.find(x => x.id === studentId);
-            
             if(!s) {
+                scanCooldowns[studentId] = now - 117000; // Penalti 3 detik aja buat error
                 showToast("Santri tidak ditemukan!", "red"); return;
             }
             if(currentUserRole === 'ustadz' && !currentUserClasses.includes(s.kelas)) {
-                showToast("Akses ditolak! Bukan santri kelas Anda.", "red"); return;
+                scanCooldowns[studentId] = now - 117000;
+                showToast("Akses ditolak! Bukan kelas Anda.", "red"); return;
             }
+
+            // Kunci scan anak ini selama 2 menit
+            scanCooldowns[studentId] = now;
 
             const currentTimestamp = new Date().toISOString();
             const newData = { kehadiran: 'Hadir', timestamp: currentTimestamp, catatan: 'Hadir via Scan Barcode' };
+
+            // UPDATE UI LOG RAPID SCAN
+            const logContainer = document.getElementById('scan-log');
+            if (logContainer.innerHTML.includes('akan muncul di sini')) logContainer.innerHTML = '';
             const timeStr = new Date().toLocaleTimeString('id-ID');
+            logContainer.innerHTML = `<div class="flex justify-between items-center bg-white p-2 mb-2 rounded shadow-sm text-sm border-l-4 border-green-500"><span class="font-bold">${s.nama}</span><span class="text-xs text-green-600"><i class="fa-solid fa-check-circle mr-1"></i>Hadir (${timeStr})</span></div>` + logContainer.innerHTML;
 
             if (is_preview) {
                 if(!s.riwayat) s.riwayat = [];
@@ -812,13 +786,7 @@
                 
                 s.kehadiran = 'Hadir';
                 renderAll();
-                
-                // Add to rapid scan log
-                const logEl = document.getElementById('scan-log');
-                if(logEl.innerHTML.includes('Belum ada')) logEl.innerHTML = '';
-                logEl.innerHTML = `<div class="bg-green-50 text-green-700 p-2 rounded border border-green-200"><b>${timeStr}</b> - ✅ ${s.nama} (Hadir)</div>` + logEl.innerHTML;
-                
-                showToast(`✅ Berhasil absen: ${s.nama}`, "green");
+                showToast(`✅ Hadir: ${s.nama}`, "green");
             } else {
                 try {
                     const santriRef = doc(db, "santri", studentId);
@@ -832,18 +800,51 @@
                     else riwayatBaru.unshift(mergedData);
                     
                     await setDoc(santriRef, { kehadiran: 'Hadir', riwayat: riwayatBaru }, { merge: true });
-                    
-                    const logEl = document.getElementById('scan-log');
-                    if(logEl.innerHTML.includes('Belum ada')) logEl.innerHTML = '';
-                    logEl.innerHTML = `<div class="bg-green-50 text-green-700 p-2 rounded border border-green-200"><b>${timeStr}</b> - ✅ ${s.nama} (Hadir)</div>` + logEl.innerHTML;
-                    
-                    showToast(`✅ Berhasil absen: ${s.nama}`, "green");
+                    showToast(`✅ Hadir: ${s.nama}`, "green");
                 } catch(err) { alert(err.message); }
             }
         }
 
-        function onScanFailure(error) { /* Abaikan error scan agar loop terus berlanjut (Continuous scanning) */ }
+        function onScanFailure(error) { /* Continue looping */ }
 
+        // ==========================================
+        // AUTO-ALPA LOGIC
+        // ==========================================
+        function autoAlpaCheck() {
+            const todayStr = new Date().toISOString().split('T')[0];
+            let hasChanges = false;
+            
+            dataStore.forEach(s => {
+                if (!s.riwayat) s.riwayat = [];
+                // Cek apakah hari ini ada riwayat ngaji
+                const hasToday = s.riwayat.some(r => r.timestamp.startsWith(todayStr));
+                
+                if (!hasToday) {
+                    const alpaData = {
+                        kehadiran: 'Alpa',
+                        jilid: s.jilid || '-', halaman: s.halaman || '-',
+                        surah: s.surah || '-', ayat: s.ayat || '-',
+                        nilaiHafalan: s.nilaiHafalan || '-', nilaiJilid: s.nilaiJilid || '-',
+                        catatan: 'Belum Scan Absen',
+                        timestamp: new Date().toISOString()
+                    };
+                    s.riwayat.unshift(alpaData);
+                    s.kehadiran = 'Alpa';
+                    hasChanges = true;
+                    
+                    if (!is_preview) {
+                        const santriRef = doc(db, "santri", s.id);
+                        setDoc(santriRef, { kehadiran: 'Alpa', riwayat: s.riwayat }, { merge: true });
+                    }
+                }
+            });
+            
+            if (hasChanges && is_preview) renderAll();
+        }
+
+        // ==========================================
+        // MODALS & CRUD
+        // ==========================================
         window.openModal = (mode) => {
             if(currentUserRole === 'admin') return;
             document.getElementById('santri-form').reset();
@@ -993,6 +994,7 @@
         };
         window.closeHistory = () => document.getElementById('modal-history').classList.add('hidden');
 
+        // --- LEMBAGA & JURNAL CRUD ---
         window.openLembagaModal = () => {
             if (currentUserRole !== 'admin') return;
             document.getElementById('form-edit-lembaga').value = currentLembagaName;
@@ -1144,11 +1146,47 @@
             setTimeout(() => { toast.classList.remove('opacity-100', 'pointer-events-auto'); toast.classList.add('opacity-0', 'pointer-events-none'); }, 3000);
         };
 
+        // ==========================================
+        // PDF EXPORT
+        // ==========================================
         function handlePDFOutput(doc, filename) {
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
             if (isMobile) doc.save(filename);
             else { const blob = doc.output('blob'); window.open(URL.createObjectURL(blob), '_blank'); }
         }
+
+        // Export Mass Barcode
+        window.exportMassBarcode = () => {
+            const kelas = document.getElementById('filter-kelas-tabel').value;
+            if (kelas === 'Semua') { showToast("Pilih kelas spesifik terlebih dahulu!", "red"); return; }
+            
+            const murid = dataStore.filter(s => s.kelas === kelas);
+            if (murid.length === 0) { showToast("Tidak ada santri di kelas ini", "red"); return; }
+
+            const doc = new window.jspdf.jsPDF();
+            const pageWidth = doc.internal.pageSize.getWidth();
+            doc.setFontSize(16); doc.text(`Barcode Santri: ${kelas}`, pageWidth / 2, 15, { align: 'center' });
+
+            let x = 20, y = 30;
+            murid.forEach((s) => {
+                const canvas = document.createElement("canvas");
+                JsBarcode(canvas, s.id, { format: "CODE128", displayValue: true, width: 2, height: 40, fontSize: 14 });
+                const imgData = canvas.toDataURL("image/jpeg");
+                
+                doc.setFontSize(10);
+                doc.text(s.nama, x + 25, y - 2, { align: 'center' });
+                doc.addImage(imgData, 'JPEG', x, y, 50, 20);
+                
+                x += 90; // geser kolom kanan
+                if (x > 150) { 
+                    x = 20; y += 35; // ganti baris
+                }
+                if (y > 270) { 
+                    doc.addPage(); y = 30; x = 20; // ganti halaman
+                }
+            });
+            handlePDFOutput(doc, `Barcode_${kelas.replace(/\s+/g, '_')}.pdf`);
+        };
 
         window.exportRapor = (id) => {
             if(!window.jspdf) return;
@@ -1168,74 +1206,6 @@
             const tableData = dataStore.filter(x => x.kelas === kelas).map((m, i) => [i+1, m.nama, m.id, m.kehadiran, m.jilid, m.surah]);
             doc.autoTable({ startY: 30, head: [['No', 'Nama Santri', 'ID Absen', 'Status Terakhir', 'Jilid', 'Hafalan']], body: tableData, theme: 'striped', headStyles: { fillColor: [79, 70, 229] } });
             handlePDFOutput(doc, `Kelas_${kelas.replace(/\s+/g, '_')}.pdf`);
-        };
-
-        window.exportBarcodeKelas = () => {
-            if(!window.jspdf) return;
-            const kelas = document.getElementById('filter-kelas-tabel').value;
-            
-            if(kelas === "Semua") {
-                alert("Silakan pilih kelas spesifik terlebih dahulu pada dropdown filter untuk mencetak barcode!");
-                return;
-            }
-
-            const murid = dataStore.filter(s => s.kelas === kelas);
-            if(murid.length === 0) {
-                alert("Tidak ada data santri di kelas ini.");
-                return;
-            }
-
-            const doc = new window.jspdf.jsPDF();
-            const pageWidth = doc.internal.pageSize.getWidth();
-            
-            doc.setFontSize(16);
-            doc.text(`Kumpulan Barcode ID - ${kelas}`, pageWidth / 2, 15, { align: 'center' });
-
-            const tempCanvas = document.createElement('canvas');
-            
-            let startX = 20;
-            let startY = 30;
-            const colWidth = 85;
-            const rowHeight = 45; 
-            let col = 0;
-
-            murid.forEach((m, index) => {
-                // Gambar barcode di canvas
-                JsBarcode(tempCanvas, m.id, { 
-                    format: "CODE128", 
-                    width: 2, 
-                    height: 40, 
-                    displayValue: true,
-                    fontSize: 14,
-                    margin: 2
-                });
-                
-                const imgData = tempCanvas.toDataURL("image/jpeg", 1.0);
-                let x = startX + (col * colWidth);
-                let y = startY;
-
-                // Tulis Nama Anak di atas barcode
-                doc.setFontSize(10);
-                doc.setFont(undefined, 'bold');
-                doc.text(m.nama, x + 37.5, y, { align: 'center' }); 
-                // Tempel gambar barcode
-                doc.addImage(imgData, 'JPEG', x, y + 2, 75, 25);
-                
-                col++;
-                if (col > 1) { 
-                    col = 0;
-                    startY += rowHeight;
-                }
-
-                // Kalau udah sampai ujung bawah kertas, tambah halaman baru
-                if (startY > doc.internal.pageSize.getHeight() - 40 && index < murid.length - 1) {
-                    doc.addPage();
-                    startY = 20;
-                    col = 0;
-                }
-            });
-
-            handlePDFOutput(doc, `Barcode_Massal_${kelas.replace(/\s+/g, '_')}.pdf`);
         };
 
         window.exportGlobalPDF = () => {
@@ -1287,11 +1257,14 @@
             handlePDFOutput(doc, `Rekap_${tglMulai}_sd_${tglAkhir}.pdf`);
         };
 
+        // ==========================================
+        // INITIALIZATION & DUMMY DATA
+        // ==========================================
         function injectDummyData() {
             const today = new Date();
-            // Data dimundurkan ke H-1 agar memicu fungsi Auto-Alpa hari ini untuk Ustadz saat login
-            const yesterday = new Date(today); yesterday.setDate(yesterday.getDate() - 1); 
+            const yesterday = new Date(today); yesterday.setDate(yesterday.getDate() - 1);
             
+            const tDateStr = today.toISOString().split('T')[0];
             const yDateStr = yesterday.toISOString().split('T')[0];
 
             pengajarMap = { "Kelas Madinah": "Ust. Saprudin S.Ag", "Kelas Mekkah": "Ust. Fulan, Lc" };
@@ -1299,25 +1272,27 @@
             currentLembagaName = "TPQ Mockup Preview";
 
             jurnalStore = [
+                { id: `Kelas Madinah_${tDateStr}`, kelas: "Kelas Madinah", tanggal: tDateStr, tadarus: "Al-Mulk 1-10", murojaah: "Juz 30", materi: "Makhrojul Huruf", timestamp: today.toISOString() },
                 { id: `Kelas Madinah_${yDateStr}`, kelas: "Kelas Madinah", tanggal: yDateStr, tadarus: "Al-Qalam", murojaah: "An-Naba", materi: "Hukum Nun Mati", timestamp: yesterday.toISOString() },
-                { id: `Kelas Mekkah_${yDateStr}`, kelas: "Kelas Mekkah", tanggal: yDateStr, tadarus: "Yasin 1-20", murojaah: "Al-Baqarah", materi: "Tajwid Lanjutan", timestamp: yesterday.toISOString() }
+                { id: `Kelas Mekkah_${tDateStr}`, kelas: "Kelas Mekkah", tanggal: tDateStr, tadarus: "Yasin 1-20", murojaah: "Al-Baqarah", materi: "Tajwid Lanjutan", timestamp: today.toISOString() }
             ];
 
+            // Riwayat disetting kemarin, supaya fitur Auto-Alpa bisa dites hari ini!
             dataStore = [
                 {
-                    id: "ST111111", nama: "Ahmad Rafli", kelas: "Kelas Madinah", kehadiran: "Hadir", jilid: "Jilid 4", halaman: "12", surah: "Al-Mulk", ayat: "5-10", nilaiHafalan: "Lancar", nilaiJilid: "Lancar", catatan: "Data Kemarin", timestamp: yesterday.toISOString(),
+                    id: "ST111111", nama: "Ahmad Rafli", kelas: "Kelas Madinah", kehadiran: "Hadir", jilid: "Jilid 4", halaman: "12", surah: "Al-Mulk", ayat: "5-10", nilaiHafalan: "Lancar", nilaiJilid: "Lancar", catatan: "Rajin sekali", timestamp: yesterday.toISOString(),
                     riwayat: [
-                        { kehadiran: "Hadir", jilid: "Jilid 4", halaman: "10", surah: "Al-Mulk", ayat: "1-4", nilaiHafalan: "Mengulang", nilaiJilid: "Lancar", catatan: "Tajwid diperbaiki", timestamp: yesterday.toISOString() }
+                        { kehadiran: "Hadir", jilid: "Jilid 4", halaman: "12", surah: "Al-Mulk", ayat: "5-10", nilaiHafalan: "Lancar", nilaiJilid: "Lancar", catatan: "Rajin sekali", timestamp: yesterday.toISOString() }
                     ]
                 },
                 {
-                    id: "ST222222", nama: "Budi Santoso", kelas: "Kelas Madinah", kehadiran: "Izin", jilid: "Jilid 3", halaman: "20", surah: "An-Naba", ayat: "1-15", nilaiHafalan: "Kurang Lancar", nilaiJilid: "Lancar", catatan: "Data Kemarin", timestamp: yesterday.toISOString(),
+                    id: "ST222222", nama: "Budi Santoso", kelas: "Kelas Madinah", kehadiran: "Izin", jilid: "Jilid 3", halaman: "20", surah: "An-Naba", ayat: "1-15", nilaiHafalan: "Kurang Lancar", nilaiJilid: "Lancar", catatan: "Sakit demam", timestamp: yesterday.toISOString(),
                     riwayat: [
-                        { kehadiran: "Hadir", jilid: "Jilid 3", halaman: "20", surah: "An-Naba", ayat: "1-15", nilaiHafalan: "Kurang Lancar", nilaiJilid: "Lancar", catatan: "Belum hafal lancar", timestamp: yesterday.toISOString() }
+                        { kehadiran: "Izin", jilid: "Jilid 3", halaman: "20", surah: "An-Naba", ayat: "1-15", nilaiHafalan: "Kurang Lancar", nilaiJilid: "Lancar", catatan: "Sakit demam", timestamp: yesterday.toISOString() }
                     ]
                 },
                 {
-                    id: "ST333333", nama: "Siti Aminah", kelas: "Kelas Mekkah", kehadiran: "Hadir", jilid: "Al-Quran", halaman: "Juz 2", surah: "Al-Baqarah", ayat: "145", nilaiHafalan: "Lancar", nilaiJilid: "Lancar", catatan: "Data Kemarin", timestamp: yesterday.toISOString(),
+                    id: "ST333333", nama: "Siti Aminah", kelas: "Kelas Mekkah", kehadiran: "Hadir", jilid: "Al-Quran", halaman: "Juz 2", surah: "Al-Baqarah", ayat: "145", nilaiHafalan: "Lancar", nilaiJilid: "Lancar", catatan: "-", timestamp: yesterday.toISOString(),
                     riwayat: [
                         { kehadiran: "Hadir", jilid: "Al-Quran", halaman: "Juz 2", surah: "Al-Baqarah", ayat: "145", nilaiHafalan: "Lancar", nilaiJilid: "Lancar", catatan: "-", timestamp: yesterday.toISOString() }
                     ]
@@ -1327,7 +1302,7 @@
 
         function initApp() {
             if (is_preview && dataStore.length === 0) injectDummyData();
-            checkDailyReset(); 
+            autoAlpaCheck(); // Jalankan Auto-Alpa tiap kali buka web
             renderAll();
             const lastView = localStorage.getItem('activeView') || 'dashboard';
             switchView(lastView);
@@ -1395,11 +1370,7 @@
                         renderAll();
                     });
                     onSnapshot(collection(db, "jurnal"), (snapshot) => { jurnalStore = []; snapshot.forEach((docSnap) => { jurnalStore.push({ id: docSnap.id, ...docSnap.data() }); }); renderRekap(); });
-                    onSnapshot(collection(db, "santri"), (snapshot) => { 
-                        dataStore = []; snapshot.forEach((docSnap) => { dataStore.push({ id: docSnap.id, ...docSnap.data() }); }); 
-                        hasCheckedDailyReset = false; // Reset the flag so auto-alpa triggers on fresh reload
-                        initApp(); 
-                    });
+                    onSnapshot(collection(db, "santri"), (snapshot) => { dataStore = []; snapshot.forEach((docSnap) => { dataStore.push({ id: docSnap.id, ...docSnap.data() }); }); initApp(); });
                 } else {
                     document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
                     const loginView = document.getElementById('view-login'); loginView.style.display = 'block'; loginView.classList.add('active');

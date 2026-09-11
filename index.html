@@ -151,7 +151,6 @@
         <div id="view-data-santri" class="view-section">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-3">
                 <h2 class="text-2xl font-bold text-gray-800">Manajemen Data Santri</h2>
-                <!-- FIX RESPONSIVE: Ganti flex biasa dengan flex-wrap biar tombol gak nembus layar di HP -->
                 <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
                     <select id="filter-kelas-tabel" class="border px-3 py-2 rounded-lg text-sm bg-white shadow-sm focus:outline-none flex-grow md:flex-grow-0">
                         <option value="Semua">Semua Kelas</option>
@@ -205,7 +204,6 @@
                     <h2 class="text-2xl font-bold text-gray-800">Laporan Progres Santri</h2>
                     <p id="info-pengajar-rekap" class="text-sm text-indigo-600 font-medium mt-1 hidden"></p>
                 </div>
-                <!-- FIX RESPONSIVE: Flex-wrap buat filter tanggal biar rapi di HP -->
                 <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto">
                     <select id="filter-kelas-rekap" class="border px-3 py-2 rounded-lg text-sm bg-white shadow-sm focus:outline-none flex-grow lg:flex-grow-0">
                         <option value="Semua">Semua Kelas</option>
@@ -440,15 +438,14 @@
         let isFirstRender = true; // Kunci biar dropdown default jalan sekali saat login
 
         const firebaseConfig = {
-  apiKey: "AIzaSyCfapSUazt_uCVVI5uttatd2iGR7DyLk54",
-  authDomain: "project-311a138f-ccc5-491b-b79.firebaseapp.com",
-  projectId: "project-311a138f-ccc5-491b-b79",
-  storageBucket: "project-311a138f-ccc5-491b-b79.firebasestorage.app",
-  messagingSenderId: "691555762548",
-  appId: "1:691555762548:web:f7037fd32e00abf488ac21",
-  measurementId: "G-NHSDJKXSD6"
-};
-
+            apiKey: "AIzaSyCfapSUazt_uCVVI5uttatd2iGR7DyLk54",
+            authDomain: "project-311a138f-ccc5-491b-b79.firebaseapp.com",
+            projectId: "project-311a138f-ccc5-491b-b79",
+            storageBucket: "project-311a138f-ccc5-491b-b79.firebasestorage.app",
+            messagingSenderId: "691555762548",
+            appId: "1:691555762548:web:f7037fd32e00abf488ac21",
+            measurementId: "G-NHSDJKXSD6"
+        };
 
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -537,10 +534,16 @@
 
         function extractClasses() {
             classesSet.clear();
-            // Ambil dari murid yang ada & dari Ustadz terdaftar biar nggak ada kelas Ghaib
+            
+            // 1. Ambil kelas dari santri yang sudah ada (Syarat minimal 1 santri agar ustadz lain bisa lihat)
             dataStore.forEach(s => { if(s.kelas) classesSet.add(s.kelas); });
-            Object.keys(pengajarMap).forEach(cls => classesSet.add(cls));
-            if (currentUserRole === 'ustadz') {
+            
+            // 2. Hak Akses Kelas Kosong
+            if (currentUserRole === 'admin') {
+                // Admin mode dewa: Tarik SEMUA kelas dari profil ustadz biarpun masih kosong (0 santri)
+                Object.keys(pengajarMap).forEach(cls => classesSet.add(cls));
+            } else if (currentUserRole === 'ustadz') {
+                // Ustadz mode normal: Tarik kelas bawaan miliknya sendiri (biar dia bisa nambah santri pertama)
                 currentUserClasses.forEach(cls => { if(cls !== 'Semua') classesSet.add(cls); });
             }
             
@@ -550,7 +553,6 @@
             
             let valTabel = filterTabel.value; let valRekap = filterRekap.value; let valDash = filterDash.value;
             
-            // PAKSA OVERRIDE DEFAULT SAAT AWAL LOGIN
             if (currentUserRole === 'ustadz' && isFirstRender) {
                 valTabel = currentUserClasses[0]; valRekap = currentUserClasses[0]; valDash = currentUserClasses[0];
                 isFirstRender = false;
@@ -614,7 +616,7 @@
         document.getElementById('filter-kelas-dash').addEventListener('change', renderAll);
         
         let html5QrcodeScanner = null;
-        let scanHistoryMap = {}; // Penyimpanan Waktu Scan per ID Santri (Anti-Spam Rapid Scan)
+        let scanHistoryMap = {}; 
 
         window.showBarcode = (id, nama) => {
             document.getElementById('barcode-nama').innerText = nama;
@@ -682,10 +684,7 @@
             const studentId = decodedText;
             const now = Date.now();
             
-            // Cooldown 2 Menit (120,000 ms) per ID Santri 
-            if (scanHistoryMap[studentId] && (now - scanHistoryMap[studentId] < 120000)) {
-                return; // Cuek (Tidak Double Scan)
-            }
+            if (scanHistoryMap[studentId] && (now - scanHistoryMap[studentId] < 120000)) { return; }
             scanHistoryMap[studentId] = now;
 
             const s = dataStore.find(x => x.id === studentId);
@@ -863,7 +862,6 @@
                     let cardList = '';
                     jurnalKelasIni.forEach(j => {
                         let btnEditCard = (currentUserRole === 'admin' || !currentUserClasses.includes(kls)) ? '' : `<button onclick="openJurnalModal('${kls}', '${j.tanggal}')" class="bg-indigo-500 text-white px-2 py-1 rounded text-xs font-bold hover:bg-indigo-600">Isi/Edit Jurnal</button>`;
-                        // FIX RESPONSIVE: grid-cols-1 md:grid-cols-3 buat jurnal grid
                         cardList += `<div class="bg-white p-3 rounded-lg border border-indigo-100 shadow-sm"><div class="flex justify-between items-center mb-2 border-b border-gray-100 pb-2"><h4 class="font-bold text-sm text-indigo-800"><i class="fa-solid fa-book-journal-whills mr-1"></i> Jurnal Tgl: ${j.tanggal}</h4>${btnEditCard}</div><div class="grid grid-cols-1 md:grid-cols-3 gap-2"><div class="bg-gray-50 p-2 rounded"><p class="text-[10px] text-indigo-500 font-bold mb-0.5">Tadarus</p><p class="text-xs font-medium text-gray-800">${j.tadarus || '-'}</p></div><div class="bg-gray-50 p-2 rounded"><p class="text-[10px] text-indigo-500 font-bold mb-0.5">Murojaah</p><p class="text-xs font-medium text-gray-800">${j.murojaah || '-'}</p></div><div class="bg-gray-50 p-2 rounded"><p class="text-[10px] text-indigo-500 font-bold mb-0.5">Materi</p><p class="text-xs font-medium text-gray-800">${j.materi || '-'}</p></div></div></div>`;
                     });
                     jurnalHTML = `<div class="bg-indigo-50 p-4 rounded-xl shadow-sm mb-4 border border-indigo-100 relative"><div class="absolute top-4 right-4">${btnTambahJurnal}</div><h4 class="font-bold text-gray-700 mb-3"><i class="fa-solid fa-layer-group mr-2"></i>Kumpulan Jurnal</h4><div class="max-h-60 overflow-y-auto pr-2 space-y-3 custom-scrollbar">${cardList}</div></div>`;
@@ -967,7 +965,6 @@
             pengajarMap = { "Kelas Madinah": "Ust. Saprudin S.Ag", "Kelas Mekkah": "Ust. Fulan, Lc" };
             classesSet = new Set(["Kelas Madinah", "Kelas Mekkah"]); currentLembagaName = "TPQ Mockup Preview";
             jurnalStore = [ { id: `Kelas Madinah_${tDateStr}`, kelas: "Kelas Madinah", tanggal: tDateStr, tadarus: "Al-Mulk 1-10", murojaah: "Juz 30", materi: "Makhrojul Huruf", timestamp: today.toISOString() }, { id: `Kelas Madinah_${yDateStr}`, kelas: "Kelas Madinah", tanggal: yDateStr, tadarus: "Al-Qalam", murojaah: "An-Naba", materi: "Hukum Nun Mati", timestamp: yesterday.toISOString() }, { id: `Kelas Mekkah_${tDateStr}`, kelas: "Kelas Mekkah", tanggal: tDateStr, tadarus: "Yasin 1-20", murojaah: "Al-Baqarah", materi: "Tajwid Lanjutan", timestamp: today.toISOString() } ];
-            // Data Santri Sengaja Dibuat Kemarin, biar Auto-Alpa bisa dipamerkan!
             dataStore = [
                 { id: "ST111111", nama: "Ahmad Rafli", kelas: "Kelas Madinah", kehadiran: "Hadir", jilid: "Jilid 4", halaman: "12", surah: "Al-Mulk", ayat: "5-10", nilaiHafalan: "Lancar", nilaiJilid: "Lancar", catatan: "Rajin sekali", timestamp: yesterday.toISOString(), riwayat: [ { kehadiran: "Hadir", jilid: "Jilid 4", halaman: "10", surah: "Al-Mulk", ayat: "1-4", nilaiHafalan: "Mengulang", nilaiJilid: "Lancar", catatan: "Tajwid diperbaiki", timestamp: yesterday.toISOString() } ] },
                 { id: "ST222222", nama: "Budi Santoso", kelas: "Kelas Madinah", kehadiran: "Izin", jilid: "Jilid 3", halaman: "20", surah: "An-Naba", ayat: "1-15", nilaiHafalan: "Kurang Lancar", nilaiJilid: "Lancar", catatan: "Sakit demam", timestamp: yesterday.toISOString(), riwayat: [ { kehadiran: "Hadir", jilid: "Jilid 3", halaman: "20", surah: "An-Naba", ayat: "1-15", nilaiHafalan: "Kurang Lancar", nilaiJilid: "Lancar", catatan: "Belum hafal lancar", timestamp: yesterday.toISOString() } ] },
@@ -975,7 +972,6 @@
             ];
         }
 
-        // MESIN AUTO-ALPA
         function autoAlpaCheck() {
             if (currentUserRole === 'admin') return;
             const todayStr = new Date().toISOString().split('T')[0];

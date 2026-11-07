@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aplikasi Progres Santri</title>
-    <link rel="icon" type="image/png" href="poto1.png">
+    <link rel="icon" type="image/png" href="poto.png">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
@@ -33,7 +33,7 @@
                 <!-- Logo -->
                 <div class="flex items-center">
                     <i class="fa-solid fa-book-quran text-2xl mr-2"></i>
-                    <span class="font-bold text-xl tracking-wider">TPQ<span class="text-indigo-300">Salaamah Bisyafa'atil Qur'an</span></span>
+                    <span class="font-bold text-xl tracking-wider">NGAJI<span class="text-indigo-300">APP</span></span>
                 </div>
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex space-x-4 items-center">
@@ -89,7 +89,7 @@
                             <p class="text-xs text-indigo-800 font-bold border-b border-indigo-200 pb-1 mb-2"><i class="fa-solid fa-bolt mr-1"></i> Data Dummy Aktif (Klik untuk Login):</p>
                             <ul class="text-xs text-gray-700 space-y-2 list-none">
                                 <li>👑 <span class="text-indigo-600 font-bold cursor-pointer hover:underline" onclick="document.getElementById('login-email').value='admin@ngaji.com'; document.getElementById('login-password').value='123456';">admin@ngaji.com</span> <br><span class="text-[10px] text-gray-500 ml-5">(Akses Semua Kelas - Read Only)</span></li>
-                                <li>👨‍🏫 <span class="text-green-600 font-bold cursor-pointer hover:underline" onclick="document.getElementById('login-email').value='saprudin@ngaji.com'; document.getElementById('login-password').value='123456';">saprudin@ngaji.com</span> <br><span class="text-[10px] text-gray-500 ml-5">(Wali Kelas Madinah - Akses Penuh)</span></li>
+                                <li>👨‍🏫 <span class="text-green-600 font-bold cursor-pointer hover:underline" onclick="document.getElementById('login-email').value='saprudin@ngaji.com'; document.getElementById('login-password').value='123456';">saprudin@ngaji.com</span> <br><span class="text-[10px] text-gray-500 ml-5">(Wali Kelas Madinah - Akses Penuh / Ustadz)</span></li>
                             </ul>
                         </div>
                     </div>
@@ -158,7 +158,7 @@
         <div id="view-data-santri" class="view-section">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 space-y-3 md:space-y-0">
                 <h2 class="text-2xl font-bold text-gray-800">Manajemen Data Santri</h2>
-                <!-- Filter & Navigasi Buttons Responsif (Flex-wrap untuk HP) -->
+                <!-- Filter & Navigasi Buttons Responsif -->
                 <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
                     <select id="filter-kelas-tabel" class="border px-3 py-2 rounded-lg text-sm bg-white shadow-sm focus:outline-none flex-grow md:flex-grow-0">
                         <option value="Semua">Semua Kelas</option>
@@ -178,14 +178,14 @@
             </div>
             
             <div class="bg-white rounded-xl shadow overflow-hidden w-full">
-                <!-- Wrapper Tabel untuk Horizontal Scroll di HP -->
                 <div class="overflow-x-auto w-full custom-scrollbar">
-                    <table class="w-full text-left border-collapse min-w-[800px]">
+                    <table class="w-full text-left border-collapse min-w-[850px]">
                         <thead>
                             <tr class="bg-gray-100 text-gray-600 text-sm uppercase">
                                 <th class="p-4 border-b w-1/5 whitespace-nowrap">Nama Santri</th>
                                 <th class="p-4 border-b w-1/5 whitespace-nowrap">Kelas / Wali Kelas</th>
-                                <th class="p-4 border-b whitespace-nowrap">Status</th>
+                                <th class="p-4 border-b whitespace-nowrap">Status Absen</th>
+                                <th class="p-4 border-b whitespace-nowrap">SPP Bulan Ini</th>
                                 <th class="p-4 border-b whitespace-nowrap">Hafalan</th>
                                 <th class="p-4 border-b whitespace-nowrap">Jilid</th>
                                 <th class="p-4 border-b whitespace-nowrap">Nilai</th>
@@ -209,13 +209,22 @@
         <div id="view-rekap" class="view-section">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 space-y-3 md:space-y-0">
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-800">Laporan Progres Santri</h2>
+                    <h2 class="text-2xl font-bold text-gray-800">Laporan Progres & Keuangan Santri</h2>
                     <p id="info-pengajar-rekap" class="text-sm text-indigo-600 font-medium mt-1 hidden"></p>
                 </div>
                 <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
                     <select id="filter-kelas-rekap" class="border px-3 py-2 rounded-lg text-sm bg-white shadow-sm focus:outline-none flex-grow md:flex-grow-0">
                         <option value="Semua">Semua Kelas</option>
                     </select>
+
+                    <!-- Shortcut Cepat Periode Semester -->
+                    <select id="filter-preset-semester" onchange="applyTopSemesterPreset(this.value)" class="border px-2 py-2 rounded-lg text-xs bg-indigo-50 text-indigo-700 font-bold shadow-sm focus:outline-none">
+                        <option value="">⚡ Set Periode Cepat</option>
+                        <option value="ganjil">🍂 Semester Ganjil (Jul - Des)</option>
+                        <option value="genap">🌱 Semester Genap (Jan - Jun)</option>
+                        <option value="bulan_ini">📅 Bulan Berjalan</option>
+                    </select>
+
                     <div class="flex items-center space-x-1 border px-2 py-1.5 rounded-lg bg-white shadow-sm">
                         <span class="text-xs text-gray-500 font-bold">Dari:</span>
                         <input type="date" id="filter-tanggal-mulai" class="focus:outline-none text-sm bg-transparent">
@@ -316,7 +325,7 @@
         </div>
     </div>
 
-    <!-- Modal Riwayat -->
+    <!-- Modal Riwayat Ngaji -->
     <div id="modal-history" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[80vh] flex flex-col">
             <div class="bg-indigo-600 px-6 py-4 flex justify-between items-center text-white rounded-t-xl">
@@ -337,6 +346,115 @@
                     </thead>
                     <tbody id="hist-tbody"></tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal SPP & Infaq Santri (Dengan Kartu Kontrol & Fitur Edit Transaksi) -->
+    <div id="modal-spp" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-xl overflow-hidden max-h-[92vh] flex flex-col">
+            <div class="bg-amber-600 px-6 py-4 flex justify-between items-center text-white sticky top-0 z-10">
+                <h3 class="font-bold text-lg"><i class="fa-solid fa-wallet mr-2"></i>SPP & Infaq: <span id="spp-santri-nama"></span></h3>
+                <button onclick="closeSPPModal()" class="hover:text-gray-300"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="p-6 overflow-y-auto flex-grow custom-scrollbar">
+                
+                <!-- KARTU KONTROL PEMBAYARAN SPP 12 BULAN -->
+                <div id="spp-kartu-kontrol-wrap" class="mb-5 bg-white p-4 rounded-xl border border-amber-200 shadow-sm">
+                    <div class="flex justify-between items-center mb-2.5">
+                        <span class="text-xs font-bold text-gray-800 flex items-center">
+                            <i class="fa-solid fa-calendar-check text-amber-500 mr-1.5"></i> Kartu Kontrol SPP (Tahun Berjalan)
+                        </span>
+                        <span id="spp-tunggakan-info" class="text-[11px] font-bold px-2 py-0.5 rounded bg-red-100 text-red-600 hidden"></span>
+                    </div>
+                    <!-- Matriks Grid 12 Bulan -->
+                    <div id="spp-matrix-bulan" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 text-center"></div>
+                    <p class="text-[10px] text-gray-400 mt-2.5 italic">
+                        <i class="fa-solid fa-hand-pointer mr-1 text-amber-500"></i>Klik kotak bulan merah/abu untuk memilih otomatis bulan yang akan dibayar.
+                    </p>
+                </div>
+
+                <!-- Form Pembayaran Baru / Form Edit -->
+                <div id="spp-form-container" class="bg-amber-50 p-4 rounded-xl border border-amber-200 mb-6">
+                    <div class="flex justify-between items-center mb-3">
+                        <h4 id="spp-form-heading" class="font-bold text-amber-900 text-sm"><i class="fa-solid fa-plus-circle mr-1"></i> Catat Pembayaran Baru</h4>
+                        <button type="button" id="btn-cancel-edit-spp-top" onclick="cancelEditSPP()" class="text-xs text-red-600 hover:underline hidden font-bold">
+                            <i class="fa-solid fa-xmark mr-1"></i> Batal Edit
+                        </button>
+                    </div>
+                    <form id="form-bayar-spp" class="space-y-3">
+                        <input type="hidden" id="spp-santri-id">
+                        <input type="hidden" id="spp-edit-id">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-1">Jenis Pembayaran</label>
+                                <select id="spp-jenis" class="w-full px-3 py-1.5 border rounded-lg text-sm bg-white focus:ring-2 focus:ring-amber-500" onchange="toggleSPPBulan()">
+                                    <option value="SPP">SPP Bulanan</option>
+                                    <option value="Infaq">Infaq / Sedekah Bebas</option>
+                                    <option value="Uang Gedung/Pendaftaran">Uang Gedung / Pendaftaran</option>
+                                </select>
+                            </div>
+                            <div id="div-spp-bulan">
+                                <label class="block text-xs font-bold text-gray-700 mb-1">Untuk Bulan</label>
+                                <select id="spp-bulan" class="w-full px-3 py-1.5 border rounded-lg text-sm bg-white focus:ring-2 focus:ring-amber-500">
+                                    <option value="Januari">Januari</option>
+                                    <option value="Februari">Februari</option>
+                                    <option value="Maret">Maret</option>
+                                    <option value="April">April</option>
+                                    <option value="Mei">Mei</option>
+                                    <option value="Juni">Juni</option>
+                                    <option value="Juli">Juli</option>
+                                    <option value="Agustus">Agustus</option>
+                                    <option value="September">September</option>
+                                    <option value="Oktober">Oktober</option>
+                                    <option value="November">November</option>
+                                    <option value="Desember">Desember</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-1">Nominal (Rp)</label>
+                                <input type="number" id="spp-nominal" class="w-full px-3 py-1.5 border rounded-lg text-sm focus:ring-2 focus:ring-amber-500" placeholder="Cth: 50000" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-1">Tanggal Bayar</label>
+                                <input type="date" id="spp-tanggal" class="w-full px-3 py-1.5 border rounded-lg text-sm bg-white focus:ring-2 focus:ring-amber-500" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Catatan (Opsional)</label>
+                            <input type="text" id="spp-catatan" class="w-full px-3 py-1.5 border rounded-lg text-sm focus:ring-2 focus:ring-amber-500" placeholder="Cth: Titip lewat wali santri">
+                        </div>
+                        <div class="flex justify-end pt-2 space-x-2">
+                            <button type="button" id="btn-cancel-edit-spp-bottom" onclick="cancelEditSPP()" class="bg-gray-200 text-gray-700 px-3 py-2 rounded-lg text-xs font-bold hover:bg-gray-300 transition hidden">
+                                Batal
+                            </button>
+                            <button type="submit" id="btn-submit-spp" class="bg-amber-600 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-amber-700 shadow transition">
+                                <i class="fa-solid fa-receipt mr-1"></i> <span id="spp-btn-text">Simpan Pembayaran</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="flex justify-between items-center mb-2">
+                    <h4 class="font-bold text-gray-800 text-sm"><i class="fa-solid fa-list-check mr-1 text-amber-600"></i> Riwayat Transaksi</h4>
+                    <span id="spp-total-terbayar" class="text-xs bg-green-100 text-green-700 font-bold px-2 py-1 rounded">Total: Rp 0</span>
+                </div>
+                <div class="overflow-x-auto custom-scrollbar border rounded-lg">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead>
+                            <tr class="bg-gray-100 text-gray-600">
+                                <th class="p-2 border-b whitespace-nowrap">Tgl Bayar</th>
+                                <th class="p-2 border-b whitespace-nowrap">Jenis / Bulan</th>
+                                <th class="p-2 border-b whitespace-nowrap">Nominal</th>
+                                <th class="p-2 border-b whitespace-nowrap">Penerima</th>
+                                <th class="p-2 border-b text-center whitespace-nowrap">Kuitansi / Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="spp-tbody"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -439,9 +557,15 @@
 
     <!-- Firebase SDK (Modular v9) -->
     <script type="module">
-        const is_preview = false; // Set ke false untuk produksi (Firebase Asli)
+        const is_preview = false; // Ubah ke false untuk mode produksi dengan database Firebase asli
         
-        const ADMIN_EMAILS = ['admin@ngaji.com', 'saprudin@ngaji.com']; 
+        // HANYA EMAIL ADMIN UTAMA
+        const ADMIN_EMAILS = ['admin@ngaji.com']; 
+
+        const NAMA_BULAN = [
+            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+        ];
 
         const firebaseConfig = {
   apiKey: "AIzaSyCfapSUazt_uCVVI5uttatd2iGR7DyLk54",
@@ -473,6 +597,7 @@
         let jurnalStore = [];
         let classesSet = new Set();
         let pengajarMap = {};
+        let semesterFilterMap = {};
         
         let authMode = 'login'; 
         
@@ -573,18 +698,32 @@
             return `<span class="px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-[10px] font-bold">${ket || '-'}</span>`;
         }
 
-        // --- FILTER KELAS GHAIB (Diperbaiki) ---
+        function getBulanIniNama() {
+            return NAMA_BULAN[new Date().getMonth()];
+        }
+
+        function getSPPBadge(pembayaranList) {
+            const bulanIni = getBulanIniNama();
+            const sudahBayar = (pembayaranList || []).some(p => p.jenis === 'SPP' && p.bulan === bulanIni);
+            if (sudahBayar) {
+                return `<span class="px-2 py-1 rounded text-[11px] font-bold bg-green-100 text-green-700"><i class="fa-solid fa-circle-check mr-1"></i>Lunas (${bulanIni})</span>`;
+            } else {
+                return `<span class="px-2 py-1 rounded text-[11px] font-bold bg-amber-100 text-amber-700"><i class="fa-solid fa-clock mr-1"></i>Belum Bayar</span>`;
+            }
+        }
+
+        // --- FILTER KELAS GHAIB ---
         function extractClasses() {
             classesSet.clear();
             
-            // 1. Tarik dari data santri yang ada
             dataStore.forEach(s => { if(s.kelas) classesSet.add(s.kelas); });
             
-            // 2. Tarik dari data profil Ustadz yang login (biar kelas kosong tetep kelihatan oleh ustadznya)
             if (currentUserRole === 'admin') {
                 Object.keys(pengajarMap).forEach(cls => classesSet.add(cls));
             } else if (currentUserRole === 'ustadz' && currentUserClasses.length > 0) {
-                currentUserClasses.forEach(cls => classesSet.add(cls));
+                currentUserClasses.forEach(cls => {
+                    if (cls !== 'Semua') classesSet.add(cls);
+                });
             }
             
             const filterTabel = document.getElementById('filter-kelas-tabel');
@@ -598,8 +737,11 @@
             
             filterTabel.innerHTML = optionsHTML; filterRekap.innerHTML = optionsHTML; filterDash.innerHTML = optionsHTML;
 
-            // Logika Kunci Default Dropdown saat pertama kali load
-            let defaultKelas = (currentUserRole === 'ustadz' && currentUserClasses.length > 0) ? currentUserClasses[0] : "Semua";
+            let defaultKelas = "Semua";
+            if (currentUserRole === 'ustadz' && currentUserClasses.length > 0) {
+                let firstClass = currentUserClasses.find(c => c !== 'Semua');
+                if (firstClass) defaultKelas = firstClass;
+            }
             
             filterTabel.value = classesSet.has(valTabel) ? valTabel : defaultKelas;
             filterRekap.value = classesSet.has(valRekap) ? valRekap : defaultKelas;
@@ -611,9 +753,7 @@
             const today = new Date();
             const dayOfWeek = today.getDay();
             
-            // JIKA SABTU (6) ATAU MINGGU (0), MESIN AUTO-ALPA BERHENTI (LIBUR)
             if (dayOfWeek === 0 || dayOfWeek === 6) {
-                console.log("Hari Libur (Sabtu/Minggu). Auto-Alpa dimatikan.");
                 return; 
             }
 
@@ -639,8 +779,8 @@
                         s.kehadiran = 'Alpa';
                         needsUpdate = true;
                     } else {
-                        // Di Real DB, cuma Ustadz kelasnya sendiri yg bisa memicu update Alpa ke server biar gak spam
-                        if (currentUserRole === 'ustadz' && currentUserClasses.includes(s.kelas)) {
+                        const canManageStudent = currentUserRole === 'ustadz' && (currentUserClasses.includes('Semua') || currentUserClasses.includes(s.kelas));
+                        if (canManageStudent) {
                             try {
                                 let riwayatBaru = [...s.riwayat];
                                 riwayatBaru.unshift(newData);
@@ -661,33 +801,35 @@
             const btnMassBarcode = document.getElementById('btn-mass-barcode');
             const filterTabelVal = document.getElementById('filter-kelas-tabel').value;
 
-            if(btnTambah) btnTambah.style.display = currentUserRole === 'admin' ? 'none' : 'block';
+            if(btnTambah) {
+                btnTambah.style.display = currentUserRole === 'admin' ? 'none' : 'block';
+            }
             
-            // BLOKER TOMBOL SCAN DI AKHIR PEKAN
+            // TOMBOL SCAN ABSEN
             if(btnScan) {
-                const isWeekend = new Date().getDay() === 0 || new Date().getDay() === 6;
                 if(currentUserRole === 'admin') {
                     btnScan.style.display = 'none';
-                } else if (isWeekend) {
-                    btnScan.style.display = 'block';
-                    btnScan.disabled = true;
-                    btnScan.classList.replace('bg-green-600', 'bg-gray-400');
-                    btnScan.classList.replace('hover:bg-green-700', 'hover:bg-gray-400');
-                    btnScan.classList.add('cursor-not-allowed');
-                    btnScan.innerHTML = '<i class="fa-solid fa-lock mr-1"></i> Libur (Akhir Pekan)';
-                    btnScan.onclick = null;
                 } else {
                     btnScan.style.display = 'block';
-                    btnScan.disabled = false;
-                    btnScan.classList.replace('bg-gray-400', 'bg-green-600');
-                    btnScan.classList.replace('hover:bg-gray-400', 'hover:bg-green-700');
-                    btnScan.classList.remove('cursor-not-allowed');
-                    btnScan.innerHTML = '<i class="fa-solid fa-qrcode mr-1"></i> Scan Absen';
-                    btnScan.onclick = openScanner;
+                    const isWeekend = new Date().getDay() === 0 || new Date().getDay() === 6;
+                    if (isWeekend) {
+                        btnScan.disabled = true;
+                        btnScan.classList.replace('bg-green-600', 'bg-gray-400');
+                        btnScan.classList.replace('hover:bg-green-700', 'hover:bg-gray-400');
+                        btnScan.classList.add('cursor-not-allowed');
+                        btnScan.innerHTML = '<i class="fa-solid fa-lock mr-1"></i> Libur (Akhir Pekan)';
+                        btnScan.onclick = null;
+                    } else {
+                        btnScan.disabled = false;
+                        btnScan.classList.replace('bg-gray-400', 'bg-green-600');
+                        btnScan.classList.replace('hover:bg-gray-400', 'hover:bg-green-700');
+                        btnScan.classList.remove('cursor-not-allowed');
+                        btnScan.innerHTML = '<i class="fa-solid fa-qrcode mr-1"></i> Scan Absen';
+                        btnScan.onclick = openScanner;
+                    }
                 }
             }
 
-            // TAMPILKAN TOMBOL BARCODE MASSAL JIKA PILIH SPESIFIK KELAS
             if(btnMassBarcode) {
                 if (filterTabelVal !== "Semua") {
                     btnMassBarcode.style.display = 'block';
@@ -726,6 +868,7 @@
                         <div class="text-sm text-gray-600 space-y-1">
                             <p><i class="fa-solid fa-book-open text-indigo-400 mr-2"></i>${s.jilid} - Hal ${s.halaman}</p>
                             <p><i class="fa-solid fa-headphones text-indigo-400 mr-2"></i>${s.surah} (Ayat ${s.ayat})</p>
+                            <p><i class="fa-solid fa-money-bill-wave text-amber-500 mr-2"></i>${getSPPBadge(s.pembayaran)}</p>
                         </div>
                     </div>
                 `;
@@ -743,11 +886,15 @@
             
             dataStore.filter(s => selectedClass === "Semua" || s.kelas === selectedClass).forEach(s => {
                 let actionButtons = `
+                    <button onclick="openSPPModal('${s.id}')" class="text-amber-500 hover:text-amber-700 px-1" title="SPP / Infaq"><i class="fa-solid fa-wallet"></i></button>
                     <button onclick="showBarcode('${s.id}', '${s.nama}')" class="text-gray-700 hover:text-black px-1" title="Lihat Barcode"><i class="fa-solid fa-barcode"></i></button>
                     <button onclick="showHistory('${s.id}')" class="text-green-500 hover:text-green-700 px-1" title="Riwayat"><i class="fa-solid fa-clock-rotate-left"></i></button>
                     <button onclick="exportRapor('${s.id}')" class="text-red-500 hover:text-red-700 px-1" title="Cetak Rapor"><i class="fa-solid fa-file-pdf"></i></button>
                 `;
-                if(currentUserRole === 'ustadz' && currentUserClasses.includes(s.kelas)) {
+                
+                const canManage = currentUserRole === 'ustadz' && (currentUserClasses.includes('Semua') || currentUserClasses.includes(s.kelas));
+                
+                if(canManage) {
                     actionButtons += `
                         <button onclick="editSantri('${s.id}')" class="text-blue-500 hover:text-blue-700 px-1" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
                         <button onclick="deleteSantri('${s.id}')" class="text-red-300 hover:text-red-600 px-1" title="Hapus"><i class="fa-solid fa-trash"></i></button>
@@ -769,13 +916,14 @@
                             <div class="text-xs text-indigo-600 font-bold mt-0.5"><i class="fa-solid fa-user-tie mr-1"></i> ${namaWaliKelas}</div>
                         </td>
                         <td class="p-4 whitespace-nowrap">${getStatusBadge(s.kehadiran)}</td>
+                        <td class="p-4 whitespace-nowrap">${getSPPBadge(s.pembayaran)}</td>
                         <td class="p-4 whitespace-nowrap">${s.surah} <br><span class="text-gray-500 text-[11px]">(Ayat ${s.ayat})</span></td>
                         <td class="p-4 whitespace-nowrap">${s.jilid} <br><span class="text-gray-500 text-[11px]">(Hal ${s.halaman})</span></td>
                         <td class="p-4 whitespace-nowrap">
                             <div class="mb-1 flex items-center space-x-1"><span class="text-[10px] text-gray-400 w-6">Haf:</span> ${badgeHafalan}</div>
                             <div class="flex items-center space-x-1"><span class="text-[10px] text-gray-400 w-6">Jld:</span> ${badgeJilid}</div>
                         </td>
-                        <td class="p-4 text-xs italic text-gray-600 break-words whitespace-normal min-w-[150px]">${s.catatan || '-'}</td>
+                        <td class="p-4 text-xs italic text-gray-600 break-words whitespace-normal min-w-[140px]">${s.catatan || '-'}</td>
                         <td class="p-4 text-center whitespace-nowrap">
                             <div class="flex justify-center space-x-2 text-lg items-center">
                                 ${actionButtons}
@@ -809,11 +957,382 @@
         document.getElementById('filter-kelas-dash').addEventListener('change', renderAll);
         
         // ==========================================
+        // FITUR SPP, KARTU KONTROL 12 BULAN & EDIT TRANSAKSI
+        // ==========================================
+        window.toggleSPPBulan = () => {
+            const jenis = document.getElementById('spp-jenis').value;
+            const divBulan = document.getElementById('div-spp-bulan');
+            const wrapKartu = document.getElementById('spp-kartu-kontrol-wrap');
+            if(jenis === 'SPP') {
+                divBulan.style.display = 'block';
+                if(wrapKartu) wrapKartu.style.display = 'block';
+            } else {
+                divBulan.style.display = 'none';
+                if(wrapKartu) wrapKartu.style.display = 'none';
+            }
+        };
+
+        window.selectSPPBulan = (bulan) => {
+            document.getElementById('spp-bulan').value = bulan;
+            showToast(`Bulan ${bulan} dipilih untuk pembayaran!`, 'amber');
+        };
+
+        function renderKartuKontrol(s) {
+            const wrap = document.getElementById('spp-matrix-bulan');
+            const tunggakanInfo = document.getElementById('spp-tunggakan-info');
+            if (!wrap) return getBulanIniNama();
+            wrap.innerHTML = '';
+
+            const paidMonths = new Set((s.pembayaran || []).filter(p => p.jenis === 'SPP').map(p => p.bulan));
+            const currMonthIdx = new Date().getMonth();
+            let oldestUnpaid = null;
+            let countNunggak = 0;
+
+            NAMA_BULAN.forEach((bulan, idx) => {
+                const isPaid = paidMonths.has(bulan);
+                const isPastOrCurrent = idx <= currMonthIdx;
+                
+                let badgeClass = '';
+                let statusIcon = '';
+
+                if (isPaid) {
+                    badgeClass = 'bg-green-100 text-green-700 border-green-300 font-bold';
+                    statusIcon = '<i class="fa-solid fa-check text-[9px] mr-1"></i>';
+                } else if (isPastOrCurrent) {
+                    badgeClass = 'bg-red-50 text-red-600 border-red-300 font-bold hover:bg-red-100 cursor-pointer shadow-sm';
+                    statusIcon = '<i class="fa-solid fa-triangle-exclamation text-[9px] mr-1"></i>';
+                    countNunggak++;
+                    if (!oldestUnpaid) oldestUnpaid = bulan;
+                } else {
+                    badgeClass = 'bg-gray-50 text-gray-500 border-gray-200 hover:bg-gray-100 cursor-pointer';
+                    statusIcon = '<i class="fa-regular fa-circle text-[9px] mr-1"></i>';
+                    if (!oldestUnpaid && idx > currMonthIdx) oldestUnpaid = bulan;
+                }
+
+                const clickAttr = isPaid ? '' : `onclick="selectSPPBulan('${bulan}')"`;
+
+                wrap.innerHTML += `
+                    <div ${clickAttr} class="border rounded-lg p-2 text-xs transition select-none ${badgeClass}" title="${isPaid ? 'Sudah Lunas' : 'Klik untuk bayar bulan ' + bulan}">
+                        <div class="truncate font-semibold">${statusIcon}${bulan.substring(0,3)}</div>
+                        <div class="text-[9px] mt-0.5">${isPaid ? 'Lunas' : (isPastOrCurrent ? 'Nunggak' : 'Belum')}</div>
+                    </div>
+                `;
+            });
+
+            if (countNunggak > 0 && oldestUnpaid) {
+                tunggakanInfo.classList.remove('hidden');
+                tunggakanInfo.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> Nunggak: <b>${oldestUnpaid}</b> (${countNunggak} Bln)`;
+            } else {
+                tunggakanInfo.classList.add('hidden');
+            }
+
+            return oldestUnpaid || getBulanIniNama();
+        }
+
+        window.cancelEditSPP = () => {
+            document.getElementById('spp-edit-id').value = '';
+            document.getElementById('spp-form-heading').innerHTML = '<i class="fa-solid fa-plus-circle mr-1"></i> Catat Pembayaran Baru';
+            document.getElementById('spp-btn-text').innerText = 'Simpan Pembayaran';
+            document.getElementById('btn-cancel-edit-spp-top').classList.add('hidden');
+            document.getElementById('btn-cancel-edit-spp-bottom').classList.add('hidden');
+            document.getElementById('spp-nominal').value = '50000';
+            document.getElementById('spp-tanggal').valueAsDate = new Date();
+            document.getElementById('spp-catatan').value = '';
+            document.getElementById('spp-jenis').value = 'SPP';
+            toggleSPPBulan();
+            
+            const sid = document.getElementById('spp-santri-id').value;
+            const s = dataStore.find(x => x.id === sid);
+            if (s) {
+                const nextMonth = renderKartuKontrol(s);
+                document.getElementById('spp-bulan').value = nextMonth;
+            }
+        };
+
+        window.editSPP = (santriId, paymentId) => {
+            const s = dataStore.find(x => x.id === santriId);
+            if (!s) return;
+            const p = (s.pembayaran || []).find(item => item.id === paymentId);
+            if (!p) return;
+
+            document.getElementById('spp-edit-id').value = p.id;
+            document.getElementById('spp-jenis').value = p.jenis;
+            toggleSPPBulan();
+            if (p.jenis === 'SPP' && p.bulan && p.bulan !== '-') {
+                document.getElementById('spp-bulan').value = p.bulan;
+            }
+            document.getElementById('spp-nominal').value = p.nominal;
+            document.getElementById('spp-tanggal').value = p.tanggal;
+            document.getElementById('spp-catatan').value = p.catatan || '';
+
+            document.getElementById('spp-form-heading').innerHTML = '<i class="fa-solid fa-pen-to-square mr-1 text-blue-600"></i> Edit Catatan Pembayaran';
+            document.getElementById('spp-btn-text').innerText = 'Perbarui Transaksi';
+            document.getElementById('btn-cancel-edit-spp-top').classList.remove('hidden');
+            document.getElementById('btn-cancel-edit-spp-bottom').classList.remove('hidden');
+
+            document.getElementById('spp-form-container').scrollIntoView({ behavior: 'smooth' });
+            showToast('Mode koreksi pembayaran aktif', 'amber');
+        };
+
+        window.openSPPModal = (id) => {
+            const s = dataStore.find(x => x.id === id);
+            if(!s) return;
+
+            document.getElementById('spp-santri-id').value = s.id;
+            document.getElementById('spp-santri-nama').innerText = `${s.nama} (${s.kelas})`;
+            cancelEditSPP();
+
+            const formContainer = document.getElementById('spp-form-container');
+            const canManage = currentUserRole === 'ustadz' && (currentUserClasses.includes('Semua') || currentUserClasses.includes(s.kelas));
+            if(!canManage) {
+                formContainer.style.display = 'none';
+            } else {
+                formContainer.style.display = 'block';
+            }
+
+            renderSPPTabel(s);
+            document.getElementById('modal-spp').classList.remove('hidden');
+        };
+
+        window.closeSPPModal = () => {
+            cancelEditSPP();
+            document.getElementById('modal-spp').classList.add('hidden');
+        };
+
+        function renderSPPTabel(s) {
+            renderKartuKontrol(s);
+            const tbody = document.getElementById('spp-tbody');
+            tbody.innerHTML = '';
+            let total = 0;
+
+            const list = s.pembayaran || [];
+            if(list.length > 0) {
+                list.forEach((p) => {
+                    total += Number(p.nominal || 0);
+                    const dt = new Date(p.tanggal);
+                    const fmtTgl = `${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}/${dt.getFullYear()}`;
+                    const periodeText = p.jenis === 'SPP' ? `SPP - ${p.bulan}` : p.jenis;
+                    
+                    let actionBtns = '';
+                    const canManage = currentUserRole === 'ustadz' && (currentUserClasses.includes('Semua') || currentUserClasses.includes(s.kelas));
+                    if(canManage) {
+                        actionBtns = `
+                            <button onclick="editSPP('${s.id}', '${p.id}')" class="text-blue-500 hover:text-blue-700 px-1" title="Edit Transaksi"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="deleteSPP('${s.id}', '${p.id}')" class="text-red-400 hover:text-red-600 px-1" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+                        `;
+                    }
+
+                    tbody.innerHTML += `
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="p-2 whitespace-nowrap">${fmtTgl}</td>
+                            <td class="p-2 font-bold text-gray-800 whitespace-nowrap">${periodeText}</td>
+                            <td class="p-2 font-bold text-green-600 whitespace-nowrap">Rp ${Number(p.nominal).toLocaleString('id-ID')}</td>
+                            <td class="p-2 text-gray-500 whitespace-nowrap">${p.penerima || '-'}</td>
+                            <td class="p-2 text-center whitespace-nowrap">
+                                <button onclick="cetakKuitansiSPP('${s.id}', '${p.id}')" class="text-amber-600 hover:text-amber-800 px-1" title="Cetak Kuitansi"><i class="fa-solid fa-file-invoice"></i></button>
+                                ${actionBtns}
+                            </td>
+                        </tr>
+                    `;
+                });
+            } else {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-400 italic">Belum ada catatan pembayaran</td></tr>`;
+            }
+
+            document.getElementById('spp-total-terbayar').innerText = `Total: Rp ${total.toLocaleString('id-ID')}`;
+        }
+
+        document.getElementById('form-bayar-spp').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('spp-santri-id').value;
+            const editId = document.getElementById('spp-edit-id').value;
+            const s = dataStore.find(x => x.id === id);
+            if(!s) return;
+
+            const jenis = document.getElementById('spp-jenis').value;
+            const bulan = document.getElementById('spp-bulan').value;
+            const nominal = Number(document.getElementById('spp-nominal').value);
+            const tanggal = document.getElementById('spp-tanggal').value;
+            const catatan = document.getElementById('spp-catatan').value;
+            const penerima = pengajarMap[s.kelas] || (currentUserRole === 'ustadz' ? 'Ustadz Kelas' : 'Bendahara');
+
+            // LOGIKA UPDATE / EDIT TRANSAKSI LAMA
+            if (editId) {
+                if (is_preview) {
+                    const idx = (s.pembayaran || []).findIndex(p => p.id === editId);
+                    if (idx !== -1) {
+                        s.pembayaran[idx] = {
+                            ...s.pembayaran[idx],
+                            jenis: jenis,
+                            bulan: jenis === 'SPP' ? bulan : '-',
+                            nominal: nominal,
+                            tanggal: tanggal,
+                            catatan: catatan,
+                            updatedAt: new Date().toISOString()
+                        };
+                    }
+                    cancelEditSPP();
+                    renderSPPTabel(s);
+                    renderAll();
+                    showToast("Data pembayaran berhasil diperbarui!");
+                } else {
+                    try {
+                        let updatedPembayaran = (s.pembayaran || []).map(p => {
+                            if (p.id === editId) {
+                                return {
+                                    ...p,
+                                    jenis: jenis,
+                                    bulan: jenis === 'SPP' ? bulan : '-',
+                                    nominal: nominal,
+                                    tanggal: tanggal,
+                                    catatan: catatan,
+                                    updatedAt: new Date().toISOString()
+                                };
+                            }
+                            return p;
+                        });
+                        await setDoc(doc(db, "santri", s.id), { pembayaran: updatedPembayaran }, { merge: true });
+                        s.pembayaran = updatedPembayaran;
+                        cancelEditSPP();
+                        renderSPPTabel(s);
+                        renderAll();
+                        showToast("Perubahan pembayaran berhasil disimpan!");
+                    } catch(err) { alert(err.message); }
+                }
+                return;
+            }
+
+            // LOGIKA TRANSAKSI BARU
+            const newPayment = {
+                id: 'PAY_' + Date.now(),
+                jenis: jenis,
+                bulan: jenis === 'SPP' ? bulan : '-',
+                nominal: nominal,
+                tanggal: tanggal,
+                catatan: catatan,
+                penerima: penerima,
+                timestamp: new Date().toISOString()
+            };
+
+            if(is_preview) {
+                if(!s.pembayaran) s.pembayaran = [];
+                s.pembayaran.unshift(newPayment);
+                renderSPPTabel(s);
+                const nextMonth = renderKartuKontrol(s);
+                document.getElementById('spp-bulan').value = nextMonth;
+                renderAll();
+                showToast(`Pembayaran ${bulan} (Rp ${nominal.toLocaleString('id-ID')}) berhasil dicatat!`);
+            } else {
+                try {
+                    let updatedPembayaran = s.pembayaran ? [...s.pembayaran] : [];
+                    updatedPembayaran.unshift(newPayment);
+                    await setDoc(doc(db, "santri", s.id), { pembayaran: updatedPembayaran }, { merge: true });
+                    s.pembayaran = updatedPembayaran;
+                    renderSPPTabel(s);
+                    const nextMonth = renderKartuKontrol(s);
+                    document.getElementById('spp-bulan').value = nextMonth;
+                    renderAll();
+                    showToast(`Pembayaran berhasil disimpan ke database!`);
+                } catch(err) { alert(err.message); }
+            }
+        });
+
+        window.deleteSPP = async (santriId, paymentId) => {
+            if(!confirm("Yakin ingin menghapus riwayat pembayaran ini?")) return;
+            const s = dataStore.find(x => x.id === santriId);
+            if(!s) return;
+
+            if (document.getElementById('spp-edit-id').value === paymentId) {
+                cancelEditSPP();
+            }
+
+            if(is_preview) {
+                s.pembayaran = (s.pembayaran || []).filter(p => p.id !== paymentId);
+                renderSPPTabel(s);
+                renderAll();
+                showToast("Catatan pembayaran dihapus", "yellow");
+            } else {
+                try {
+                    let updated = (s.pembayaran || []).filter(p => p.id !== paymentId);
+                    await setDoc(doc(db, "santri", s.id), { pembayaran: updated }, { merge: true });
+                    s.pembayaran = updated;
+                    renderSPPTabel(s);
+                    renderAll();
+                    showToast("Catatan pembayaran dihapus", "yellow");
+                } catch(err) { alert(err.message); }
+            }
+        };
+
+        window.cetakKuitansiSPP = (santriId, paymentId) => {
+            if(!window.jspdf) return;
+            const s = dataStore.find(x => x.id === santriId);
+            if(!s) return;
+            const p = (s.pembayaran || []).find(item => item.id === paymentId);
+            if(!p) return;
+
+            const doc = new window.jspdf.jsPDF({ orientation: 'landscape', unit: 'mm', format: [105, 148] });
+
+            doc.setDrawColor(217, 119, 6);
+            doc.setLineWidth(1);
+            doc.rect(5, 5, 138, 95);
+
+            doc.setFontSize(14);
+            doc.setFont(undefined, 'bold');
+            doc.text(currentLembagaName.toUpperCase(), 74, 14, { align: 'center' });
+            
+            doc.setFontSize(9);
+            doc.setFont(undefined, 'normal');
+            doc.text("BUKTI PEMBAYARAN / KUITANSI SAH", 74, 19, { align: 'center' });
+            doc.setDrawColor(200, 200, 200);
+            doc.line(10, 22, 138, 22);
+
+            doc.setFontSize(9);
+            const leftCol = 14;
+            const valueCol = 50;
+            let currentY = 28;
+
+            doc.text("No. Kuitansi", leftCol, currentY);
+            doc.text(`: ${p.id}`, valueCol, currentY); currentY += 6;
+
+            doc.text("Telah Terima Dari", leftCol, currentY);
+            doc.setFont(undefined, 'bold');
+            doc.text(`: ${s.nama} (${s.kelas})`, valueCol, currentY); currentY += 6;
+
+            doc.setFont(undefined, 'normal');
+            doc.text("Untuk Pembayaran", leftCol, currentY);
+            const peruntukan = p.jenis === 'SPP' ? `SPP Bulan ${p.bulan}` : p.jenis;
+            doc.text(`: ${peruntukan}`, valueCol, currentY); currentY += 6;
+
+            doc.text("Tanggal Bayar", leftCol, currentY);
+            doc.text(`: ${p.tanggal}`, valueCol, currentY); currentY += 6;
+
+            if(p.catatan) {
+                doc.text("Catatan", leftCol, currentY);
+                doc.text(`: ${p.catatan}`, valueCol, currentY); currentY += 6;
+            }
+
+            doc.setFillColor(254, 243, 199);
+            doc.roundedRect(leftCol, currentY + 2, 60, 12, 2, 2, 'F');
+            doc.setFontSize(11);
+            doc.setFont(undefined, 'bold');
+            doc.setTextColor(180, 83, 9);
+            doc.text(`Rp ${Number(p.nominal).toLocaleString('id-ID')}`, leftCol + 4, currentY + 10);
+            doc.setTextColor(0, 0, 0);
+
+            doc.setFontSize(8);
+            doc.setFont(undefined, 'normal');
+            doc.text("Diterima oleh,", 105, currentY + 3);
+            doc.text("Ustadz / Pengurus", 105, currentY + 7);
+            doc.setFont(undefined, 'bold');
+            doc.text(p.penerima || "Bendahara", 105, currentY + 22);
+
+            handlePDFOutput(doc, `Kuitansi_${s.nama.replace(/\s+/g, '_')}_${p.id}.pdf`);
+        };
+
+        // ==========================================
         // SCAN, COOLDOWN, & BARCODE PDF MASSAL
         // ==========================================
         let html5QrcodeScanner = null;
-        
-        // Objek buat nyimpen waktu scan masing-masing ID (Cooldown per anak)
         let scanHistoryMap = {}; 
 
         window.showBarcode = (id, nama) => {
@@ -832,7 +1351,7 @@
 
         window.openScanner = () => {
             if(currentUserRole === 'admin') return; 
-            document.getElementById('scan-log').innerHTML = ''; // Bersihin log pas buka kamera
+            document.getElementById('scan-log').innerHTML = '';
             document.getElementById('modal-scanner').classList.remove('hidden');
             html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: {width: 250, height: 250} }, false);
             html5QrcodeScanner.render(onScanSuccess, onScanFailure);
@@ -847,28 +1366,24 @@
             const studentId = decodedText;
             const now = Date.now();
 
-            // LOGIKA SMART-COOLDOWN (2 MENIT PER-ID)
-            // Kalau ID ini udah pernah discan, dan waktunya masih kurang dari 2 menit (120000 ms) -> CUEKIN.
             if (scanHistoryMap[studentId] && (now - scanHistoryMap[studentId] < 120000)) {
-                return; // Jangan lakukan apa-apa, cegah spam
+                return;
             }
-            
-            // Catat waktu terbaru anak ini discan
             scanHistoryMap[studentId] = now;
 
             const s = dataStore.find(x => x.id === studentId);
-            
             if(!s) {
                 showToast("Santri tidak ditemukan!", "red"); return;
             }
-            if(currentUserRole === 'ustadz' && !currentUserClasses.includes(s.kelas)) {
+            
+            const canManage = currentUserRole === 'ustadz' && (currentUserClasses.includes('Semua') || currentUserClasses.includes(s.kelas));
+            if(!canManage) {
                 showToast("Bukan santri kelas Anda.", "red"); return;
             }
 
             const currentTimestamp = new Date().toISOString();
             const newData = { kehadiran: 'Hadir', timestamp: currentTimestamp, catatan: 'Hadir via Scan Barcode' };
 
-            // Update UI Log History (Bawah Kamera)
             const logUl = document.getElementById('scan-log');
             const d = new Date(); const timeStr = `${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
             logUl.innerHTML = `<li><i class="fa-solid fa-check-circle text-green-500 mr-1"></i> <b>${s.nama}</b> - Masuk (${timeStr})</li>` + logUl.innerHTML;
@@ -898,10 +1413,10 @@
             }
         }
 
-        function onScanFailure(error) { /* Abaikan error scan continue loop */ }
+        function onScanFailure(error) { }
 
         // ==========================================
-        // MODALS & CRUD
+        // MODALS & CRUD SANTRI
         // ==========================================
         window.openModal = (mode) => {
             if(currentUserRole === 'admin') return;
@@ -911,7 +1426,9 @@
             
             const selectKelas = document.getElementById('form-kelas'); selectKelas.innerHTML = '';
             Array.from(classesSet).sort().forEach(cls => { selectKelas.innerHTML += `<option value="${cls}">${cls}</option>`; });
-            if(currentUserClasses.length > 0) selectKelas.value = currentUserClasses[0];
+            
+            let defaultVal = currentUserClasses.find(c => c !== 'Semua') || Array.from(classesSet)[0] || '';
+            selectKelas.value = defaultVal;
 
             document.getElementById('form-halaman').value = "-"; document.getElementById('form-surah').value = "-";
             document.getElementById('form-ayat').value = "-"; document.getElementById('form-nilai-hafalan').value = "Lancar";
@@ -924,7 +1441,8 @@
         window.editSantri = (id) => {
             if(currentUserRole === 'admin') return;
             const s = dataStore.find(x => x.id === id);
-            if(currentUserRole === 'ustadz' && !currentUserClasses.includes(s.kelas)) { alert("Akses Ditolak."); return; }
+            const canManage = currentUserRole === 'ustadz' && (currentUserClasses.includes('Semua') || currentUserClasses.includes(s.kelas));
+            if(!canManage) { alert("Akses Ditolak."); return; }
             
             if(s) {
                 document.getElementById('form-id').value = s.id; document.getElementById('form-nama').value = s.nama;
@@ -965,7 +1483,9 @@
                     else existing.riwayat.unshift({...newData});
                     Object.assign(existing, newData);
                 } else {
-                    newData.riwayat = [{...newData}]; dataStore.push(newData);
+                    newData.riwayat = [{...newData}]; 
+                    newData.pembayaran = [];
+                    dataStore.push(newData);
                 }
                 closeModal(); renderAll(); showToast();
             } else {
@@ -985,7 +1505,8 @@
         window.deleteSantri = async (id) => {
             if(currentUserRole === 'admin') return;
             const s = dataStore.find(x => x.id === id);
-            if(currentUserRole === 'ustadz' && s && !currentUserClasses.includes(s.kelas)) return;
+            const canManage = currentUserRole === 'ustadz' && (currentUserClasses.includes('Semua') || currentUserClasses.includes(s.kelas));
+            if(!canManage) return;
 
             if(confirm("Yakin hapus data santri ini?")) {
                 if(is_preview) { dataStore = dataStore.filter(x => x.id !== id); renderAll(); } 
@@ -1033,7 +1554,9 @@
             if(currentUserRole === 'admin') return; 
             const kelas = kelasSpesifik || document.getElementById('filter-kelas-rekap').value;
             if (kelas === "Semua") { alert("Pilih satu kelas spesifik terlebih dahulu!"); return; }
-            if (currentUserRole === 'ustadz' && !currentUserClasses.includes(kelas)) { alert("Akses Ditolak."); return; }
+            
+            const canManage = currentUserRole === 'ustadz' && (currentUserClasses.includes('Semua') || currentUserClasses.includes(kelas));
+            if (!canManage) { alert("Akses Ditolak."); return; }
             
             document.getElementById('form-jurnal-kelas').value = kelas;
             const dp = document.getElementById('form-jurnal-tanggal');
@@ -1063,27 +1586,67 @@
             }
         });
 
+        // --- SHORTCUT PRESET PERIODE ATAS ---
+        window.applyTopSemesterPreset = (val) => {
+            if(!val) return;
+            const currYear = new Date().getFullYear();
+            const dpMulai = document.getElementById('filter-tanggal-mulai');
+            const dpAkhir = document.getElementById('filter-tanggal-akhir');
+            
+            if(val === 'ganjil') {
+                dpMulai.value = `${currYear}-07-01`;
+                dpAkhir.value = `${currYear}-12-31`;
+            } else if(val === 'genap') {
+                dpMulai.value = `${currYear}-01-01`;
+                dpAkhir.value = `${currYear}-06-30`;
+            } else if(val === 'bulan_ini') {
+                const d = new Date();
+                const y = d.getFullYear();
+                const m = String(d.getMonth() + 1).padStart(2, '0');
+                const lastDay = new Date(y, d.getMonth() + 1, 0).getDate();
+                dpMulai.value = `${y}-${m}-01`;
+                dpAkhir.value = `${y}-${m}-${lastDay}`;
+            }
+            renderRekap();
+        };
+
+        // --- FILTER SPESIFIK SEMESTER KARTU REKAPITULASI ABSENSI ---
+        window.setSemesterSIA = (kls, val) => {
+            semesterFilterMap[kls] = val;
+            renderRekap();
+        };
+
         // --- REKAP & JURNAL RENDER ---
         let hariIni = new Date(); let semingguLalu = new Date(); semingguLalu.setDate(hariIni.getDate() - 6);
-        document.getElementById('filter-tanggal-mulai').valueAsDate = semingguLalu; document.getElementById('filter-tanggal-akhir').valueAsDate = hariIni;
-        document.getElementById('filter-tanggal-mulai').addEventListener('change', renderRekap); document.getElementById('filter-tanggal-akhir').addEventListener('change', renderRekap); document.getElementById('filter-kelas-rekap').addEventListener('change', renderRekap);
+        document.getElementById('filter-tanggal-mulai').valueAsDate = semingguLalu; 
+        document.getElementById('filter-tanggal-akhir').valueAsDate = hariIni;
+        
+        document.getElementById('filter-tanggal-mulai').addEventListener('change', renderRekap); 
+        document.getElementById('filter-tanggal-akhir').addEventListener('change', renderRekap); 
+        document.getElementById('filter-kelas-rekap').addEventListener('change', renderRekap);
         
         function renderRekap() {
-            const tglMulai = document.getElementById('filter-tanggal-mulai').value; const tglAkhir = document.getElementById('filter-tanggal-akhir').value; const kelasFilter = document.getElementById('filter-kelas-rekap').value;
-            const container = document.getElementById('rekap-container'); container.innerHTML = '';
+            const tglMulai = document.getElementById('filter-tanggal-mulai').value; 
+            const tglAkhir = document.getElementById('filter-tanggal-akhir').value; 
+            const kelasFilter = document.getElementById('filter-kelas-rekap').value;
+            const container = document.getElementById('rekap-container'); 
+            container.innerHTML = '';
             if(!tglMulai || !tglAkhir) return;
 
             let kelasRenderList = kelasFilter === "Semua" ? Array.from(classesSet).sort() : [kelasFilter];
+            const currYear = new Date().getFullYear();
 
             kelasRenderList.forEach(kls => {
                 const pengajar = pengajarMap[kls] || "Belum diatur";
-                let btnTambahJurnal = (currentUserRole === 'admin' || !currentUserClasses.includes(kls)) ? '' : `<button onclick="openJurnalModal('${kls}')" class="bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-sm font-bold shadow hover:bg-indigo-700 transition whitespace-nowrap"><i class="fa-solid fa-plus mr-1"></i> Jurnal Hari Ini</button>`;
-                let jurnalHTML = ''; let jurnalKelasIni = jurnalStore.filter(j => j.kelas === kls && j.tanggal >= tglMulai && j.tanggal <= tglAkhir).sort((a,b) => b.tanggal.localeCompare(a.tanggal));
+                const canManage = currentUserRole === 'ustadz' && (currentUserClasses.includes('Semua') || currentUserClasses.includes(kls));
+                let btnTambahJurnal = !canManage ? '' : `<button onclick="openJurnalModal('${kls}')" class="bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-sm font-bold shadow hover:bg-indigo-700 transition whitespace-nowrap"><i class="fa-solid fa-plus mr-1"></i> Jurnal Hari Ini</button>`;
+                let jurnalHTML = ''; 
+                let jurnalKelasIni = jurnalStore.filter(j => j.kelas === kls && j.tanggal >= tglMulai && j.tanggal <= tglAkhir).sort((a,b) => b.tanggal.localeCompare(a.tanggal));
                 
                 if (jurnalKelasIni.length > 0) {
                     let cardList = '';
                     jurnalKelasIni.forEach(j => {
-                        let btnEditCard = (currentUserRole === 'admin' || !currentUserClasses.includes(kls)) ? '' : `<button onclick="openJurnalModal('${kls}', '${j.tanggal}')" class="bg-indigo-500 text-white px-2 py-1 rounded text-xs font-bold hover:bg-indigo-600">Isi/Edit Jurnal</button>`;
+                        let btnEditCard = !canManage ? '' : `<button onclick="openJurnalModal('${kls}', '${j.tanggal}')" class="bg-indigo-500 text-white px-2 py-1 rounded text-xs font-bold hover:bg-indigo-600">Isi/Edit Jurnal</button>`;
                         cardList += `<div class="bg-white p-3 rounded-lg border border-indigo-100 shadow-sm"><div class="flex justify-between items-center mb-2 border-b border-gray-100 pb-2"><h4 class="font-bold text-sm text-indigo-800"><i class="fa-solid fa-book-journal-whills mr-1"></i> Jurnal Tgl: ${j.tanggal}</h4>${btnEditCard}</div><div class="grid grid-cols-1 md:grid-cols-3 gap-2"><div class="bg-gray-50 p-2 rounded"><p class="text-[10px] text-indigo-500 font-bold mb-0.5">Tadarus</p><p class="text-xs font-medium text-gray-800">${j.tadarus || '-'}</p></div><div class="bg-gray-50 p-2 rounded"><p class="text-[10px] text-indigo-500 font-bold mb-0.5">Murojaah</p><p class="text-xs font-medium text-gray-800">${j.murojaah || '-'}</p></div><div class="bg-gray-50 p-2 rounded"><p class="text-[10px] text-indigo-500 font-bold mb-0.5">Materi</p><p class="text-xs font-medium text-gray-800">${j.materi || '-'}</p></div></div></div>`;
                     });
                     jurnalHTML = `<div class="bg-indigo-50 p-4 rounded-xl shadow-sm mb-4 border border-indigo-100 relative"><div class="absolute top-4 right-4">${btnTambahJurnal}</div><h4 class="font-bold text-gray-700 mb-3"><i class="fa-solid fa-layer-group mr-2"></i>Kumpulan Jurnal</h4><div class="max-h-60 overflow-y-auto pr-2 space-y-3 custom-scrollbar">${cardList}</div></div>`;
@@ -1091,33 +1654,203 @@
                     jurnalHTML = `<div class="bg-indigo-50 p-4 rounded-xl shadow-sm mb-4 border border-indigo-100 flex justify-between items-center"><p class="text-sm text-indigo-800 italic">Belum ada jurnal untuk rentang tanggal ini.</p>${btnTambahJurnal}</div>`;
                 }
 
-                let tabelSIAHTML = '', rekapSIATbody = '', tabelTbody = '', adaDataSantri = false;
+                // Hitung Keuangan SPP & Infaq di rentang tanggal
+                let totalUangMasuk = 0;
+                let sppRows = '';
                 dataStore.filter(s => s.kelas === kls).forEach(s => {
-                    let riwayatDalamRange = (s.riwayat || []).filter(r => { const tglRiwayat = r.timestamp.split('T')[0]; return tglRiwayat >= tglMulai && tglRiwayat <= tglAkhir; });
+                    (s.pembayaran || []).forEach(p => {
+                        if(p.tanggal >= tglMulai && p.tanggal <= tglAkhir) {
+                            totalUangMasuk += Number(p.nominal || 0);
+                            sppRows += `
+                                <tr class="border-b text-xs">
+                                    <td class="p-2">${p.tanggal}</td>
+                                    <td class="p-2 font-bold">${s.nama}</td>
+                                    <td class="p-2">${p.jenis === 'SPP' ? `SPP (${p.bulan})` : p.jenis}</td>
+                                    <td class="p-2 font-bold text-green-600">Rp ${Number(p.nominal).toLocaleString('id-ID')}</td>
+                                    <td class="p-2 text-gray-500">${p.penerima || '-'}</td>
+                                </tr>
+                            `;
+                        }
+                    });
+                });
+
+                let rekapKeuanganHTML = `
+                    <div class="bg-white rounded-xl shadow overflow-hidden p-4 mb-4 border border-amber-200">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-3 border-b pb-2">
+                            <h4 class="font-bold text-amber-900"><i class="fa-solid fa-money-bill-wave mr-2 text-amber-500"></i>Rekap Keuangan (SPP & Infaq)</h4>
+                            <div class="text-sm font-bold text-green-700 bg-green-100 px-3 py-1 rounded-lg mt-2 md:mt-0">
+                                Total Kas Masuk: Rp ${totalUangMasuk.toLocaleString('id-ID')}
+                            </div>
+                        </div>
+                        ${sppRows ? `
+                        <div class="overflow-x-auto custom-scrollbar max-h-48">
+                            <table class="w-full text-left border-collapse min-w-[500px]">
+                                <thead>
+                                    <tr class="bg-amber-50 text-amber-900 text-[11px] uppercase">
+                                        <th class="p-2">Tgl</th>
+                                        <th class="p-2">Nama Santri</th>
+                                        <th class="p-2">Keterangan</th>
+                                        <th class="p-2">Nominal</th>
+                                        <th class="p-2">Penerima</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${sppRows}</tbody>
+                            </table>
+                        </div>` : `<p class="text-xs text-gray-400 italic">Tidak ada transaksi pembayaran di rentang tanggal ini.</p>`}
+                    </div>
+                `;
+
+                // --- LOGIKA FILTER SEMESTER KHUSUS REKAPITULASI ABSENSI (H/S/I/A) ---
+                const chosenSemester = semesterFilterMap[kls] || 'rentang';
+                let siaMulai = tglMulai;
+                let siaAkhir = tglAkhir;
+                let semesterLabel = `Sesuai Rentang Tanggal (${tglMulai} s/d ${tglAkhir})`;
+
+                if (chosenSemester === 'ganjil') {
+                    siaMulai = `${currYear}-07-01`;
+                    siaAkhir = `${currYear}-12-31`;
+                    semesterLabel = `Semester Ganjil ${currYear} (1 Jul s/d 31 Des)`;
+                } else if (chosenSemester === 'genap') {
+                    siaMulai = `${currYear}-01-01`;
+                    siaAkhir = `${currYear}-06-30`;
+                    semesterLabel = `Semester Genap ${currYear} (1 Jan s/d 30 Jun)`;
+                } else if (chosenSemester === 'ganjil_prev') {
+                    siaMulai = `${currYear - 1}-07-01`;
+                    siaAkhir = `${currYear - 1}-12-31`;
+                    semesterLabel = `Semester Ganjil ${currYear - 1} (Tahun Lalu)`;
+                } else if (chosenSemester === 'semua') {
+                    siaMulai = '2000-01-01';
+                    siaAkhir = '2099-12-31';
+                    semesterLabel = `Semua Waktu (Total Keseluruhan)`;
+                }
+
+                let tabelSIAHTML = '', rekapSIATbody = '', tabelTbody = '', adaDataSantri = false;
+                
+                dataStore.filter(s => s.kelas === kls).forEach(s => {
+                    let riwayatDalamSemester = (s.riwayat || []).filter(r => {
+                        const tglR = r.timestamp.split('T')[0];
+                        return tglR >= siaMulai && tglR <= siaAkhir;
+                    });
+
                     let countH = 0, countS = 0, countI = 0, countA = 0;
+                    riwayatDalamSemester.forEach(r => {
+                        if(r.kehadiran === 'Hadir') countH++;
+                        if(r.kehadiran === 'Sakit') countS++;
+                        if(r.kehadiran === 'Izin') countI++;
+                        if(r.kehadiran === 'Alpa') countA++;
+                    });
+
+                    rekapSIATbody += `
+                        <tr class="border-b hover:bg-gray-50 text-center font-bold">
+                            <td class="p-3 text-left text-gray-800">${s.nama}</td>
+                            <td class="p-3 text-green-600">${countH}</td>
+                            <td class="p-3 text-orange-500">${countS}</td>
+                            <td class="p-3 text-yellow-500">${countI}</td>
+                            <td class="p-3 text-red-600">${countA}</td>
+                        </tr>
+                    `;
+
+                    let riwayatDalamRange = (s.riwayat || []).filter(r => { 
+                        const tglRiwayat = r.timestamp.split('T')[0]; 
+                        return tglRiwayat >= tglMulai && tglRiwayat <= tglAkhir; 
+                    });
+
                     if(riwayatDalamRange.length > 0) {
                         adaDataSantri = true;
                         riwayatDalamRange.forEach(adaData => {
-                            if(adaData.kehadiran === 'Hadir') countH++; if(adaData.kehadiran === 'Sakit') countS++; if(adaData.kehadiran === 'Izin') countI++; if(adaData.kehadiran === 'Alpa') countA++;
-                            let dtRaw = new Date(adaData.timestamp); let tglCetak = `${String(dtRaw.getDate()).padStart(2,'0')}/${String(dtRaw.getMonth()+1).padStart(2,'0')}`;
-                            let badgeHafalan = getKetBadge(adaData.nilaiHafalan || adaData.keterangan); let badgeJilid = getKetBadge(adaData.nilaiJilid || adaData.keterangan);
-                            tabelTbody += `<tr class="border-b hover:bg-gray-50"><td class="p-3 text-xs text-gray-500 font-bold whitespace-nowrap">${tglCetak}</td><td class="p-3 font-bold text-gray-800 whitespace-nowrap">${s.nama}</td><td class="p-3 whitespace-nowrap">${getStatusBadge(adaData.kehadiran)}</td><td class="p-3 whitespace-nowrap">${adaData.surah} <br><span class="text-gray-500 text-[10px]">(Ayat ${adaData.ayat})</span></td><td class="p-3 whitespace-nowrap">${adaData.jilid} <br><span class="text-gray-500 text-[10px]">(Hal ${adaData.halaman})</span></td><td class="p-3 whitespace-nowrap"><div class="mb-1 flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">H:</span> ${badgeHafalan}</div><div class="flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">J:</span> ${badgeJilid}</div></td><td class="p-3 text-xs italic text-gray-600 break-words whitespace-normal min-w-[150px]">${adaData.catatan || '-'}</td></tr>`;
+                            let dtRaw = new Date(adaData.timestamp); 
+                            let tglCetak = `${String(dtRaw.getDate()).padStart(2,'0')}/${String(dtRaw.getMonth()+1).padStart(2,'0')}`;
+                            tabelTbody += `
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3 text-xs text-gray-500 font-bold whitespace-nowrap">${tglCetak}</td>
+                                    <td class="p-3 font-bold text-gray-800 whitespace-nowrap">${s.nama}</td>
+                                    <td class="p-3 whitespace-nowrap">${getStatusBadge(adaData.kehadiran)}</td>
+                                    <td class="p-3 whitespace-nowrap">${adaData.surah} <br><span class="text-gray-500 text-[10px]">(Ayat ${adaData.ayat})</span></td>
+                                    <td class="p-3 whitespace-nowrap">${adaData.jilid} <br><span class="text-gray-500 text-[10px]">(Hal ${adaData.halaman})</span></td>
+                                    <td class="p-3 whitespace-nowrap">
+                                        <div class="mb-1 flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">H:</span> ${getKetBadge(adaData.nilaiHafalan||adaData.keterangan)}</div>
+                                        <div class="flex items-center space-x-1"><span class="text-[9px] text-gray-400 w-4">J:</span> ${getKetBadge(adaData.nilaiJilid||adaData.keterangan)}</div>
+                                    </td>
+                                    <td class="p-3 text-xs italic text-gray-600 break-words whitespace-normal min-w-[150px]">${adaData.catatan || '-'}</td>
+                                </tr>
+                            `;
                         });
-                        rekapSIATbody += `<tr class="border-b hover:bg-gray-50 text-center font-bold"><td class="p-3 text-left text-gray-800">${s.nama}</td><td class="p-3 text-green-600">${countH}</td><td class="p-3 text-orange-500">${countS}</td><td class="p-3 text-yellow-500">${countI}</td><td class="p-3 text-red-600">${countA}</td></tr>`;
                     }
                 });
 
                 if(!adaDataSantri) {
-                     tabelTbody = '<tr><td colspan="7" class="p-4 text-center text-gray-400">Tidak ada data ngaji di rentang tanggal ini</td></tr>'; tabelSIAHTML = '';
-                } else {
-                     tabelSIAHTML = `<div class="bg-white rounded-xl shadow overflow-hidden p-4 mb-4 border border-gray-100"><h4 class="font-bold text-gray-700 mb-3"><i class="fa-solid fa-calculator mr-2 text-indigo-400"></i>Rekapitulasi Absensi</h4><div class="overflow-x-auto custom-scrollbar"><table class="w-full text-left border-collapse text-sm min-w-[500px]"><thead><tr class="bg-gray-100 border-b text-gray-700 uppercase text-[10px] text-center"><th class="p-3 whitespace-nowrap text-left">Nama Santri</th><th class="p-3 whitespace-nowrap">Hadir (H)</th><th class="p-3 whitespace-nowrap">Sakit (S)</th><th class="p-3 whitespace-nowrap">Izin (I)</th><th class="p-3 whitespace-nowrap">Alpa (A)</th></tr></thead><tbody>${rekapSIATbody}</tbody></table></div></div>`;
+                     tabelTbody = '<tr><td colspan="7" class="p-4 text-center text-gray-400">Tidak ada data ngaji di rentang tanggal ini</td></tr>';
                 }
 
-                if (jurnalKelasIni.length > 0 || adaDataSantri) {
-                    container.innerHTML += `<div class="mb-10"><h3 class="text-xl font-bold text-gray-800 mb-1 border-b-2 border-indigo-200 pb-2">${kls}</h3><p class="text-sm text-indigo-600 font-bold mb-4"><i class="fa-solid fa-user-tie mr-1"></i> Pengajar: ${pengajar}</p>${jurnalHTML}${tabelSIAHTML}<div class="bg-white rounded-xl shadow overflow-hidden p-4"><div class="overflow-x-auto custom-scrollbar"><table class="w-full text-left border-collapse text-sm min-w-[700px]"><thead><tr class="bg-gray-100 border-b text-gray-700 uppercase text-xs"><th class="p-3 whitespace-nowrap">Tgl</th><th class="p-3 whitespace-nowrap">Nama Santri</th><th class="p-3 whitespace-nowrap">Status</th><th class="p-3 whitespace-nowrap">Hafalan</th><th class="p-3 whitespace-nowrap">Jilid</th><th class="p-3 whitespace-nowrap">Nilai</th><th class="p-3 w-1/4">Catatan</th></tr></thead><tbody>${tabelTbody}</tbody></table></div></div></div>`;
+                tabelSIAHTML = `
+                    <div class="bg-white rounded-xl shadow overflow-hidden p-4 mb-4 border border-gray-100">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3 pb-3 border-b gap-2">
+                            <div>
+                                <h4 class="font-bold text-gray-700 flex items-center">
+                                    <i class="fa-solid fa-calculator mr-2 text-indigo-500"></i>Rekapitulasi Absensi
+                                </h4>
+                                <p class="text-[11px] text-gray-500 mt-0.5"><i class="fa-regular fa-calendar-check mr-1 text-indigo-400"></i> ${semesterLabel}</p>
+                            </div>
+                            <!-- FILTER PER SEMESTER -->
+                            <div class="flex items-center space-x-2 w-full sm:w-auto">
+                                <span class="text-xs font-bold text-gray-600 whitespace-nowrap"><i class="fa-solid fa-filter text-indigo-500 mr-1"></i>Filter Semester:</span>
+                                <select onchange="window.setSemesterSIA('${kls}', this.value)" class="border border-indigo-200 px-2 py-1.5 rounded-lg text-xs bg-indigo-50 text-indigo-800 font-bold focus:outline-none focus:ring-2 focus:ring-indigo-400 flex-grow sm:flex-grow-0">
+                                    <option value="rentang" ${chosenSemester === 'rentang' ? 'selected' : ''}>Rentang Tanggal (Filter Atas)</option>
+                                    <option value="ganjil" ${chosenSemester === 'ganjil' ? 'selected' : ''}>🍂 Semester Ganjil (${currYear})</option>
+                                    <option value="genap" ${chosenSemester === 'genap' ? 'selected' : ''}>🌱 Semester Genap (${currYear})</option>
+                                    <option value="ganjil_prev" ${chosenSemester === 'ganjil_prev' ? 'selected' : ''}>🍂 Semester Ganjil (${currYear - 1})</option>
+                                    <option value="semua" ${chosenSemester === 'semua' ? 'selected' : ''}>📚 Semua Waktu (Akumulasi)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto custom-scrollbar">
+                            <table class="w-full text-left border-collapse text-sm min-w-[500px]">
+                                <thead>
+                                    <tr class="bg-gray-100 border-b text-gray-700 uppercase text-[10px] text-center">
+                                        <th class="p-3 whitespace-nowrap text-left">Nama Santri</th>
+                                        <th class="p-3 whitespace-nowrap text-green-700">Hadir (H)</th>
+                                        <th class="p-3 whitespace-nowrap text-orange-600">Sakit (S)</th>
+                                        <th class="p-3 whitespace-nowrap text-yellow-600">Izin (I)</th>
+                                        <th class="p-3 whitespace-nowrap text-red-600">Alpa (A)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${rekapSIATbody}</tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+
+                if (jurnalKelasIni.length > 0 || adaDataSantri || totalUangMasuk > 0 || dataStore.some(s => s.kelas === kls)) {
+                    container.innerHTML += `
+                        <div class="mb-10">
+                            <h3 class="text-xl font-bold text-gray-800 mb-1 border-b-2 border-indigo-200 pb-2">${kls}</h3>
+                            <p class="text-sm text-indigo-600 font-bold mb-4"><i class="fa-solid fa-user-tie mr-1"></i> Pengajar: ${pengajar}</p>
+                            ${rekapKeuanganHTML}
+                            ${jurnalHTML}
+                            ${tabelSIAHTML}
+                            <div class="bg-white rounded-xl shadow overflow-hidden p-4">
+                                <div class="overflow-x-auto custom-scrollbar">
+                                    <table class="w-full text-left border-collapse text-sm min-w-[700px]">
+                                        <thead>
+                                            <tr class="bg-gray-100 border-b text-gray-700 uppercase text-xs">
+                                                <th class="p-3 whitespace-nowrap">Tgl</th>
+                                                <th class="p-3 whitespace-nowrap">Nama Santri</th>
+                                                <th class="p-3 whitespace-nowrap">Status</th>
+                                                <th class="p-3 whitespace-nowrap">Hafalan</th>
+                                                <th class="p-3 whitespace-nowrap">Jilid</th>
+                                                <th class="p-3 whitespace-nowrap">Nilai</th>
+                                                <th class="p-3 w-1/4">Catatan</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>${tabelTbody}</tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    `;
                 }
             });
-            if(container.innerHTML === '') container.innerHTML = '<div class="text-center text-gray-400 p-10 bg-white rounded-xl shadow">Tidak ada aktivitas ngaji atau jurnal untuk semua kelas di rentang tanggal ini.</div>';
+            if(container.innerHTML === '') container.innerHTML = '<div class="text-center text-gray-400 p-10 bg-white rounded-xl shadow">Tidak ada aktivitas ngaji, keuangan, atau jurnal untuk kelas di rentang tanggal ini.</div>';
         }
 
         window.showToast = (msg = "Berhasil disimpan!", color = "green") => {
@@ -1168,29 +1901,80 @@
 
         window.exportGlobalPDF = () => {
             if(!window.jspdf) return;
-            const doc = new window.jspdf.jsPDF(); const pageWidth = doc.internal.pageSize.getWidth();
-            const tglMulai = document.getElementById('filter-tanggal-mulai').value; const tglAkhir = document.getElementById('filter-tanggal-akhir').value; const kelasFilter = document.getElementById('filter-kelas-rekap').value;
-            doc.setFontSize(16); doc.text(`Laporan Progres Santri`, pageWidth / 2, 22, { align: 'center' }); doc.setFontSize(10); doc.text(`Periode: ${tglMulai} s/d ${tglAkhir}`, pageWidth / 2, 28, { align: 'center' });
-            let startY = 36; let kelasRenderList = kelasFilter === "Semua" ? Array.from(classesSet).sort() : [kelasFilter];
+            const doc = new window.jspdf.jsPDF(); 
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const tglMulai = document.getElementById('filter-tanggal-mulai').value; 
+            const tglAkhir = document.getElementById('filter-tanggal-akhir').value; 
+            const kelasFilter = document.getElementById('filter-kelas-rekap').value;
+            const currYear = new Date().getFullYear();
+
+            doc.setFontSize(16); 
+            doc.text(`Laporan Progres & Kehadiran Santri`, pageWidth / 2, 22, { align: 'center' }); 
+            doc.setFontSize(10); 
+            doc.text(`Periode Laporan: ${tglMulai} s/d ${tglAkhir}`, pageWidth / 2, 28, { align: 'center' });
+            
+            let startY = 36; 
+            let kelasRenderList = kelasFilter === "Semua" ? Array.from(classesSet).sort() : [kelasFilter];
 
             kelasRenderList.forEach((kls, index) => {
                 if (index > 0 && startY > doc.internal.pageSize.getHeight() - 40) { doc.addPage(); startY = 20; }
-                const pengajar = pengajarMap[kls] || "Belum diatur"; doc.setFontSize(11); doc.setFont(undefined, 'bold'); doc.text(`Kelas: ${kls} | Pengajar: ${pengajar}`, 14, startY); startY += 8;
-                let tableSIAData = []; let tableData = [];
+                const pengajar = pengajarMap[kls] || "Belum diatur"; 
+                doc.setFontSize(11); 
+                doc.setFont(undefined, 'bold'); 
+                doc.text(`Kelas: ${kls} | Pengajar: ${pengajar}`, 14, startY); 
+                startY += 8;
+
+                const chosenSemester = semesterFilterMap[kls] || 'rentang';
+                let siaMulai = tglMulai;
+                let siaAkhir = tglAkhir;
+                let labelSIA = `(${tglMulai} s/d ${tglAkhir})`;
+                if (chosenSemester === 'ganjil') { siaMulai = `${currYear}-07-01`; siaAkhir = `${currYear}-12-31`; labelSIA = `Semester Ganjil ${currYear}`; }
+                else if (chosenSemester === 'genap') { siaMulai = `${currYear}-01-01`; siaAkhir = `${currYear}-06-30`; labelSIA = `Semester Genap ${currYear}`; }
+                else if (chosenSemester === 'ganjil_prev') { siaMulai = `${currYear - 1}-07-01`; siaAkhir = `${currYear - 1}-12-31`; labelSIA = `Semester Ganjil ${currYear - 1}`; }
+                else if (chosenSemester === 'semua') { siaMulai = '2000-01-01'; siaAkhir = '2099-12-31'; labelSIA = `Semua Waktu`; }
+
+                let tableSIAData = []; 
+                let tableData = [];
+
                 dataStore.filter(s => s.kelas === kls).forEach(s => {
-                    let riwayatDalamRange = (s.riwayat || []).filter(r => { const tglRiwayat = r.timestamp.split('T')[0]; return tglRiwayat >= tglMulai && tglRiwayat <= tglAkhir; });
+                    let riwayatDalamSemester = (s.riwayat || []).filter(r => { 
+                        const tglR = r.timestamp.split('T')[0]; 
+                        return tglR >= siaMulai && tglR <= siaAkhir; 
+                    });
                     let cH = 0, cS = 0, cI = 0, cA = 0;
+                    riwayatDalamSemester.forEach(r => {
+                        if(r.kehadiran === 'Hadir') cH++; 
+                        if(r.kehadiran === 'Sakit') cS++; 
+                        if(r.kehadiran === 'Izin') cI++; 
+                        if(r.kehadiran === 'Alpa') cA++;
+                    });
+                    tableSIAData.push([s.nama, cH, cS, cI, cA]);
+
+                    let riwayatDalamRange = (s.riwayat || []).filter(r => { 
+                        const tglRiwayat = r.timestamp.split('T')[0]; 
+                        return tglRiwayat >= tglMulai && tglRiwayat <= tglAkhir; 
+                    });
                     riwayatDalamRange.forEach(r => {
-                        if(r.kehadiran === 'Hadir') cH++; if(r.kehadiran === 'Sakit') cS++; if(r.kehadiran === 'Izin') cI++; if(r.kehadiran === 'Alpa') cA++;
-                        let dt = new Date(r.timestamp); let tglStr = `${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}`;
+                        let dt = new Date(r.timestamp); 
+                        let tglStr = `${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}`;
                         tableData.push([tglStr, s.nama, r.kehadiran, r.jilid, r.surah, `H: ${r.nilaiHafalan || r.keterangan || '-'}\nJ: ${r.nilaiJilid || r.keterangan || '-'}`, r.catatan || '-']);
                     });
-                    if(riwayatDalamRange.length > 0) tableSIAData.push([s.nama, cH, cS, cI, cA]);
                 });
 
                 if (tableSIAData.length > 0) {
-                    doc.setFontSize(9); doc.setFont(undefined, 'bold'); doc.text(`Rekapitulasi Kehadiran (H/S/I/A)`, 14, startY); startY += 4;
-                    doc.autoTable({ startY: startY, head: [['Nama Santri', 'Hadir', 'Sakit', 'Izin', 'Alpa']], body: tableSIAData, theme: 'grid', headStyles: { fillColor: [79, 70, 229] }, styles: { fontSize: 8, halign: 'center' }, columnStyles: { 0: { halign: 'left' } } });
+                    doc.setFontSize(9); 
+                    doc.setFont(undefined, 'bold'); 
+                    doc.text(`Rekapitulasi Kehadiran (H/S/I/A) - ${labelSIA}`, 14, startY); 
+                    startY += 4;
+                    doc.autoTable({ 
+                        startY: startY, 
+                        head: [['Nama Santri', 'Hadir', 'Sakit', 'Izin', 'Alpa']], 
+                        body: tableSIAData, 
+                        theme: 'grid', 
+                        headStyles: { fillColor: [79, 70, 229] }, 
+                        styles: { fontSize: 8, halign: 'center' }, 
+                        columnStyles: { 0: { halign: 'left' } } 
+                    });
                     startY = doc.lastAutoTable.finalY + 10;
                 }
 
@@ -1208,7 +1992,7 @@
                 if (tableData.length > 0) {
                     doc.autoTable({ startY: startY, head: [['Tgl', 'Nama', 'Hadir', 'Jilid', 'Hafalan', 'Nilai', 'Catatan']], body: tableData, theme: 'grid', headStyles: { fillColor: [220, 38, 38] }, styles: { cellPadding: 2, fontSize: 8 } });
                     startY = doc.lastAutoTable.finalY + 15;
-                } else { doc.setFontSize(9); doc.setFont(undefined, 'italic'); doc.text(`Tidak ada data ngaji.`, 14, startY); startY += 12; }
+                } else { doc.setFontSize(9); doc.setFont(undefined, 'italic'); doc.text(`Tidak ada data harian ngaji.`, 14, startY); startY += 12; }
             });
             handlePDFOutput(doc, `Rekap_${tglMulai}_sd_${tglAkhir}.pdf`);
         };
@@ -1230,11 +2014,16 @@
             dataStore = [
                 {
                     id: "ST111111", nama: "Ahmad Rafli", kelas: "Kelas Madinah", kehadiran: "Hadir", jilid: "Jilid 4", halaman: "12", surah: "Al-Mulk", ayat: "5-10", nilaiHafalan: "Lancar", nilaiJilid: "Lancar", catatan: "Rajin sekali", timestamp: yesterday.toISOString(),
-                    riwayat: [{ kehadiran: "Hadir", jilid: "Jilid 4", halaman: "10", surah: "Al-Mulk", ayat: "1-4", nilaiHafalan: "Mengulang", nilaiJilid: "Lancar", catatan: "Tajwid diperbaiki", timestamp: yesterday.toISOString() }]
+                    riwayat: [{ kehadiran: "Hadir", jilid: "Jilid 4", halaman: "10", surah: "Al-Mulk", ayat: "1-4", nilaiHafalan: "Mengulang", nilaiJilid: "Lancar", catatan: "Tajwid diperbaiki", timestamp: yesterday.toISOString() }],
+                    pembayaran: [
+                        { id: "PAY_101", jenis: "SPP", bulan: "Januari", nominal: 50000, tanggal: "2026-01-10", catatan: "Lunas", penerima: "Ust. Saprudin S.Ag" },
+                        { id: "PAY_102", jenis: "SPP", bulan: "Februari", nominal: 50000, tanggal: "2026-02-10", catatan: "Lunas", penerima: "Ust. Saprudin S.Ag" }
+                    ]
                 },
                 {
                     id: "ST222222", nama: "Budi Santoso", kelas: "Kelas Madinah", kehadiran: "Izin", jilid: "Jilid 3", halaman: "20", surah: "An-Naba", ayat: "1-15", nilaiHafalan: "Kurang Lancar", nilaiJilid: "Lancar", catatan: "Sakit demam", timestamp: yesterday.toISOString(),
-                    riwayat: [{ kehadiran: "Izin", jilid: "Jilid 3", halaman: "20", surah: "An-Naba", ayat: "1-15", nilaiHafalan: "Kurang Lancar", nilaiJilid: "Lancar", catatan: "Belum hafal lancar", timestamp: yesterday.toISOString() }]
+                    riwayat: [{ kehadiran: "Izin", jilid: "Jilid 3", halaman: "20", surah: "An-Naba", ayat: "1-15", nilaiHafalan: "Kurang Lancar", nilaiJilid: "Lancar", catatan: "Belum hafal lancar", timestamp: yesterday.toISOString() }],
+                    pembayaran: []
                 }
             ];
         }
@@ -1242,9 +2031,7 @@
         async function initApp() {
             if (is_preview && dataStore.length === 0) injectDummyData();
             
-            // JALANKAN MESIN AUTO ALPA SETIAP LOAD APLIKASI
             await runAutoAlpa(); 
-            
             renderAll();
             const lastView = localStorage.getItem('activeView') || 'dashboard';
             switchView(lastView);
@@ -1273,9 +2060,15 @@
             const errEl = document.getElementById('login-error'); errEl.classList.add('hidden');
             
             if (is_preview) {
-                if (ADMIN_EMAILS.includes(em.toLowerCase())) { currentUserRole = 'admin'; currentUserClasses = ['Semua']; } 
-                else { currentUserRole = 'ustadz'; currentUserClasses = ['Kelas Madinah']; }
-                document.getElementById('view-login').style.display = 'none'; document.getElementById('main-nav').classList.remove('hidden');
+                if (ADMIN_EMAILS.includes(em.toLowerCase())) { 
+                    currentUserRole = 'admin'; 
+                    currentUserClasses = ['Semua']; 
+                } else { 
+                    currentUserRole = 'ustadz'; 
+                    currentUserClasses = ['Kelas Madinah']; 
+                }
+                document.getElementById('view-login').style.display = 'none'; 
+                document.getElementById('main-nav').classList.remove('hidden');
                 initApp();
             } else {
                 try {
@@ -1297,9 +2090,27 @@
                 if(user) {
                     document.getElementById('view-login').style.display = 'none'; currentUserId = user.uid;
                     try {
-                        const userDocRef = doc(db, "users", user.uid); let userDoc = await getDoc(userDocRef);
-                        if(userDoc.exists()) { const dt = userDoc.data(); currentUserRole = dt.role || 'ustadz'; let kl = dt.kelas || ['Kelas Umum']; currentUserClasses = Array.isArray(kl) ? kl : [kl]; }
-                    } catch(err) { console.error("Gagal menarik profil user:", err); }
+                        const userDocRef = doc(db, "users", user.uid); 
+                        let userDoc = await getDoc(userDocRef);
+                        
+                        if(userDoc.exists()) { 
+                            const dt = userDoc.data(); 
+                            if (!ADMIN_EMAILS.includes(user.email.toLowerCase()) && dt.role === 'admin') {
+                                currentUserRole = 'ustadz';
+                            } else {
+                                currentUserRole = dt.role || (ADMIN_EMAILS.includes(user.email.toLowerCase()) ? 'admin' : 'ustadz');
+                            }
+                            let kl = dt.kelas || ['Kelas Madinah']; 
+                            currentUserClasses = Array.isArray(kl) ? kl : [kl]; 
+                        } else {
+                            currentUserRole = ADMIN_EMAILS.includes(user.email.toLowerCase()) ? 'admin' : 'ustadz';
+                            currentUserClasses = currentUserRole === 'admin' ? ['Semua'] : ['Kelas Madinah', 'Semua'];
+                        }
+                    } catch(err) { 
+                        console.error("Gagal menarik profil user:", err); 
+                        currentUserRole = 'ustadz';
+                        currentUserClasses = ['Kelas Madinah', 'Semua'];
+                    }
                     
                     document.getElementById('main-nav').classList.remove('hidden');
 

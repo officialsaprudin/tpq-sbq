@@ -415,7 +415,14 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                             <div>
                                 <label class="block text-xs font-bold text-gray-700 mb-1">Nominal (Rp)</label>
-                                <input type="number" id="spp-nominal" class="w-full px-3 py-1.5 border rounded-lg text-sm focus:ring-2 focus:ring-amber-500" placeholder="Cth: 50000" required>
+                                <input type="number" id="spp-nominal" value="100000" class="w-full px-3 py-1.5 border rounded-lg text-sm focus:ring-2 focus:ring-amber-500" placeholder="Cth: 100000" required>
+                                <div class="flex flex-wrap gap-1.5 mt-1.5">
+                                    <button type="button" onclick="setNominalSPP(100000)" class="px-2 py-0.5 text-[11px] font-bold bg-white border border-amber-300 text-amber-800 rounded hover:bg-amber-200 transition">100rb</button>
+                                    <button type="button" onclick="setNominalSPP(150000)" class="px-2 py-0.5 text-[11px] font-bold bg-white border border-amber-300 text-amber-800 rounded hover:bg-amber-200 transition">150rb</button>
+                                    <button type="button" onclick="setNominalSPP(200000)" class="px-2 py-0.5 text-[11px] font-bold bg-white border border-amber-300 text-amber-800 rounded hover:bg-amber-200 transition">200rb</button>
+                                    <button type="button" onclick="setNominalSPP(250000)" class="px-2 py-0.5 text-[11px] font-bold bg-white border border-amber-300 text-amber-800 rounded hover:bg-amber-200 transition">250rb</button>
+                                    <button type="button" onclick="setNominalSPP(300000)" class="px-2 py-0.5 text-[11px] font-bold bg-white border border-amber-300 text-amber-800 rounded hover:bg-amber-200 transition">300rb</button>
+                                </div>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-gray-700 mb-1">Tanggal Bayar</label>
@@ -1029,13 +1036,20 @@
             return oldestUnpaid || getBulanIniNama();
         }
 
+        window.setNominalSPP = (val) => {
+            const input = document.getElementById('spp-nominal');
+            if (input) {
+                input.value = val;
+            }
+        };
+
         window.cancelEditSPP = () => {
             document.getElementById('spp-edit-id').value = '';
             document.getElementById('spp-form-heading').innerHTML = '<i class="fa-solid fa-plus-circle mr-1"></i> Catat Pembayaran Baru';
             document.getElementById('spp-btn-text').innerText = 'Simpan Pembayaran';
             document.getElementById('btn-cancel-edit-spp-top').classList.add('hidden');
             document.getElementById('btn-cancel-edit-spp-bottom').classList.add('hidden');
-            document.getElementById('spp-nominal').value = '50000';
+            document.getElementById('spp-nominal').value = '100000';
             document.getElementById('spp-tanggal').valueAsDate = new Date();
             document.getElementById('spp-catatan').value = '';
             document.getElementById('spp-jenis').value = 'SPP';
